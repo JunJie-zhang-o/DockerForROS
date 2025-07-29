@@ -10,6 +10,9 @@
 docker build -t cros:latest
 ```
 
+## 修改主机终端字体
+
+
 ## 图形化
 主机执行 echo "xhost +local:docker" >> ~/.bashrc
 

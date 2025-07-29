@@ -21,9 +21,13 @@ xeyes 使用该命令进行测试
 sudo docker network create --subnet=192.168.50.0/24 ros_network
 
 添加 --net 和 --ip参数
-docker run -it -e DISPLAY=${HOSTNAME}:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v /home/jay/01-RosSpace:/home/ros/01-RosSpace --net ros_network --ip 192.168.50.50 --name my_cros cros zsh
+docker run -it -e DISPLAY=${HOSTNAME}:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v /home/jay/01-RosSpace:/home/ros/01-RosSpace --net ros_network --ip 192.168.50.50 --name my_cros cros &
 
 ## 解决文件映射后的权限问题
-
+使用ros用户开发即可
 
 ## 使用vscode进行remote 开发
+Host MyRos
+  HostName 192.168.50.50
+  User ros
+  Port 10022

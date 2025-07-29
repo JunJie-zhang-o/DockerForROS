@@ -45,7 +45,8 @@ COPY .p10k.zsh /home/ros/.p10k.zsh
 # 切换回 root 用户
 USER root
 # SSH 配置
-RUN mkdir /var/run/sshd
+RUN mkdir -p /etc/ssh /var/run/sshd
+RUN ssh-keygen -A
 RUN echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
 RUN echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
 RUN echo 'Port 10022' >> /etc/ssh/sshd_config
@@ -64,4 +65,4 @@ WORKDIR /home/ros
 # 暴露 SSH 端口
 EXPOSE 10022
 # 启动 sshd 服务并保持容器不退出
-CMD ["/usr/sbin/sshd", "-D"]
+CMD ["sshpass", "-p", "1234", "sudo", "/usr/sbin/sshd", "-D"]

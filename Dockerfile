@@ -8,7 +8,7 @@ FROM osrf/ros:noetic-desktop-full
 
 RUN apt update && apt upgrade -y
 
-RUN apt install bash-completion openssh-server net-tools nano zsh git curl x11-apps iputils-ping -y
+RUN apt install bash-completion openssh-server net-tools nano zsh git curl x11-apps iputils-ping sshpass -y
 
 ARG USERNAME=ros
 # 创建用户并配置 sudo | 用户名ros 密码1234

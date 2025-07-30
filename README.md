@@ -14,23 +14,26 @@ docker build -t cros:latest
 
 
 ## 图形化
-主机执行 echo "xhost +local:docker" >> ~/.bashrc
+主机执行 `echo "xhost +local:docker" >> ~/.bashrc`
 
-从机中确认echo $DISPLAY 其中应该为127.0.0.1
+从机中确认`echo $DISPLAY` 其中应该为`127.0.0.1`
 
-xeyes 使用该命令进行测试
+`xeyes` 使用该命令进行测试
 
 ## 创建自定义网络固定IP
-sudo docker network create --subnet=192.168.50.0/24 ros_network
+`sudo docker network create --subnet=192.168.50.0/24 ros_network`
 
 添加 --net 和 --ip参数
-docker run -it -e DISPLAY=${HOSTNAME}:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v /home/jay/01-RosSpace:/home/ros/01-RosSpace --net ros_network --ip 192.168.50.50 --name my_cros cros &
+`docker run -itd -e DISPLAY=${HOSTNAME}:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v /home/jay/01-RosSpace:/home/ros/01-RosSpace --net ros_network --ip 192.168.50.50 --name ros-noetic cros`
 
 ## 解决文件映射后的权限问题
 使用ros用户开发即可
 
 ## 使用vscode进行remote 开发
+```
 Host MyRos
   HostName 192.168.50.50
   User ros
   Port 10022
+```
+

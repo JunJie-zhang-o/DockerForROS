@@ -12,6 +12,8 @@ docker build -t cros:latest
 
 ## 修改主机终端字体
 
+`unzip FiraCode.zip -d ~/.fonts && fc-cache -fv`
+使用该命令在主机安装该字体，然后在终端选择该字体，zsh对应的主题就会正确显示
 
 ## 图形化
 主机执行 `echo "xhost +local:docker" >> ~/.bashrc`

@@ -10,6 +10,17 @@ RUN apt update && apt upgrade -y
 
 RUN apt install bash-completion openssh-server net-tools nano zsh git curl x11-apps iputils-ping sshpass -y
 
+# 安装 locales 包
+RUN apt-get update && apt-get install -y locales && \
+    sed -i '/zh_CN.UTF-8/s/^# //g' /etc/locale.gen && \
+    sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen
+
+# 设置环境变量
+ENV LANG=en_US.UTF-8 \
+    LANGUAGE=zh_CN:zh \
+    LC_ALL=zh_CN.UTF-8
+
 ARG USERNAME=ros
 # 创建用户并配置 sudo | 用户名ros 密码1234
 # RUN useradd -m -s /bin/zsh ros && echo "ros:1234" | chpasswd && adduser ros sudo

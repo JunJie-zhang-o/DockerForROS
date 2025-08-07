@@ -12,8 +12,15 @@ RUN apt install bash-completion openssh-server net-tools nano zsh git curl x11-a
 
 ARG USERNAME=ros
 # 创建用户并配置 sudo | 用户名ros 密码1234
-RUN useradd -m -s /bin/zsh ros && echo "ros:1234" | chpasswd && adduser ros sudo
+# RUN useradd -m -s /bin/zsh ros && echo "ros:1234" | chpasswd && adduser ros sudo
+ARG UID=1002
+ARG GID=1002
 
+# 创建组和用户并指定 UID/GID
+RUN groupadd -g $GID ros && \
+    useradd -m -u $UID -g $GID -s /bin/zsh ros && \
+    echo "ros:1234" | chpasswd && \
+    usermod -aG sudo ros
 
 # 切换到 ros 用户，后续命令以 ros 用户身份执行
 USER ros

@@ -69,6 +69,8 @@ ENV DISPLAY=:0
 USER ros
 WORKDIR /home/ros
 
+ENTRYPOINT []
+
 # 暴露 SSH 端口
 EXPOSE 10022
 # 启动 sshd 服务并保持容器不退出

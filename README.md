@@ -29,7 +29,9 @@ docker build -t cros:latest
 `docker run -itd -e DISPLAY=${HOSTNAME}:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v /home/jay/01-RosSpace:/home/ros/01-RosSpace --net ros_network --ip 192.168.50.50 --name ros-noetic cros`
 
 ## 解决文件映射后的权限问题
-使用ros用户开发即可
+使用ros用户开发即可.
+
+Dockerfile中已经添加了 UID和GID的参数，在build的时候，添加指定参数即可。
 
 ## 使用vscode进行remote 开发
 ```

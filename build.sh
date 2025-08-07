@@ -8,7 +8,7 @@
 ### 
 
 # cros 为镜像名称
-docker build --platform=linux/amd64 -t cros:latest . 
+docker build --platform=linux/amd64 --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t cros:latest . 
 
 # 后续如何创建实例
 # my_cros为实例名称 cros为镜像名称

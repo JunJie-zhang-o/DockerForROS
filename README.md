@@ -41,3 +41,6 @@ Host MyRos
   Port 10022
 ```
 
+## 设置容器开机自启动
+
+`docker update --restart=always ros-noetic`

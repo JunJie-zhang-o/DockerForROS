@@ -8,7 +8,7 @@ FROM osrf/ros:noetic-desktop-full
 
 RUN apt update && apt upgrade -y
 
-RUN apt install bash-completion openssh-server net-tools nano zsh git curl x11-apps iputils-ping sshpass fakeroot python3-bloom debhelper unzip tree -y
+RUN apt install bash-completion openssh-server net-tools nano zsh git curl x11-apps iputils-ping sshpass fakeroot python3-bloom debhelper unzip zip tree -y
 
 # 安装 locales 包
 RUN apt-get update && apt-get install -y locales && \

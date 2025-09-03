@@ -26,7 +26,7 @@ docker build -t cros:latest
 `sudo docker network create --subnet=192.168.50.0/24 ros_network`
 
 添加 --net 和 --ip参数
-`docker run -itd -e DISPLAY=${HOSTNAME}:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v /home/jay/01-RosSpace:/home/ros/01-RosSpace -v /dev:/dev --net ros_network --ip 192.168.50.50 --name ros-noetic cros`
+`docker run -itd --privileged -e DISPLAY=${HOSTNAME}:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v /home/jay/01-RosSpace:/home/ros/01-RosSpace -v /dev:/dev --net ros_network --ip 192.168.50.50 --name ros-noetic cros`
 
 ## 解决文件映射后的权限问题
 使用ros用户开发即可.

@@ -34,11 +34,15 @@ docker build -t cros:latest
 Dockerfile中已经添加了 UID和GID的参数，在build的时候，添加指定参数即可。
 
 ## 使用vscode进行remote 开发
+
+> 并配置进行x11转发,方便图形化界面的显示
 ```
 Host MyRos
   HostName 192.168.50.50
   User ros
   Port 10022
+  ForwardX11 yes
+  ForwardX11Trusted yes
 ```
 
 ## 设置容器开机自启动

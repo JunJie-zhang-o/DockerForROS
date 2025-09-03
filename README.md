@@ -23,7 +23,17 @@ docker build -t cros:latest
 
 > 添加 --privileged参数,释放内核安全限制,可以访问硬件等
 
-`docker run -itd --privileged -e DISPLAY=${HOSTNAME}:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v /home/jay/01-RosSpace:/home/ros/01-RosSpace -v /dev:/dev --net ros_network --ip 192.168.50.50 --name ros-noetic cros`
+如果是Mac，建议使用该命令
+
+```
+docker run -itd --privileged -e DISPLAY=${HOSTNAME}:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v /home/jay/01-RosSpace:/home/ros/01-RosSpace -v /dev:/dev --net ros_network --ip 192.168.50.50 --name ros-noetic cros
+```
+
+如果是Ubuntu，建议使用该命令
+
+```
+docker run -itd --privileged -e DISPLAY=${DISPLAY} -v /tmp/.X11-unix:/tmp/.X11-unix -v /home/jay/01-RosSpace:/home/ros/01-RosSpace -v /dev:/dev --net ros_network --ip 192.168.50.50 --name ros-noetic cros
+```
 
 ## 创建一个自定义的启动命令
 

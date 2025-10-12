@@ -1,0 +1,44 @@
+services:
+  ros-noetic-focal:
+    image: cros
+    container_name: ros-noetic-focal
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-RosSpace
+      - /dev:/dev
+    networks:
+      ros_network:
+        ipv4_address: 192.168.50.60
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+  ros-noetic-jammy:
+    image: cros22
+    container_name: ros-noetic-jammy
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-RosSpace
+      - /dev:/dev
+    networks:
+      ros_network:
+        ipv4_address: 192.168.50.70
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+networks:
+  # ros_network:
+  #   driver: bridge
+  #   ipam:
+  #     config:
+  #       - subnet: 192.168.50.0/24
+  ros_network:
+    external: true
+    name: ros_network

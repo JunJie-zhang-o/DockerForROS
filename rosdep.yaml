@@ -1,0 +1,158 @@
+actionlib:
+  ubuntu: ros-noetic-actionlib
+actionlib_msgs:
+  ubuntu: ros-noetic-actionlib-msgs
+bond:
+  ubuntu: ros-noetic-bond
+bond_core:
+  ubuntu: ros-noetic-bond-core
+bondcpp:
+  ubuntu: ros-noetic-bondcpp
+bondpy:
+  ubuntu: ros-noetic-bondpy
+catkin:
+  ubuntu: ros-noetic-catkin
+class_loader:
+  ubuntu: ros-noetic-class-loader
+cmake_modules:
+  ubuntu: ros-noetic-cmake-modules
+common_msgs:
+  ubuntu: ros-noetic-common-msgs
+cpp_common:
+  ubuntu: ros-noetic-cpp-common
+diagnostic_msgs:
+  ubuntu: ros-noetic-diagnostic-msgs
+dynamic_reconfigure:
+  ubuntu: ros-noetic-dynamic-reconfigure
+gencpp:
+  ubuntu: ros-noetic-gencpp
+geneus:
+  ubuntu: ros-noetic-geneus
+genlisp:
+  ubuntu: ros-noetic-genlisp
+genmsg:
+  ubuntu: ros-noetic-genmsg
+gennodejs:
+  ubuntu: ros-noetic-gennodejs
+genpy:
+  ubuntu: ros-noetic-genpy
+geometry_msgs:
+  ubuntu: ros-noetic-geometry-msgs
+message_filters:
+  ubuntu: ros-noetic-message-filters
+message_generation:
+  ubuntu: ros-noetic-message-generation
+message_runtime:
+  ubuntu: ros-noetic-message-runtime
+mk:
+  ubuntu: ros-noetic-mk
+nav_msgs:
+  ubuntu: ros-noetic-nav-msgs
+nodelet:
+  ubuntu: ros-noetic-nodelet
+nodelet_core:
+  ubuntu: ros-noetic-nodelet-core
+nodelet_topic_tools:
+  ubuntu: ros-noetic-nodelet-topic-tools
+pluginlib:
+  ubuntu: ros-noetic-pluginlib
+ros:
+  ubuntu: ros-noetic-ros
+ros_base:
+  ubuntu: ros-noetic-ros-base
+ros_comm:
+  ubuntu: ros-noetic-ros-comm
+ros_core:
+  ubuntu: ros-noetic-ros-core
+ros_environment:
+  ubuntu: ros-noetic-ros-environment
+rosbag:
+  ubuntu: ros-noetic-rosbag
+rosbag_migration_rule:
+  ubuntu: ros-noetic-rosbag-migration-rule
+rosbag_storage:
+  ubuntu: ros-noetic-rosbag-storage
+rosbash:
+  ubuntu: ros-noetic-rosbash
+rosboost_cfg:
+  ubuntu: ros-noetic-rosboost-cfg
+rosbuild:
+  ubuntu: ros-noetic-rosbuild
+rosclean:
+  ubuntu: ros-noetic-rosclean
+rosconsole:
+  ubuntu: ros-noetic-rosconsole
+rosconsole_bridge:
+  ubuntu: ros-noetic-rosconsole-bridge
+roscpp:
+  ubuntu: ros-noetic-roscpp
+roscpp_core:
+  ubuntu: ros-noetic-roscpp-core
+roscpp_serialization:
+  ubuntu: ros-noetic-roscpp-serialization
+roscpp_traits:
+  ubuntu: ros-noetic-roscpp-traits
+roscreate:
+  ubuntu: ros-noetic-roscreate
+rosgraph:
+  ubuntu: ros-noetic-rosgraph
+rosgraph_msgs:
+  ubuntu: ros-noetic-rosgraph-msgs
+roslang:
+  ubuntu: ros-noetic-roslang
+roslaunch:
+  ubuntu: ros-noetic-roslaunch
+roslib:
+  ubuntu: ros-noetic-roslib
+roslisp:
+  ubuntu: ros-noetic-roslisp
+roslz4:
+  ubuntu: ros-noetic-roslz4
+rosmake:
+  ubuntu: ros-noetic-rosmake
+rosmaster:
+  ubuntu: ros-noetic-rosmaster
+rosmsg:
+  ubuntu: ros-noetic-rosmsg
+rosnode:
+  ubuntu: ros-noetic-rosnode
+rosout:
+  ubuntu: ros-noetic-rosout
+rospack:
+  ubuntu: ros-noetic-rospack
+rosparam:
+  ubuntu: ros-noetic-rosparam
+rospy:
+  ubuntu: ros-noetic-rospy
+rosservice:
+  ubuntu: ros-noetic-rosservice
+rostest:
+  ubuntu: ros-noetic-rostest
+rostime:
+  ubuntu: ros-noetic-rostime
+rostopic:
+  ubuntu: ros-noetic-rostopic
+rosunit:
+  ubuntu: ros-noetic-rosunit
+roswtf:
+  ubuntu: ros-noetic-roswtf
+sensor_msgs:
+  ubuntu: ros-noetic-sensor-msgs
+shape_msgs:
+  ubuntu: ros-noetic-shape-msgs
+smclib:
+  ubuntu: ros-noetic-smclib
+std_msgs:
+  ubuntu: ros-noetic-std-msgs
+std_srvs:
+  ubuntu: ros-noetic-std-srvs
+stereo_msgs:
+  ubuntu: ros-noetic-stereo-msgs
+topic_tools:
+  ubuntu: ros-noetic-topic-tools
+trajectory_msgs:
+  ubuntu: ros-noetic-trajectory-msgs
+visualization_msgs:
+  ubuntu: ros-noetic-visualization-msgs
+xmlrpcpp:
+  ubuntu: ros-noetic-xmlrpcpp

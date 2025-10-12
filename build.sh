@@ -1,20 +1,33 @@
 #!/bin/bash
-###
- # @Author       : Jay jay.zhangjunjie@outlook.com
- # @Date         : 2025-07-08 23:32:06
- # @LastEditTime : 2025-10-12 13:11:24
- # @LastEditors  : jay jay.zhangjunjie@outlook.com
- # @Description  : 
-### 
+# 检查参数是否正确
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 {focal|jammy|ubuntu2004|ubuntu2204}"
+  exit 1
+fi
+# 根据传入的参数设置 Dockerfile 和目标镜像名称
+case $1 in
+  focal|ubuntu2004)
+    DOCKERFILE="Dockerfile.NoeticOnFocal"
+    IMAGE_NAME="cros20"
+    ;;
+  jammy|ubuntu2204)
+    DOCKERFILE="Dockerfile.NoeticOnJammy"
+    IMAGE_NAME="cros22"
+    ;;
+  *)
+    echo "Invalid argument: $1"
+    echo "Usage: $0 {focal|jammy|ubuntu2004|ubuntu2204}"
+    exit 1
+    ;;
+esac
+# 执行 docker build 命令
+docker build --platform=linux/amd64 \
+             --build-arg UID="$(id -u)" \
+             --build-arg GID="$(id -g)" \
+             -t $IMAGE_NAME \
+             -f $DOCKERFILE .
 
-# cros 为镜像名称
-docker build --platform=linux/amd64 --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t cros:latest . 
 
-# 后续如何创建实例
-# my_cros为实例名称 cros为镜像名称
-# docker run -it -e DISPLAY=${HOSTNAME}:0 -v /tmp/.X11-unix:/tmp/.X11-unix  --name my_cros cros zsh
-
-# 如何运行
-# docker exec -it my_cros
-
-
+# How to test containers:
+# docker run -it --rm cros20
+# docker run -it --rm cros22

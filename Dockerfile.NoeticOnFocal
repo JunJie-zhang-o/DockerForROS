@@ -54,7 +54,6 @@ RUN pip3 install \
     sh \
     requests \
     fire \
-    loguru \
     -i https://pypi.tuna.tsinghua.edu.cn/simple
 # ----------------------------------------------------------------------------
 # 创建组和用户并指定 UID/GID

@@ -1,6 +1,11 @@
 
 
 
-☐ 添加文档
-☐ 如何RemoteSSH
-☐ 如何x11图形化显示
+✔ 添加文档 @done(25-10-12 22:25)
+✔ 如何RemoteSSH @done(25-10-12 22:25)
+✔ 如何x11图形化显示 @done(25-10-12 22:25)
+
+
+✔ Noetic on Focal 支持 @done(25-10-12 22:25)
+✔ Noetic on Jammy 支持 @done(25-10-12 22:25)
+✔ docker-compose 支持 @done(25-10-12 22:25)

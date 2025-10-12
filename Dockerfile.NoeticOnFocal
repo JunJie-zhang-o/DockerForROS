@@ -12,11 +12,12 @@ RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirrors.aliyun.com/ubuntu
 # ----------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------
+# 打包工具以及Python依赖安装
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y bash-completion openssh-server net-tools nano zsh git curl x11-apps iputils-ping sshpass fakeroot debhelper unzip zip tree python3-pip
 
-RUN pip3 install pytest pytest-dependency pytest-env bloom -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip3 install pytest pytest-dependency pytest-env bloom sh requests fire -i https://pypi.tuna.tsinghua.edu.cn/simple
 # ----------------------------------------------------------------------------
 
 
@@ -58,9 +59,14 @@ RUN echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
 RUN echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
 RUN echo 'Port 10022' >> /etc/ssh/sshd_config
 # ----------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------
 # 配置ros环境变量
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 RUN echo "source /opt/ros/noetic/setup.zsh" >> ~/.zshrc
+RUN echo "umask 0002" >> ~/.bashrc
+RUN echo "umask 0002" >> ~/.zshrc
 # ----------------------------------------------------------------------------
 ENV DISPLAY=:0
 

@@ -3,12 +3,15 @@ services:
     image: cros
     container_name: ros-noetic-focal
     privileged: true
+    user: ros
     environment:
       - DISPLAY=${DISPLAY}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-RosSpace
       - /dev:/dev
+      # TODO: 这里的挂载路径需要改成自己的
+      # - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-RosSpace
+      - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
     networks:
       ros_network:
         ipv4_address: 192.168.50.60
@@ -20,12 +23,16 @@ services:
     image: cros22
     container_name: ros-noetic-jammy
     privileged: true
+    user: ros
+    userns_mode: "host"
     environment:
       - DISPLAY=${DISPLAY}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-RosSpace
       - /dev:/dev
+      # TODO: 这里的挂载路径需要改成自己的
+      # - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-RosSpace
+      - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
     networks:
       ros_network:
         ipv4_address: 192.168.50.70
@@ -34,11 +41,6 @@ services:
     restart: unless-stopped
 
 networks:
-  # ros_network:
-  #   driver: bridge
-  #   ipam:
-  #     config:
-  #       - subnet: 192.168.50.0/24
   ros_network:
     external: true
     name: ros_network

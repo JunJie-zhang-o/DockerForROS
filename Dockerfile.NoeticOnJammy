@@ -54,7 +54,7 @@ RUN unzip /tmp/*.zip -d /tmp/ && \
 # ----------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------
-# 打包工具安装
+# 打包工具以及Python依赖安装
 RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get install -y \
@@ -64,7 +64,7 @@ RUN apt-get update && \
     pip3 install bloom && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-RUN pip3 install pytest pytest-dependency pytest-env
+RUN pip3 install pytest pytest-dependency pytest-env bloom sh requests fire -i https://pypi.tuna.tsinghua.edu.cn/simple
 # ----------------------------------------------------------------------------
     
 # ----------------------------------------------------------------------------
@@ -94,9 +94,9 @@ ARG UID=1002
 ARG GID=1002
 
 RUN groupadd -g $GID ros && \
-useradd -m -u $UID -g $GID -s /bin/zsh ros && \
-echo "ros:1234" | chpasswd && \
-usermod -aG sudo ros
+    useradd -m -u $UID -g $GID -s /bin/zsh ros && \
+    echo "ros:1234" | chpasswd && \
+    usermod -aG sudo ros
 # ----------------------------------------------------------------------------
     
 # ----------------------------------------------------------------------------
@@ -134,6 +134,8 @@ RUN echo 'Port 10022' >> /etc/ssh/sshd_config
 # 配置ros环境变量
 RUN echo "source /opt/ros/noetic/setup.zsh" >> ~/.zshrc
 RUN echo "source /opt/ros/noetic/setup.zsh" >> ~/.bashrc
+RUN echo "umask 0002" >> ~/.bashrc
+RUN echo "umask 0002" >> ~/.zshrc
 # ----------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------

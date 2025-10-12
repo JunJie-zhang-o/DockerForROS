@@ -60,11 +60,19 @@ RUN apt-get update && \
     apt-get install -y \
     fakeroot \
     debhelper \
-    makeself && \
-    pip3 install bloom && \
+    makeself \
+    dnsutils && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-RUN pip3 install pytest pytest-dependency pytest-env bloom sh requests fire -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip3 install \
+    pytest \
+    pytest-dependency \
+    pytest-env \
+    bloom \
+    sh \
+    requests \
+    fire \
+    -i https://pypi.tuna.tsinghua.edu.cn/simple
 # ----------------------------------------------------------------------------
     
 # ----------------------------------------------------------------------------
@@ -141,7 +149,10 @@ RUN echo "umask 0002" >> ~/.zshrc
 # ----------------------------------------------------------------------------
 ENV DISPLAY=:0
 
-USER ros
+COPY entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
+
+# USER ros
 WORKDIR /home/ros
 
 # 暴露 SSH 端口

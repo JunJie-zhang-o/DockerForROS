@@ -1,6 +1,6 @@
 services:
   ros-noetic-focal:
-    image: cros
+    image: cros20
     container_name: ros-noetic-focal
     privileged: true
     user: ros
@@ -24,7 +24,6 @@ services:
     container_name: ros-noetic-jammy
     privileged: true
     user: ros
-    userns_mode: "host"
     environment:
       - DISPLAY=${DISPLAY}
     volumes:

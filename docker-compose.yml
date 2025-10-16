@@ -12,9 +12,14 @@ services:
       # TODO: 这里的挂载路径需要改成自己的
       # - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-RosSpace
       - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
-    networks:
-      ros_network:
-        ipv4_address: 192.168.50.60
+    # 使用默认网络，确保能正常访问外网
+    # networks:
+    #   ros_network:
+    #     ipv4_address: 192.168.50.60
+    network_mode: "bridge"
+    dns:
+      - 8.8.8.8
+      - 114.114.114.114
     stdin_open: true
     tty: true
     restart: unless-stopped
@@ -32,14 +37,19 @@ services:
       # TODO: 这里的挂载路径需要改成自己的
       # - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-RosSpace
       - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
-    networks:
-      ros_network:
-        ipv4_address: 192.168.50.70
+    # networks:
+    #   ros_network:
+    #     ipv4_address: 192.168.50.70
+    network_mode: "bridge"
+    dns:
+      - 8.8.8.8
+      - 114.114.114.114
     stdin_open: true
     tty: true
     restart: unless-stopped
 
-networks:
-  ros_network:
-    external: true
-    name: ros_network
+# 注释掉自定义网络，使用默认桥接网络以确保外网访问
+# networks:
+#   ros_network:
+#     external: true
+#     name: ros_network

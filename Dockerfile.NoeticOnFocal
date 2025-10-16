@@ -26,6 +26,7 @@ RUN apt-get update && \
     curl \
     x11-apps \
     iputils-ping \
+    libgoogle-glog-dev \
     sshpass && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM ubuntu:22.04
 
 # ----------------------------------------------------------------------------
@@ -97,15 +98,23 @@ RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc && \
 
 
 # ----------------------------------------------------------------------------
-# 创建 用户 并指定 UID/GID,以便与宿主机用户保持一致，方便文件权限管理
+# 创建 用户 并指定 UID/GID,以便与宿主机用户保持一致,方便文件权限管理
+# 目的: 与宿主机用户保持相同的 UID/GID,方便文件共享,避免权限问题
 ARG USERNAME=ros
 ARG UID=1002
 ARG GID=1002
-
-RUN groupadd -g $GID ros && \
+# 如果 GID 已存在(如 Mac 的 GID 20),则使用现有组;否则创建新组
+RUN if getent group $GID > /dev/null 2>&1; then \
+        GROUP_NAME=$(getent group $GID | cut -d: -f1); \
+        echo "Using existing group $GROUP_NAME (GID: $GID) for user ros"; \
+    else \
+        groupadd -g $GID ros && GROUP_NAME=ros; \
+        echo "Created new group ros (GID: $GID)"; \
+    fi && \
     useradd -m -u $UID -g $GID -s /bin/zsh ros && \
     echo "ros:1234" | chpasswd && \
-    usermod -aG sudo ros
+    usermod -aG sudo ros && \
+    echo "Created user ros (UID: $UID, GID: $GID)"
 # ----------------------------------------------------------------------------
     
 # ----------------------------------------------------------------------------

@@ -28,6 +28,7 @@ RUN apt-get update && \
     iputils-ping \
     libgoogle-glog-dev \
     sshpass && \
+    trash-cli && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 # ----------------------------------------------------------------------------
@@ -107,10 +108,18 @@ RUN echo 'Port 10022' >> /etc/ssh/sshd_config
 
 # ----------------------------------------------------------------------------
 # 配置ros环境变量
-RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
-RUN echo "source /opt/ros/noetic/setup.zsh" >> ~/.zshrc
-RUN echo "umask 0002" >> ~/.bashrc
-RUN echo "umask 0002" >> ~/.zshrc
+RUN for rc in /root/.bashrc /home/ros/.bashrc; do \
+        touch "$rc"; \
+        printf '%s\n' 'source /opt/ros/noetic/setup.bash' >> "$rc"; \
+        printf '%s\n' 'alias rm="echo \"Use trash instead of rm, or use /bin/rm to force delete\""' >> "$rc"; \
+        printf '%s\n' 'umask 0002' >> "$rc"; \
+    done && \
+    for rc in /root/.zshrc /home/ros/.zshrc; do \
+        touch "$rc"; \
+        printf '%s\n' 'source /opt/ros/noetic/setup.zsh' >> "$rc"; \
+        printf '%s\n' 'alias rm="echo \"Use trash instead of rm, or use /bin/rm to force delete\""' >> "$rc"; \
+        printf '%s\n' 'umask 0002' >> "$rc"; \
+    done
 # ----------------------------------------------------------------------------
 ENV DISPLAY=:0
 

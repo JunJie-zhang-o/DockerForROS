@@ -1,0 +1,33 @@
+
+
+
+echo "Removing directory: $_PATH_INCLUDE_PKG"
+rm -rf "$_PATH_INCLUDE_PKG"
+echo "Removing directory: $_PATH_PYTHON3_PKG"
+rm -rf "$_PATH_PYTHON3_PKG"
+
+_PATH_INCLUDE="/opt/ros/noetic/include/zj_humanoid"
+_PATH_PYTHON3="/opt/ros/noetic/lib/python3/dist-packages/zj_humanoid"
+
+# 判断第一个文件夹是否为空，如果是则删除
+if [ -d "$_PATH_INCLUDE" ]; then
+    # 检查目录是否为空（仅包含隐藏文件也视为空）
+    if [ -z "$(ls -A "$_PATH_INCLUDE")" ]; then
+        echo "Removing empty include directory: $_PATH_INCLUDE"
+        rm -rf "$_PATH_INCLUDE"
+    fi
+fi
+
+# 判断第二个文件夹是否只包含__init__.py且没有其他文件/文件夹
+if [ -d "$_PATH_PYTHON3" ]; then
+    # 获取目录下所有文件和文件夹（包括隐藏文件）
+    contents=$(ls -A "$_PATH_PYTHON3")
+    # 检查是否只有__init__.py一个文件
+    if [ "$contents" = "__init__.py" ] && [ -f "$_PATH_PYTHON3/__init__.py" ]; then
+        echo "Removing python directory with only __init__.py: $_PATH_PYTHON3"
+        rm -rf "$_PATH_PYTHON3"
+    fi
+fi
+
+
+

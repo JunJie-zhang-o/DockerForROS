@@ -1,0 +1,6 @@
+# 示例:
+# actionlib:     # 功能包名称
+#   ubuntu: ros-noetic-actionlib  # deb包名,需要注意的是 如果功能包名称中有下划线,在deb包中需要更改为-
+# 该文件用来标识ros依赖,即如果在功能包中有依赖 自定义的功能包的话,需要在该文件中列出
+urdf:
+  ubuntu: ros-noetic-urdf

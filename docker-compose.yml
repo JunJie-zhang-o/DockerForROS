@@ -2,10 +2,15 @@ services:
   ros-noetic-focal:
     image: cros20
     container_name: ros-noetic-focal
+    platform: linux/amd64
     privileged: true
     user: ros
+    runtime: nvidia
     environment:
-      - DISPLAY=${DISPLAY}
+      - DISPLAY=${DISPLAY:-:0}
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+      - QT_X11_NO_MITSHM=1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev
@@ -13,10 +18,9 @@ services:
       # - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-RosSpace
       - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
     # 使用默认网络，确保能正常访问外网
-    # networks:
-    #   ros_network:
-    #     ipv4_address: 192.168.50.60
-    network_mode: "bridge"
+    networks:
+      ros_network:
+        ipv4_address: 192.168.50.60
     dns:
       - 8.8.8.8
       - 114.114.114.114
@@ -27,20 +31,24 @@ services:
   ros-noetic-jammy:
     image: cros22
     container_name: ros-noetic-jammy
+    platform: linux/amd64
     privileged: true
     user: ros
+    runtime: nvidia
     environment:
-      - DISPLAY=${DISPLAY}
+      - DISPLAY=${DISPLAY:-:0}
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+      - QT_X11_NO_MITSHM=1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev
       # TODO: 这里的挂载路径需要改成自己的
       # - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-RosSpace
       - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
-    # networks:
-    #   ros_network:
-    #     ipv4_address: 192.168.50.70
-    network_mode: "bridge"
+    networks:
+      ros_network:
+        ipv4_address: 192.168.50.70
     dns:
       - 8.8.8.8
       - 114.114.114.114
@@ -49,7 +57,9 @@ services:
     restart: unless-stopped
 
 # 注释掉自定义网络，使用默认桥接网络以确保外网访问
-# networks:
-#   ros_network:
-#     external: true
-#     name: ros_network
+networks:
+  ros_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.50.0/24

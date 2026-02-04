@@ -17,6 +17,7 @@ RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirrors.aliyun.com/ubuntu
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
+    locales \
     bash-completion \
     openssh-server \
     net-tools \
@@ -27,10 +28,14 @@ RUN apt-get update && \
     x11-apps \
     iputils-ping \
     libgoogle-glog-dev \
-    sshpass && \
+    sshpass \
     trash-cli && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+# 生成 locale
+RUN locale-gen en_US.UTF-8 && \
+    update-locale LANG=en_US.UTF-8
 # ----------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------
@@ -55,7 +60,10 @@ RUN pip3 install \
     bloom \
     sh \
     requests \
+    loguru \
     fire \
+    plumbum \
+    dataclasses-json \
     -i https://pypi.tuna.tsinghua.edu.cn/simple
 # ----------------------------------------------------------------------------
 # 创建组和用户并指定 UID/GID
@@ -104,6 +112,37 @@ RUN echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
 RUN echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
 RUN echo 'Port 10022' >> /etc/ssh/sshd_config
 # ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# 处理rosdep 的依赖问题
+COPY resources/rosdep.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
+COPY resources/custom.yaml /etc/ros/rosdep/sources.list.d/custom.yaml
+RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc && \
+    rm -f /etc/ros/rosdep/sources.list.d/20-default.list && \
+    rosdep init && \
+    echo "yaml file:///etc/ros/rosdep/sources.list.d/rosdep.yaml" > /etc/ros/rosdep/sources.list.d/99-default.list && \
+    echo "yaml file:///etc/ros/rosdep/sources.list.d/custom.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list && \
+    rosdep update --rosdistro=noetic
+# ----------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------
+# 缓存rosdistro 镜像
+# RUN git clone --depth=1 https://github.com/ros/rosdistro.git /opt/rosdistro
+# 缓存rosdistro 镜像
+COPY resources/rosdistro-master.zip /opt/
+RUN unzip /opt/rosdistro-master.zip -d /opt/ && \
+    mv /opt/rosdistro-master /opt/rosdistro && \
+    rm -f /opt/rosdistro-master.zip
+# 设置环境变量（全局生效）
+ENV ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
+# ----------------------------------------------------------------------------
+
+# 安装 gen_deb 工具
+COPY scripts/gen_deb.py /usr/local/bin/gen_deb.py
+COPY scripts/gen_deb.py /usr/local/bin/gen_deb
+COPY scripts/postrm /usr/local/bin/postrm
+RUN chmod +x /usr/local/bin/gen_deb
 
 
 # ----------------------------------------------------------------------------

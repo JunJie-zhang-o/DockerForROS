@@ -11,19 +11,23 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
       - QT_X11_NO_MITSHM=1
+      # 设置 Master URI
+      # - ROS_MASTER_URI=http://127.0.0.1:11311
+      # - ROS_IP=127.0.0.1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev
       # TODO: 这里的挂载路径需要改成自己的
-      # - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-RosSpace
-      - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
+      - /home/zhangjunjie/00_zj_humanoid/00-Ros1Space:/home/ros/01-RosSpace
+      # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
     # 使用默认网络，确保能正常访问外网
-    networks:
-      ros_network:
-        ipv4_address: 192.168.50.60
-    dns:
-      - 8.8.8.8
-      - 114.114.114.114
+    network_mode: "host"
+    # networks:
+    #   ros_network:
+    #     ipv4_address: 192.168.50.60
+    # dns:
+    #   - 8.8.8.8
+    #   - 114.114.114.114
     stdin_open: true
     tty: true
     restart: unless-stopped
@@ -40,22 +44,26 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
       - QT_X11_NO_MITSHM=1
+      # 设置 Master URI
+      # - ROS_MASTER_URI=http://127.0.0.1:11311
+      # - ROS_IP=127.0.0.1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev
       # TODO: 这里的挂载路径需要改成自己的
-      # - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-RosSpace
-      - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
-    networks:
-      ros_network:
-        ipv4_address: 192.168.50.70
-    dns:
-      - 8.8.8.8
-      - 114.114.114.114
+      - /home/zhangjunjie/00_zj_humanoid/00-Ros1Space:/home/ros/01-RosSpace
+      # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
+    network_mode: "host"
+    # networks:
+    #   ros_network:
+    #     ipv4_address: 192.168.50.70
+    # dns:
+    #   - 8.8.8.8
+    #   - 114.114.114.114
     stdin_open: true
     tty: true
     restart: unless-stopped
-
+    
 # 注释掉自定义网络，使用默认桥接网络以确保外网访问
 networks:
   ros_network:

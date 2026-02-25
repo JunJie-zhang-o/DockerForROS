@@ -9,21 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - dockerfile: Dockerfile.NoeticOnFocal
-            image: cros20
-            name: ROS Noetic on Focal
-          - dockerfile: Dockerfile.NoeticOnJammy
-            image: cros22
-            name: ROS Noetic on Jammy
-          - dockerfile: Dockerfile.HumbleOnJammy
-            image: cros22-humble
-            name: ROS Humble on Jammy
-
-    name: Build ${{ matrix.name }}
+    name: Build ROS Humble on Jammy
 
     steps:
       - name: Checkout repository
@@ -32,16 +18,16 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build ${{ matrix.name }}
+      - name: Build ROS Humble on Jammy
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ${{ matrix.dockerfile }}
+          file: Dockerfile.HumbleOnJammy
           platforms: linux/amd64
           push: false
-          tags: ${{ matrix.image }}:latest
+          tags: cros22-humble:latest
           build-args: |
             UID=1001
             GID=1001
-          cache-from: type=gha,scope=${{ matrix.dockerfile }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.dockerfile }}
+          cache-from: type=gha,scope=Dockerfile.HumbleOnJammy
+          cache-to: type=gha,mode=max,scope=Dockerfile.HumbleOnJammy

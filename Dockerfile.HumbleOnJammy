@@ -15,11 +15,11 @@ RUN if [ "$USE_CN_MIRROR" = "true" ]; then \
 
 # ----------------------------------------------------------------------------
 # 配置ROS2 apt源为清华镜像加速
-RUN if [ "$USE_CN_MIRROR" = "true" ]; then \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] https://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" \
-    | tee /etc/apt/sources.list.d/ros2.list > /dev/null; \
-    fi
-# ----------------------------------------------------------------------------
+# RUN if [ "$USE_CN_MIRROR" = "true" ]; then \
+#     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] https://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" \
+#     | tee /etc/apt/sources.list.d/ros2.list > /dev/null; \
+#     fi
+# # ----------------------------------------------------------------------------
 
     
 # ----------------------------------------------------------------------------
@@ -137,7 +137,7 @@ RUN mkdir -p /etc/ssh /var/run/sshd
 RUN ssh-keygen -A
 RUN echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
 RUN echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
-RUN echo 'Port 10022' >> /etc/ssh/sshd_config
+RUN echo 'Port 10024' >> /etc/ssh/sshd_config
 # ----------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------
@@ -197,7 +197,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 # USER ros
 WORKDIR /home/ros
 
-EXPOSE 10022
+EXPOSE 10024
 # 启动 sshd 服务并保持容器不退出
 CMD ["sshpass", "-p", "1234", "sudo", "/usr/sbin/sshd", "-D"]
 # ----------------------------------------------------------------------------

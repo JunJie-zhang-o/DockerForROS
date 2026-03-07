@@ -112,3 +112,57 @@ Host MyRos
 ## 设置容器开机自启动
 
 `docker update --restart=always ros-noetic`
+
+## 一键管理 ROS 容器
+
+仓库已提供脚本：
+
+- `startup/foxy`：管理 `ros-foxy-focal`
+- `startup/humble`：管理 `ros-humble-jammy`
+- `startup/noetic`：管理 `ros-noetic-focal` / `ros-noetic-jammy`
+
+先在本机配置命令（任选一种）：
+
+```bash
+# 方式1：加入 PATH（推荐）
+echo 'export PATH="/home/zhangjunjie/00_zj_humanoid/000-Github/DockerForROS/startup:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+```bash
+# 方式2：软链接到全局命令
+sudo ln -sf /home/zhangjunjie/00_zj_humanoid/000-Github/DockerForROS/startup/foxy /usr/local/bin/foxy
+sudo ln -sf /home/zhangjunjie/00_zj_humanoid/000-Github/DockerForROS/startup/humble /usr/local/bin/humble
+sudo ln -sf /home/zhangjunjie/00_zj_humanoid/000-Github/DockerForROS/startup/noetic /usr/local/bin/noetic
+```
+
+使用方式：
+
+```bash
+foxy
+humble
+noetic
+```
+
+输入选项后可执行：启动(s)、重启(r)、进入(e)、关闭(c)、状态(t)。
+
+也支持直接命令参数：
+
+```bash
+foxy start
+foxy stop
+foxy enter
+foxy restart
+foxy status
+
+humble start
+humble stop
+humble enter
+humble restart
+humble status
+
+noetic start            # 默认 focal
+noetic jammy start      # 指定 jammy
+noetic focal enter      # 指定 focal
+noetic jammy            # 进入 jammy 的交互菜单
+```

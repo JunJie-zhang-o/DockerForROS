@@ -1,7 +1,7 @@
 #!/bin/bash
 # 检查参数是否正确
 if [ $# -ne 1 ]; then
-  echo "Usage: $0 {focal|jammy|ubuntu2004|ubuntu2204|humble}"
+  echo "Usage: $0 {focal|jammy|ubuntu2004|ubuntu2204|humble|foxy}"
   exit 1
 fi
 # 根据传入的参数设置 Dockerfile 和目标镜像名称
@@ -18,9 +18,13 @@ case $1 in
     DOCKERFILE="Dockerfile.HumbleOnJammy"
     IMAGE_NAME="cros22-humble"
     ;;
+  foxy)
+    DOCKERFILE="Dockerfile.FoxyOnFocal"
+    IMAGE_NAME="cros20-foxy"
+    ;;
   *)
     echo "Invalid argument: $1"
-    echo "Usage: $0 {focal|jammy|ubuntu2004|ubuntu2204|humble}"
+    echo "Usage: $0 {focal|jammy|ubuntu2004|ubuntu2204|humble|foxy}"
     exit 1
     ;;
 esac

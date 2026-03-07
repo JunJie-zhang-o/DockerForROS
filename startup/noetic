@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+COMPOSE_FILE="docker-compose.yml"
+DEFAULT_VARIANT="focal"
+VARIANT="$DEFAULT_VARIANT"
+SERVICE_NAME=""
+CONTAINER_NAME=""
+
+usage() {
+  cat <<'USAGE'
+Usage: noetic [focal|jammy] [start|stop|enter|restart|status]
+       noetic [start|stop|enter|restart|status]
+
+No argument: interactive menu.
+USAGE
+}
+
+ensure_docker() {
+  if ! command -v docker >/dev/null 2>&1; then
+    echo "Error: docker command not found"
+    exit 1
+  fi
+
+  if ! docker compose version >/dev/null 2>&1; then
+    echo "Error: docker compose is not available"
+    exit 1
+  fi
+
+  if [ ! -f "$COMPOSE_FILE" ]; then
+    echo "Error: $COMPOSE_FILE not found in current directory"
+    exit 1
+  fi
+}
+
+xhost_allow() {
+  if command -v xhost >/dev/null 2>&1; then
+    xhost +local:docker >/dev/null 2>&1 || true
+  fi
+}
+
+set_target() {
+  case "$1" in
+    focal)
+      VARIANT="focal"
+      SERVICE_NAME="ros-noetic-focal"
+      CONTAINER_NAME="ros-noetic-focal"
+      ;;
+    jammy)
+      VARIANT="jammy"
+      SERVICE_NAME="ros-noetic-jammy"
+      CONTAINER_NAME="ros-noetic-jammy"
+      ;;
+    *)
+      echo "Invalid noetic variant: $1"
+      usage
+      exit 1
+      ;;
+  esac
+}
+
+container_running() {
+  docker inspect -f '{{.State.Running}}' "$CONTAINER_NAME" 2>/dev/null | grep -q '^true$'
+}
+
+do_start() {
+  xhost_allow
+  docker compose up -d "$SERVICE_NAME"
+  echo "Started: $CONTAINER_NAME"
+}
+
+do_stop() {
+  docker compose stop "$SERVICE_NAME"
+  echo "Stopped: $CONTAINER_NAME"
+}
+
+do_enter() {
+  xhost_allow
+  if ! container_running; then
+    docker compose up -d "$SERVICE_NAME"
+  fi
+  docker compose exec "$SERVICE_NAME" /bin/zsh
+}
+
+do_restart() {
+  xhost_allow
+  docker compose restart "$SERVICE_NAME"
+  echo "Restarted: $CONTAINER_NAME"
+}
+
+do_status() {
+  if container_running; then
+    echo "Status (${VARIANT}): running"
+  else
+    echo "Status (${VARIANT}): stopped"
+  fi
+}
+
+choose_variant_interactive() {
+  echo "请选择 noetic 容器版本: focal(f) jammy(j)"
+  read -r v
+  case "$v" in
+    f|focal|"") set_target "focal" ;;
+    j|jammy) set_target "jammy" ;;
+    *)
+      echo "无效版本: $v"
+      exit 1
+      ;;
+  esac
+}
+
+dispatch_action() {
+  case "$1" in
+    start|s) do_start ;;
+    stop|c) do_stop ;;
+    enter|exec|e) do_enter ;;
+    restart|r) do_restart ;;
+    status|t) do_status ;;
+    *)
+      echo "Invalid action: $1"
+      usage
+      exit 1
+      ;;
+  esac
+}
+
+interactive_menu() {
+  choose_variant_interactive
+  echo "请输入指令控制 ${CONTAINER_NAME}: 启动(s) 重启(r) 进入(e) 关闭(c) 状态(t)"
+  read -r choose
+  dispatch_action "$choose"
+}
+
+main() {
+  ensure_docker
+
+  if [ $# -eq 0 ]; then
+    interactive_menu
+    return 0
+  fi
+
+  case "$1" in
+    focal|jammy)
+      set_target "$1"
+      if [ $# -eq 1 ]; then
+        echo "请输入指令控制 ${CONTAINER_NAME}: 启动(s) 重启(r) 进入(e) 关闭(c) 状态(t)"
+        read -r choose
+        dispatch_action "$choose"
+      else
+        dispatch_action "$2"
+      fi
+      ;;
+    start|stop|enter|exec|restart|status|s|c|e|r|t)
+      set_target "$DEFAULT_VARIANT"
+      dispatch_action "$1"
+      ;;
+    -h|--help|help)
+      usage
+      ;;
+    *)
+      echo "Invalid argument: $1"
+      usage
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

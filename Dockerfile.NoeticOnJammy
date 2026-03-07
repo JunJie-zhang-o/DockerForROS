@@ -215,7 +215,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 WORKDIR /home/ros
 
 # 暴露 SSH 端口
-EXPOSE 10022
+EXPOSE 10023
 # 启动 sshd 服务并保持容器不退出
 CMD ["sshpass", "-p", "1234", "sudo", "/usr/sbin/sshd", "-D"]
 # ----------------------------------------------------------------------------

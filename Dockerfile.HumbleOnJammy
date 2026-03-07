@@ -42,7 +42,8 @@ RUN apt-get update && \
     trash-cli \
     python3-colcon-common-extensions \
     python3-vcstool \
-    ros-dev-tools && \
+    ros-dev-tools \
+    ros-humble-rmw-cyclonedds-cpp && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -179,12 +180,16 @@ RUN chmod +x /usr/local/bin/gen_deb
 RUN for rc in /root/.bashrc /home/ros/.bashrc; do \
         touch "$rc"; \
         printf '%s\n' 'source /opt/ros/humble/setup.bash' >> "$rc"; \
+        printf '%s\n' '# 可选: 使用 CycloneDDS' >> "$rc"; \
+        printf '%s\n' '# export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp' >> "$rc"; \
         printf '%s\n' 'alias rm="echo \"Use trash instead of rm, or use /bin/rm to force delete\""' >> "$rc"; \
         printf '%s\n' 'umask 0002' >> "$rc"; \
     done && \
     for rc in /root/.zshrc /home/ros/.zshrc; do \
         touch "$rc"; \
         printf '%s\n' 'source /opt/ros/humble/setup.zsh' >> "$rc"; \
+        printf '%s\n' '# 可选: 使用 CycloneDDS' >> "$rc"; \
+        printf '%s\n' '# export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp' >> "$rc"; \
         printf '%s\n' 'alias rm="echo \"Use trash instead of rm, or use /bin/rm to force delete\""' >> "$rc"; \
         printf '%s\n' 'umask 0002' >> "$rc"; \
     done

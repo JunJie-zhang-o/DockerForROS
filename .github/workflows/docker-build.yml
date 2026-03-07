@@ -42,22 +42,29 @@ jobs:
           - image: NoeticOnJammy
             dockerfile: Dockerfile.NoeticOnJammy
             tag: cros22-noetic:latest
-    # 如果手动触发且选择了特定镜像，则只构建该镜像；否则构建所有镜像
-    if: |
-      github.event_name != 'workflow_dispatch' || 
-      github.event.inputs.image == 'all' || 
-      github.event.inputs.image == matrix.image
     name: Build ROS ${{ matrix.image }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          github.event.inputs.image == 'all' ||
+          github.event.inputs.image == matrix.image
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          github.event.inputs.image == 'all' ||
+          github.event.inputs.image == matrix.image
 
       - name: Build Docker Image - ${{ matrix.image }}
         uses: docker/build-push-action@v6
+        if: |
+          github.event_name != 'workflow_dispatch' ||
+          github.event.inputs.image == 'all' ||
+          github.event.inputs.image == matrix.image
         with:
           context: .
           file: ${{ matrix.dockerfile }}

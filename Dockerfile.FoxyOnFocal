@@ -1,0 +1,203 @@
+FROM osrf/ros:foxy-desktop-full
+# ----------------------------------------------------------------------------
+ARG USE_CN_MIRROR=true
+ENV DEBIAN_FRONTEND=noninteractive \
+    TZ=Asia/Shanghai \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:zh \
+    LC_ALL=en_US.UTF-8
+
+RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak
+RUN if [ "$USE_CN_MIRROR" = "true" ]; then \
+    sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirrors.aliyun.com/ubuntu/|g' /etc/apt/sources.list; \
+    fi
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# 配置ROS2 apt源为清华镜像加速
+# RUN if [ "$USE_CN_MIRROR" = "true" ]; then \
+#     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] https://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" \
+#     | tee /etc/apt/sources.list.d/ros2.list > /dev/null; \
+#     fi
+# # ----------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------
+# 系统依赖
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y \
+    locales \
+    bash-completion \
+    openssh-server \
+    net-tools \
+    nano \
+    zsh \
+    git \
+    curl \
+    x11-apps \
+    iputils-ping \
+    libgoogle-glog-dev \
+    sshpass \
+    trash-cli \
+    python3-colcon-common-extensions \
+    python3-vcstool \
+    ros-dev-tools && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# 生成 locale
+RUN locale-gen en_US.UTF-8 && \
+    update-locale LANG=en_US.UTF-8
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# 打包工具以及Python依赖安装
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y \
+    fakeroot \
+    debhelper \
+    unzip \
+    zip \
+    tree \
+    python3-pip \
+    dnsutils && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN if [ "$USE_CN_MIRROR" = "true" ]; then \
+    pip3 install \
+        pytest \
+        pytest-dependency \
+        pytest-env \
+        bloom \
+        sh \
+        requests \
+        loguru \
+        fire \
+        plumbum \
+        dataclasses-json \
+        -i https://pypi.tuna.tsinghua.edu.cn/simple; \
+    else \
+    pip3 install \
+        pytest \
+        pytest-dependency \
+        pytest-env \
+        bloom \
+        sh \
+        requests \
+        loguru \
+        fire \
+        plumbum \
+        dataclasses-json; \
+    fi
+# ----------------------------------------------------------------------------
+# 创建组和用户并指定 UID/GID
+# 目的: 与宿主机用户保持相同的 UID/GID,方便文件共享,避免权限问题
+ARG USERNAME=ros
+ARG UID=1002
+ARG GID=1002
+# 如果 GID 已存在(如 Mac 的 GID 20),则使用现有组;否则创建新组
+RUN if getent group $GID > /dev/null 2>&1; then \
+        GROUP_NAME=$(getent group $GID | cut -d: -f1); \
+        echo "Using existing group $GROUP_NAME (GID: $GID) for user ros"; \
+    else \
+        groupadd -g $GID ros && GROUP_NAME=ros; \
+        echo "Created new group ros (GID: $GID)"; \
+    fi && \
+    useradd -m -u $UID -g $GID -s /bin/zsh ros && \
+    echo "ros:1234" | chpasswd && \
+    usermod -aG sudo ros && \
+    echo "Created user ros (UID: $UID, GID: $GID)"
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# 安装zsh及oh-my-zsh和插件
+USER ros
+ENV HOME=/home/ros
+RUN sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
+RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+RUN sed -i 's/^ZSH_THEME=".*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc
+RUN sed -i 's/^plugins=(.*)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc
+# 修复p10k配置无法rainbow的问题
+RUN echo "[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh" >> ~/.zshrc && \
+    echo "export TERM=xterm-256color" >> ~/.zshrc && \
+    echo "export TERM=xterm-256color" >> ~/.bashrc
+COPY .p10k.zsh /home/ros/.p10k.zsh
+# ----------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------
+# SSH 配置
+USER root
+RUN mkdir -p /etc/ssh /var/run/sshd
+RUN ssh-keygen -A
+RUN echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
+RUN echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
+RUN echo 'Port 10025' >> /etc/ssh/sshd_config
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# 处理rosdep 的依赖问题
+COPY resources/rosdep.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
+COPY resources/custom.yaml /etc/ros/rosdep/sources.list.d/custom.yaml
+RUN echo "source /opt/ros/foxy/setup.bash" >> ~/.bashrc && \
+    rm -f /etc/ros/rosdep/sources.list.d/20-default.list && \
+    rosdep init && \
+    echo "yaml file:///etc/ros/rosdep/sources.list.d/rosdep.yaml" > /etc/ros/rosdep/sources.list.d/99-default.list && \
+    echo "yaml file:///etc/ros/rosdep/sources.list.d/custom.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list
+    # rosdep update --rosdistro=foxy
+# 切换到 ros 用户更新数据库，这样生成的 .ros 属于 ros 用户
+USER ros
+RUN rosdep update --rosdistro=foxy
+USER root
+# ----------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------
+# 缓存rosdistro 镜像
+COPY resources/rosdistro-master.zip /opt/
+RUN unzip /opt/rosdistro-master.zip -d /opt/ && \
+    mv /opt/rosdistro-master /opt/rosdistro && \
+    rm -f /opt/rosdistro-master.zip
+# 设置环境变量（全局生效）
+ENV ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
+# ----------------------------------------------------------------------------
+
+# 安装 gen_deb 工具
+COPY scripts/gen_deb.py /usr/local/bin/gen_deb.py
+COPY scripts/gen_deb.py /usr/local/bin/gen_deb
+COPY scripts/postrm /usr/local/bin/postrm
+RUN chmod +x /usr/local/bin/gen_deb
+
+
+# ----------------------------------------------------------------------------
+# 配置ros2环境变量
+RUN for rc in /root/.bashrc /home/ros/.bashrc; do \
+        touch "$rc"; \
+        printf '%s\n' 'source /opt/ros/foxy/setup.bash' >> "$rc"; \
+        printf '%s\n' 'alias rm="echo \"Use trash instead of rm, or use /bin/rm to force delete\""' >> "$rc"; \
+        printf '%s\n' 'umask 0002' >> "$rc"; \
+    done && \
+    for rc in /root/.zshrc /home/ros/.zshrc; do \
+        touch "$rc"; \
+        printf '%s\n' 'source /opt/ros/foxy/setup.zsh' >> "$rc"; \
+        printf '%s\n' 'alias rm="echo \"Use trash instead of rm, or use /bin/rm to force delete\""' >> "$rc"; \
+        printf '%s\n' 'umask 0002' >> "$rc"; \
+    done
+# ----------------------------------------------------------------------------
+ENV DISPLAY=:0
+
+COPY entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
+
+# USER ros
+WORKDIR /home/ros
+
+EXPOSE 10025
+# 启动 sshd 服务并保持容器不退出
+CMD ["sshpass", "-p", "1234", "sudo", "/usr/sbin/sshd", "-D"]
+# ----------------------------------------------------------------------------

@@ -17,7 +17,8 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev
-      - ${HOME}/.ssh:/home/ros/.ssh:ro
+      - ${HOME}/.ssh:/home/ros/.ssh
+      - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
       # TODO: 这里的挂载路径需要改成自己的
       - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-Ros1Space
       # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
@@ -51,7 +52,8 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev
-      - ${HOME}/.ssh:/home/ros/.ssh:ro
+      - ${HOME}/.ssh:/home/ros/.ssh
+      - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
       # TODO: 这里的挂载路径需要改成自己的
       - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-Ros1Space
       # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
@@ -84,7 +86,8 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev
-      - ${HOME}/.ssh:/home/ros/.ssh:ro
+      - ${HOME}/.ssh:/home/ros/.ssh
+      - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
       # TODO: 这里的挂载路径需要改成自己的
       - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/01-Ros2Space
       # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
@@ -117,7 +120,8 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev
-      - ${HOME}/.ssh:/home/ros/.ssh:ro
+      - ${HOME}/.ssh:/home/ros/.ssh
+      - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
       # TODO: 这里的挂载路径需要改成自己的
       - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/01-Ros2Space
       # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace

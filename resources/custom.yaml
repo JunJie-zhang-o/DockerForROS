@@ -2,5 +2,54 @@
 # actionlib:     # 功能包名称
 #   ubuntu: ros-noetic-actionlib  # deb包名,需要注意的是 如果功能包名称中有下划线,在deb包中需要更改为-
 # 该文件用来标识ros依赖,即如果在功能包中有依赖 自定义的功能包的话,需要在该文件中列出
-urdf:
-  ubuntu: ros-noetic-urdf
+pico_runtime:
+  ubuntu: [zj-humanoid-ros-noetic-pico-runtime]
+legged_common:
+  ubuntu: [zj-humanoid-ros-noetic-legged-common]
+legged_hw:
+  ubuntu: [zj-humanoid-ros-noetic-legged-hw]
+legged_messages:
+  ubuntu: [zj-humanoid-ros-noetic-legged-messages]
+legged_nav_description:
+  ubuntu: [zj-humanoid-ros-noetic-legged-nav-description]
+legged_nav2_hw:
+  ubuntu: [zj-humanoid-ros-noetic-legged-nav2-hw]
+upperlimb:
+  ubuntu: [zj-humanoid-ros-noetic-upperlimb]
+uplimb_interface:
+  ubuntu: [zj-humanoid-ros-noetic-uplimb-interface]
+hand:
+  ubuntu: [zj-humanoid-ros-noetic-hand]
+dexhand_interface:
+  ubuntu: [zj-humanoid-ros-noetic-dexhand-interface]
+zj_robot:
+  ubuntu: [zj-humanoid-ros-noetic-zj-robot]
+robot_state:
+  ubuntu: [zj-humanoid-ros-noetic-robot-state]
+audio:
+  ubuntu: [zj-humanoid-ros-noetic-audio]
+hand:
+  ubuntu: [zj-humanoid-ros-noetic-hand]
+manipulation:
+  ubuntu: [zj-humanoid-ros-noetic-manipulation]
+navigation:
+  ubuntu: [zj-humanoid-ros-noetic-navigation]
+sensor:
+  ubuntu: [zj-humanoid-ros-noetic-sensor]
+chassis_msgs:
+  ubuntu: [zj-humanoid-ros-noetic-chassis-msgs]
+media_play:
+  ubuntu: [zj-humanoid-ros-noetic-media-play]
+pico_states:
+  ubuntu: [zj-humanoid-ros-noetic-pico-states]
+text_show:
+  ubuntu: [zj-humanoid-ros-noetic-text-show]
+livox_ros_driver2:
+  ubuntu: [zj-humanoid-ros-noetic-livox-ros-driver2]
+
+naviai_speaker:
+  ubuntu: [zj-humanoid-ros-noetic-naviai-speaker]
+naviai_mic_driver:
+  ubuntu: [zj-humanoid-ros-noetic-naviai-mic-driver]
+naviai_audio_launch:
+  ubuntu: [zj-humanoid-ros-noetic-naviai-audio-launch]

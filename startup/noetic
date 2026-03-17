@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-COMPOSE_FILE="docker-compose.yml"
 DEFAULT_VARIANT="focal"
 VARIANT="$DEFAULT_VARIANT"
 SERVICE_NAME=""
 CONTAINER_NAME=""
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+COMMON_SCRIPT="$SCRIPT_DIR/../scripts/startup_ros.sh"
 
 usage() {
   cat <<'USAGE'
@@ -14,29 +15,6 @@ Usage: noetic [focal|jammy] [start|stop|enter|restart|status]
 
 No argument: interactive menu.
 USAGE
-}
-
-ensure_docker() {
-  if ! command -v docker >/dev/null 2>&1; then
-    echo "Error: docker command not found"
-    exit 1
-  fi
-
-  if ! docker compose version >/dev/null 2>&1; then
-    echo "Error: docker compose is not available"
-    exit 1
-  fi
-
-  if [ ! -f "$COMPOSE_FILE" ]; then
-    echo "Error: $COMPOSE_FILE not found in current directory"
-    exit 1
-  fi
-}
-
-xhost_allow() {
-  if command -v xhost >/dev/null 2>&1; then
-    xhost +local:docker >/dev/null 2>&1 || true
-  fi
 }
 
 set_target() {
@@ -59,43 +37,6 @@ set_target() {
   esac
 }
 
-container_running() {
-  docker inspect -f '{{.State.Running}}' "$CONTAINER_NAME" 2>/dev/null | grep -q '^true$'
-}
-
-do_start() {
-  xhost_allow
-  docker compose up -d "$SERVICE_NAME"
-  echo "Started: $CONTAINER_NAME"
-}
-
-do_stop() {
-  docker compose stop "$SERVICE_NAME"
-  echo "Stopped: $CONTAINER_NAME"
-}
-
-do_enter() {
-  xhost_allow
-  if ! container_running; then
-    docker compose up -d "$SERVICE_NAME"
-  fi
-  docker compose exec "$SERVICE_NAME" /bin/zsh
-}
-
-do_restart() {
-  xhost_allow
-  docker compose restart "$SERVICE_NAME"
-  echo "Restarted: $CONTAINER_NAME"
-}
-
-do_status() {
-  if container_running; then
-    echo "Status (${VARIANT}): running"
-  else
-    echo "Status (${VARIANT}): stopped"
-  fi
-}
-
 choose_variant_interactive() {
   echo "请选择 noetic 容器版本: focal(f) jammy(j)"
   read -r v
@@ -110,18 +51,7 @@ choose_variant_interactive() {
 }
 
 dispatch_action() {
-  case "$1" in
-    start|s) do_start ;;
-    stop|c) do_stop ;;
-    enter|exec|e) do_enter ;;
-    restart|r) do_restart ;;
-    status|t) do_status ;;
-    *)
-      echo "Invalid action: $1"
-      usage
-      exit 1
-      ;;
-  esac
+  exec bash "$COMMON_SCRIPT" "$SERVICE_NAME" "$CONTAINER_NAME" "$1"
 }
 
 interactive_menu() {
@@ -132,7 +62,10 @@ interactive_menu() {
 }
 
 main() {
-  ensure_docker
+  if [ ! -f "$COMMON_SCRIPT" ]; then
+    echo "Error: $COMMON_SCRIPT not found"
+    exit 1
+  fi
 
   if [ $# -eq 0 ]; then
     interactive_menu

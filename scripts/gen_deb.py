@@ -155,7 +155,7 @@ class ROSPackageBuilder:
 
 
     def install(self):
-        sudo["apt-get", "install", "-y", self.deb_path] & FG
+        sudo["apt-get", "install", "-y", "--allow-downgrades", self.deb_path] & FG
 
 
 

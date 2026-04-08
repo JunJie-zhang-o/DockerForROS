@@ -29,9 +29,9 @@ services:
     # networks:
     #   ros_network:
     #     ipv4_address: 192.168.50.60
-    # dns:
-    #   - 8.8.8.8
-    #   - 114.114.114.114
+    dns:
+      - 8.8.8.8
+      - 114.114.114.114
     stdin_open: true
     tty: true
     restart: unless-stopped
@@ -65,9 +65,9 @@ services:
     # networks:
     #   ros_network:
     #     ipv4_address: 192.168.50.70
-    # dns:
-    #   - 8.8.8.8
-    #   - 114.114.114.114
+    dns:
+      - 8.8.8.8
+      - 114.114.114.114
     stdin_open: true
     tty: true
     restart: unless-stopped
@@ -100,9 +100,9 @@ services:
     # networks:
     #   ros_network:
     #     ipv4_address: 192.168.50.80
-    # dns:
-    #   - 8.8.8.8
-    #   - 114.114.114.114
+    dns:
+      - 8.8.8.8
+      - 114.114.114.114
     stdin_open: true
     tty: true
     restart: unless-stopped
@@ -135,9 +135,9 @@ services:
     # networks:
     #   ros_network:
     #     ipv4_address: 192.168.50.90
-    # dns:
-    #   - 8.8.8.8
-    #   - 114.114.114.114
+    dns:
+      - 8.8.8.8
+      - 114.114.114.114
     stdin_open: true
     tty: true
     restart: unless-stopped

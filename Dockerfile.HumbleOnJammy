@@ -45,6 +45,7 @@ RUN apt-get update && \
     python3-colcon-common-extensions \
     python3-vcstool \
     ros-dev-tools \
+    ros-humble-plotjuggler \
     ros-humble-rmw-cyclonedds-cpp && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

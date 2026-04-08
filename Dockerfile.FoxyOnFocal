@@ -36,6 +36,8 @@ RUN apt-get update && \
     git \
     curl \
     x11-apps \
+    iproute2 \
+    jq \
     iputils-ping \
     libgoogle-glog-dev \
     sshpass \
@@ -146,16 +148,16 @@ RUN echo 'Port 10025' >> /etc/ssh/sshd_config
 # ----------------------------------------------------------------------------
 # 处理rosdep 的依赖问题
 COPY resources/rosdep.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
-COPY resources/custom.yaml /etc/ros/rosdep/sources.list.d/custom.yaml
+COPY resources/custom2.yaml /etc/ros/rosdep/sources.list.d/custom2.yaml
 RUN echo "source /opt/ros/foxy/setup.bash" >> ~/.bashrc && \
     rm -f /etc/ros/rosdep/sources.list.d/20-default.list && \
     rosdep init && \
     echo "yaml file:///etc/ros/rosdep/sources.list.d/rosdep.yaml" > /etc/ros/rosdep/sources.list.d/99-default.list && \
-    echo "yaml file:///etc/ros/rosdep/sources.list.d/custom.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list
+    echo "yaml file:///etc/ros/rosdep/sources.list.d/custom2.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list
     # rosdep update --rosdistro=foxy
 # 切换到 ros 用户更新数据库，这样生成的 .ros 属于 ros 用户
 USER ros
-RUN rosdep update --rosdistro=foxy
+RUN rosdep update --include-eol-distros --rosdistro foxy
 USER root
 # ----------------------------------------------------------------------------
 

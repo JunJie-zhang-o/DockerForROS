@@ -1,0 +1,261 @@
+FROM ubuntu:20.04
+
+SHELL ["/bin/bash", "-c"]
+
+# ----------------------------------------------------------------------------
+ARG USE_CN_MIRROR=true
+ENV DEBIAN_FRONTEND=noninteractive \
+    TZ=Asia/Shanghai \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:zh \
+    LC_ALL=en_US.UTF-8
+
+RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak
+RUN if [ "$USE_CN_MIRROR" = "true" ]; then \
+    sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirrors.aliyun.com/ubuntu/|g' /etc/apt/sources.list; \
+    sed -i 's|http://security.ubuntu.com/ubuntu|http://mirrors.aliyun.com/ubuntu|g' /etc/apt/sources.list; \
+    fi
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# 基础工具和 Humble 源码编译依赖
+# 说明: Humble 官方目标平台是 Ubuntu 22.04，这里在 20.04 上采用源码编译方案
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y \
+    locales \
+    bash-completion \
+    openssh-server \
+    net-tools \
+    nano \
+    zsh \
+    git \
+    curl \
+    wget \
+    x11-apps \
+    iproute2 \
+    jq \
+    iputils-ping \
+    libgoogle-glog-dev \
+    sshpass \
+    trash-cli \
+    sudo \
+    gnupg2 \
+    lsb-release \
+    ca-certificates \
+    build-essential \
+    cmake \
+    unzip \
+    zip \
+    tree \
+    dnsutils \
+    python3-pip \
+    python3-venv \
+    python3-dev \
+    python3-setuptools \
+    python3-wheel \
+    python3-colcon-common-extensions \
+    python3-vcstool \
+    python3-rosdep \
+    python3-rosinstall-generator \
+    python3-bloom \
+    python3-empy \
+    python3-yaml \
+    python3-argcomplete \
+    python3-netifaces \
+    python3-nose \
+    python3-pytest \
+    python3-pytest-cov \
+    libasio-dev \
+    libtinyxml2-dev \
+    libcunit1-dev \
+    libbullet-dev \
+    libeigen3-dev \
+    libyaml-cpp-dev \
+    libpoco-dev \
+    libopencv-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    libboost-all-dev \
+    libconsole-bridge-dev \
+    libomp-dev \
+    libzmq3-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# 生成 locale，兼容宿主机通过 SSH 传入的 zh_CN.UTF-8 类别变量
+RUN sed -i 's/^# *\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen && \
+    sed -i 's/^# *\(zh_CN.UTF-8 UTF-8\)/\1/' /etc/locale.gen && \
+    locale-gen en_US.UTF-8 zh_CN.UTF-8 && \
+    update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 LANGUAGE=en_US:zh
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# Python 依赖
+RUN if [ "$USE_CN_MIRROR" = "true" ]; then \
+    pip3 install \
+        pytest \
+        pytest-dependency \
+        pytest-env \
+        bloom \
+        sh \
+        requests \
+        loguru \
+        fire \
+        plumbum \
+        dataclasses-json \
+        empy==3.3.4 \
+        catkin_pkg \
+        rosdistro \
+        rosinstall_generator \
+        vcstool \
+        colcon-common-extensions \
+        -i https://pypi.tuna.tsinghua.edu.cn/simple; \
+    else \
+    pip3 install \
+        pytest \
+        pytest-dependency \
+        pytest-env \
+        bloom \
+        sh \
+        requests \
+        loguru \
+        fire \
+        plumbum \
+        dataclasses-json \
+        empy==3.3.4 \
+        catkin_pkg \
+        rosdistro \
+        rosinstall_generator \
+        vcstool \
+        colcon-common-extensions; \
+    fi
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# 缓存 rosdistro 镜像
+COPY resources/rosdistro-master.zip /opt/
+RUN unzip /opt/rosdistro-master.zip -d /opt/ && \
+    mv /opt/rosdistro-master /opt/rosdistro && \
+    rm -f /opt/rosdistro-master.zip
+ENV ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# rosdep 配置
+COPY resources/rosdep.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
+COPY resources/custom2.yaml /etc/ros/rosdep/sources.list.d/custom2.yaml
+RUN rm -f /etc/ros/rosdep/sources.list.d/20-default.list && \
+    rosdep init && \
+    echo "yaml file:///etc/ros/rosdep/sources.list.d/rosdep.yaml" > /etc/ros/rosdep/sources.list.d/99-default.list && \
+    echo "yaml file:///etc/ros/rosdep/sources.list.d/custom2.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list && \
+    rosdep update --include-eol-distros --rosdistro humble
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# 编译 ROS 2 Humble
+WORKDIR /opt/ros/humble_ws
+RUN mkdir -p src && \
+    curl -L https://raw.githubusercontent.com/ros2/ros2/humble/ros2.repos -o /tmp/ros2.repos && \
+    vcs import src < /tmp/ros2.repos && \
+    rm -f /tmp/ros2.repos
+
+# 说明: Focal 上构建 Humble 属于非官方组合，保守跳过一部分常见问题依赖键
+RUN apt-get update && \
+    rosdep install \
+        --from-paths src \
+        --ignore-src \
+        --rosdistro humble \
+        -y \
+        --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers" && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN . /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash && \
+    colcon build \
+        --merge-install \
+        --symlink-install \
+        --cmake-args -DBUILD_TESTING=OFF && \
+    ln -s /opt/ros/humble_ws/install /opt/ros/humble
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# 创建组和用户并指定 UID/GID
+ARG USERNAME=ros
+ARG UID=1002
+ARG GID=1002
+RUN if getent group $GID > /dev/null 2>&1; then \
+        GROUP_NAME=$(getent group $GID | cut -d: -f1); \
+        echo "Using existing group $GROUP_NAME (GID: $GID) for user ros"; \
+    else \
+        groupadd -g $GID ros && GROUP_NAME=ros; \
+        echo "Created new group ros (GID: $GID)"; \
+    fi && \
+    useradd -m -u $UID -g $GID -s /bin/zsh ros && \
+    echo "ros:1234" | chpasswd && \
+    usermod -aG sudo ros && \
+    echo "Created user ros (UID: $UID, GID: $GID)"
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# 安装 zsh 及 oh-my-zsh 和插件
+USER ros
+ENV HOME=/home/ros
+RUN sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
+RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+RUN sed -i 's/^ZSH_THEME=".*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc
+RUN sed -i 's/^plugins=(.*)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc
+RUN echo "[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh" >> ~/.zshrc && \
+    echo "export TERM=xterm-256color" >> ~/.zshrc && \
+    echo "export TERM=xterm-256color" >> ~/.bashrc
+COPY .p10k.zsh /home/ros/.p10k.zsh
+# ----------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------
+# SSH 配置
+USER root
+RUN mkdir -p /etc/ssh /var/run/sshd
+RUN ssh-keygen -A
+RUN echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
+RUN echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
+RUN echo 'Port 10026' >> /etc/ssh/sshd_config
+# ----------------------------------------------------------------------------
+
+# 安装 gen_deb 工具
+COPY scripts/gen_deb.py /usr/local/bin/gen_deb.py
+COPY scripts/gen_deb.py /usr/local/bin/gen_deb
+COPY scripts/postrm /usr/local/bin/postrm
+RUN chmod +x /usr/local/bin/gen_deb
+
+# ----------------------------------------------------------------------------
+# 配置 ROS 2 环境变量
+RUN for rc in /root/.bashrc /home/ros/.bashrc; do \
+        touch "$rc"; \
+        printf '%s\n' 'if [ -f /opt/ros/humble/setup.bash ]; then source /opt/ros/humble/setup.bash; fi' >> "$rc"; \
+        printf '%s\n' '# 可选: 使用 CycloneDDS' >> "$rc"; \
+        printf '%s\n' '# export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp' >> "$rc"; \
+        printf '%s\n' 'alias rm="echo \"Use trash instead of rm, or use /bin/rm to force delete\""' >> "$rc"; \
+        printf '%s\n' 'umask 0002' >> "$rc"; \
+    done && \
+    for rc in /root/.zshrc /home/ros/.zshrc; do \
+        touch "$rc"; \
+        printf '%s\n' 'if [ -f /opt/ros/humble/setup.zsh ]; then source /opt/ros/humble/setup.zsh; fi' >> "$rc"; \
+        printf '%s\n' '# 可选: 使用 CycloneDDS' >> "$rc"; \
+        printf '%s\n' '# export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp' >> "$rc"; \
+        printf '%s\n' 'alias rm="echo \"Use trash instead of rm, or use /bin/rm to force delete\""' >> "$rc"; \
+        printf '%s\n' 'umask 0002' >> "$rc"; \
+    done
+# ----------------------------------------------------------------------------
+
+ENV DISPLAY=:0
+
+COPY entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
+
+WORKDIR /home/ros
+
+EXPOSE 10026
+CMD ["sshpass", "-p", "1234", "sudo", "/usr/sbin/sshd", "-D"]

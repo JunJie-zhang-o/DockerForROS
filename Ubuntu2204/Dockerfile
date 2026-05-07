@@ -139,6 +139,24 @@ RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc && \
 # RUN apt install sshpass && which sshpass
 
 # 设置环境变量
+# ----------------------------------------------------------------------------
+# 安装 nvm 和 Node.js 20
+USER root
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | NVM_DIR=/usr/local/nvm bash && \
+    export NVM_DIR="/usr/local/nvm" && \
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
+    nvm install 20 && \
+    nvm use 20 && \
+    nvm alias default 20 && \
+    chmod -R 777 /usr/local/nvm && \
+    for rc in /root/.bashrc /home/ros/.bashrc /root/.zshrc /home/ros/.zshrc; do \
+        if [ -f "$rc" ]; then \
+            echo 'export NVM_DIR="/usr/local/nvm"' >> "$rc"; \
+            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> "$rc"; \
+            echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion' >> "$rc"; \
+        fi; \
+    done
+# ----------------------------------------------------------------------------
 ENV DISPLAY=:0
 USER ros
 WORKDIR /home/ros

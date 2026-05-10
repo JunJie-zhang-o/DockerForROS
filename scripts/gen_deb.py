@@ -141,6 +141,7 @@ class ROSPackageBuilder:
             logger.info("📦 Building debian package...")
             fakeroot["debian/rules", "binary"] & FG
         self.get_deb_info()
+        self.clear()
 
 
     def clear(self):

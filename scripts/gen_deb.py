@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from typing import List, Optional
-from plumbum import local , FG
+from plumbum import CommandNotFound, ProcessExecutionError, local , FG
 from plumbum.cmd import sudo, chmod, echo, cat, git, sed
 from pathlib import Path
 import fire
@@ -25,6 +25,13 @@ rosdep            = local["/usr/bin/rosdep"]
 bloom_generate    = local["bloom-generate"]
 fakeroot          = local["fakeroot"]
 
+
+def is_git_repo(path: str) -> bool:
+    try:
+        with local.cwd(path):
+            return git("rev-parse", "--is-inside-work-tree").strip() == "true"
+    except (ProcessExecutionError, CommandNotFound, FileNotFoundError):
+        return False
 
 
 def get_branch_info():
@@ -115,14 +122,14 @@ class ROSPackageBuilder:
         self.deb_path, self.deb_name = None, None
 
 
-    def build(self, prefix: str="zj-humanoid", arch: str="all"):
+    def build(self, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False):
         logger.info(f"📦 Building package: {self.__pkg.name} at {self.__pkg.abs_path}")
 
         self.clear()
         with local.cwd(self.__pkg.abs_path):
 
             logger.info("🛠  Generating debian package...")
-            if os.environ.get("IS_TAG_TRIGGER") == "true":        # 打tag的时候云端也上传 tag名称就是v1.0.0等
+            if os.environ.get("IS_TAG_TRIGGER") == "true" or local_build:        # 打tag的时候云端也上传 tag名称就是v1.0.0等
             # TODO 根据构建的规则进行生成，是否要生成一个时间戳
                 bloom_generate["rosdebian", "--ros-distro", f"{ROS_VERSION}", "--unsafe"]()
             else:
@@ -226,7 +233,6 @@ class ROSPackageBuilder:
         ]
         context = "\n".join(raw_context)
         (echo[f"{context}"] >> "debian/postrm")()
-        (cat[f"{Path(__file__).resolve().parent}/postrm"] >> "debian/postrm")()
         chmod["+x", "debian/postrm"]()
 
 
@@ -271,15 +277,25 @@ class ROSPackageBuilder:
 
 class RosDebCli:
 
-    def __call__(self, workspace: str, prefix: str="zj-humanoid", arch: str="all") -> None:
 
-        with local.cwd(workspace):
-            self._packages = PackgesInfo(
-                branch_name  = git("rev-parse", "--abbrev-ref", "HEAD").strip().replace("/", "").replace("_", ""),
-                commit_count = git("rev-list", "--count", "HEAD").strip(),
-                commit_hash  = git("log", "-1", "--format=%h").strip()
+    def __init__(self):
+        self._local_build = False
+        self._packages = PackgesInfo()
 
-            )
+
+    def __call__(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False) -> None:
+        self._local_build = local_build
+
+        if not self._local_build:
+            if not is_git_repo(workspace):
+                logger.error(f"工作空间路径 {workspace} 不是一个有效的 Git 仓库，请确保在 Git 仓库中运行，或者使用 --local-build 参数进行本地构建")
+                exit(1)
+            with local.cwd(workspace):
+                self._packages = PackgesInfo(
+                    branch_name  = git("rev-parse", "--abbrev-ref", "HEAD").strip().replace("/", "").replace("_", ""),
+                    commit_count = git("rev-list", "--count", "HEAD").strip(),
+                    commit_hash  = git("log", "-1", "--format=%h").strip()
+                )
         self.build(workspace=workspace, prefix=prefix, arch=arch)
 
 

@@ -11,7 +11,13 @@ import json
 import os
 
 VERSION = "0.1.0"
-ROS_VERSION = local["/usr/bin/rosversion"]["-d"]().strip()
+
+# ROS_VERSION = local["/usr/bin/rosversion"]["-d"]().strip()
+ROS_VERSION = os.environ.get("ROS_DISTRO", None)
+if ROS_VERSION is None:
+    logger.error("未检测到 ROS 版本,请确保已正确加载 ROS 环境变量")
+    exit(1)
+
 
 rospack           = local["/opt/ros/noetic/bin/rospack"]
 catkin_make       = local["/opt/ros/noetic/bin/catkin_make"]

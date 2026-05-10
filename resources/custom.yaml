@@ -2,6 +2,10 @@
 # actionlib:     # 功能包名称
 #   ubuntu: ros-noetic-actionlib  # deb包名,需要注意的是 如果功能包名称中有下划线,在deb包中需要更改为-
 # 该文件用来标识ros依赖,即如果在功能包中有依赖 自定义的功能包的话,需要在该文件中列出
+rtipc_runtime:
+  ubuntu: [zj-humanoid-ros-noetic-rtipc-runtime]
+uplimb_runtime:
+  ubuntu: [zj-humanoid-ros-noetic-uplimb-runtime]
 pico_runtime:
   ubuntu: [zj-humanoid-ros-noetic-pico-runtime]
 legged_common:
@@ -14,6 +18,8 @@ legged_nav_description:
   ubuntu: [zj-humanoid-ros-noetic-legged-nav-description]
 legged_nav2_hw:
   ubuntu: [zj-humanoid-ros-noetic-legged-nav2-hw]
+legged_nav3t_hw:
+  ubuntu: [zj-humanoid-ros-noetic-legged-nav3t-hw]
 upperlimb:
   ubuntu: [zj-humanoid-ros-noetic-upperlimb]
 uplimb_interface:
@@ -28,8 +34,6 @@ robot_state:
   ubuntu: [zj-humanoid-ros-noetic-robot-state]
 audio:
   ubuntu: [zj-humanoid-ros-noetic-audio]
-hand:
-  ubuntu: [zj-humanoid-ros-noetic-hand]
 manipulation:
   ubuntu: [zj-humanoid-ros-noetic-manipulation]
 navigation:

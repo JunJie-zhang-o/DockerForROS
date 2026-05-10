@@ -139,7 +139,9 @@ class ROSPackageBuilder:
                 self.postrm()
 
             logger.info("📦 Building debian package...")
-            fakeroot["debian/rules", "binary"] & FG
+            # TODO 判断当前系统的CPU核心数量，如果超过10核的情况下 在根据实际情况是否要进行多核编译
+            with local.env(DEB_BUILD_OPTIONS="parallel=4 nocheck"):
+                fakeroot["debian/rules", "binary"] & FG
         self.get_deb_info()
         self.clear()
 
@@ -182,6 +184,9 @@ class ROSPackageBuilder:
         ]
         context = "\n".join(raw_context)
         (echo[f"{context}"] >> "debian/rules")()
+        # 开启多核编译
+        context = Path("debian/rules").read_text().replace("dh $@ -v", "dh $@ -v --parallel")
+        Path("debian/rules").write_text(context)
     
 
     def postrm(self):

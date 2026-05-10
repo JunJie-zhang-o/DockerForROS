@@ -3,7 +3,7 @@ FROM osrf/ros:noetic-desktop-full
 ENV DEBIAN_FRONTEND=noninteractive \
     TZ=Asia/Shanghai \
     LANG=en_US.UTF-8 \
-    LANGUAGE=en_US:zh \
+    LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8
 
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak
@@ -36,7 +36,7 @@ RUN apt-get update && \
 RUN sed -i 's/^# *\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen && \
     sed -i 's/^# *\(zh_CN.UTF-8 UTF-8\)/\1/' /etc/locale.gen && \
     locale-gen en_US.UTF-8 zh_CN.UTF-8 && \
-    update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 LANGUAGE=en_US:zh
+    update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 LANGUAGE=en_US:en
 # ----------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------

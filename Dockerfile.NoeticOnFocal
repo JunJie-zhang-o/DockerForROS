@@ -67,6 +67,27 @@ RUN pip3 install \
     dataclasses-json \
     -i https://pypi.tuna.tsinghua.edu.cn/simple
 # ----------------------------------------------------------------------------
+# 安装 nvm 和 Node.js 20
+USER root
+RUN mkdir -p /usr/local/nvm && \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | NVM_DIR=/usr/local/nvm bash && \
+    export NVM_DIR="/usr/local/nvm" && \
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
+    nvm install 20 && \
+    nvm use 20 && \
+    nvm alias default 20 && \
+    chmod -R 777 /usr/local/nvm && \
+    for rc in /root/.bashrc /home/ros/.bashrc /root/.zshrc /home/ros/.zshrc; do \
+        if [ -f "$rc" ]; then \
+            echo 'export NVM_DIR="/usr/local/nvm"' >> "$rc"; \
+            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> "$rc"; \
+            echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion' >> "$rc"; \
+        fi; \
+    done
+
+
+
+# ----------------------------------------------------------------------------
 # 创建组和用户并指定 UID/GID
 # 目的: 与宿主机用户保持相同的 UID/GID,方便文件共享,避免权限问题
 ARG USERNAME=ros
@@ -142,14 +163,13 @@ RUN unzip /opt/rosdistro-master.zip -d /opt/ && \
 # 设置环境变量（全局生效）
 ENV ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
 # ----------------------------------------------------------------------------
-
 # 安装 gen_deb 工具
 COPY scripts/gen_deb.py /usr/local/bin/gen_deb.py
 COPY scripts/gen_deb.py /usr/local/bin/gen_deb
+COPY scripts/chfs.py /usr/local/bin/chfs
 COPY scripts/postrm /usr/local/bin/postrm
-RUN chmod +x /usr/local/bin/gen_deb
-
-
+RUN chmod +x /usr/local/bin/gen_deb && \
+    chmod +x /usr/local/bin/chfs
 # ----------------------------------------------------------------------------
 # 配置ros环境变量
 RUN for rc in /root/.bashrc /home/ros/.bashrc; do \
@@ -166,29 +186,14 @@ RUN for rc in /root/.bashrc /home/ros/.bashrc; do \
     done
 # ----------------------------------------------------------------------------
 # ----------------------------------------------------------------------------
-# 安装 nvm 和 Node.js 20
-USER root
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | NVM_DIR=/usr/local/nvm bash && \
-    export NVM_DIR="/usr/local/nvm" && \
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
-    nvm install 20 && \
-    nvm use 20 && \
-    nvm alias default 20 && \
-    chmod -R 777 /usr/local/nvm && \
-    for rc in /root/.bashrc /home/ros/.bashrc /root/.zshrc /home/ros/.zshrc; do \
-        if [ -f "$rc" ]; then \
-            echo 'export NVM_DIR="/usr/local/nvm"' >> "$rc"; \
-            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> "$rc"; \
-            echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion' >> "$rc"; \
-        fi; \
-    done
+
 # ----------------------------------------------------------------------------
 ENV DISPLAY=:0
 
 COPY entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
 
-# USER ros
+USER ros
 WORKDIR /home/ros
 
 EXPOSE 10022

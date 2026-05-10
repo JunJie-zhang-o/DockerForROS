@@ -18,6 +18,10 @@ case $1 in
     DOCKERFILE="Dockerfile.HumbleOnJammy"
     IMAGE_NAME="cros22-humble"
     ;;
+  HumbleOnFoxy)
+    DOCKERFILE="Dockerfile.HumbleOnFocal"
+    IMAGE_NAME="cros20-humble"
+    ;;
   foxy)
     DOCKERFILE="Dockerfile.FoxyOnFocal"
     IMAGE_NAME="cros20-foxy"

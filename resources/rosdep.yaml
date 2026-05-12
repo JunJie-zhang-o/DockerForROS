@@ -171,3 +171,5 @@ controller_manager:
   ubuntu: ros-noetic-controller-manager
 urdf:
   ubuntu: ros-noetic-urdf
+python3-catkin-pkg-modules:
+  ubuntu: [python3-catkin-pkg]

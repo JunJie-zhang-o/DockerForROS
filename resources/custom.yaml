@@ -18,6 +18,16 @@ legged_nav_description:
   ubuntu: [zj-humanoid-ros-noetic-legged-nav-description]
 legged_nav2_hw:
   ubuntu: [zj-humanoid-ros-noetic-legged-nav2-hw]
+legged_nav2_fsm:
+  ubuntu: [zj-humanoid-ros-noetic-legged-nav2-fsm]
+legged_rl_controllers:
+  ubuntu: [zj-humanoid-ros-noetic-legged-rl-controllers]
+legged_control:
+  ubuntu: [zj-humanoid-ros-noetic-legged-control]
+libbase_fsm:
+  ubuntu: [zj-humanoid-ros-noetic-libbase-fsm]
+libonnxruntime:
+  ubuntu: [zj-humanoid-ros-noetic-libonnxruntime]
 legged_nav3t_hw:
   ubuntu: [zj-humanoid-ros-noetic-legged-nav3t-hw]
 upperlimb:

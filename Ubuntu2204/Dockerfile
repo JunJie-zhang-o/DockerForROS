@@ -3,13 +3,13 @@ FROM ubuntu:22.04
 
 # 设置环境变量
 ENV LANG=en_US.UTF-8 \
-    LANGUAGE=zh_CN:zh \
-    LC_ALL=zh_CN.UTF-8 \
+    LANGUAGE=en_US:en \
+    LC_ALL=en_US.UTF-8 \
     DEBIAN_FRONTEND=noninteractive
 
 RUN apt update && apt upgrade -y && apt install locales && \
     locale-gen en_US.UTF-8 && \
-    update-locale LANG=en_US.UTF-8
+    update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 LANGUAGE=en_US:en
 
 # 安装基础工具
 RUN apt update && apt upgrade -y && \
@@ -45,6 +45,26 @@ RUN apt update && apt upgrade -y && \
 
 # 安装 pytest 相关工具
 RUN pip3 install pytest pytest-dependency pytest-env &&  ln -s /lib/x86_64-linux-gnu/librt.so.1 /lib/x86_64-linux-gnu/librt.so
+
+# ----------------------------------------------------------------------------
+# 安装 nvm 和 Node.js 20
+USER root
+RUN mkdir -p /usr/local/nvm && \
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | NVM_DIR=/usr/local/nvm bash && \
+    export NVM_DIR="/usr/local/nvm" && \
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
+    nvm install 20 && \
+    nvm use 20 && \
+    nvm alias default 20 && \
+    chmod -R 777 /usr/local/nvm && \
+    for rc in /root/.bashrc /home/ros/.bashrc /root/.zshrc /home/ros/.zshrc; do \
+        if [ -f "$rc" ]; then \
+            echo 'export NVM_DIR="/usr/local/nvm"' >> "$rc"; \
+            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> "$rc"; \
+            echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion' >> "$rc"; \
+        fi; \
+    done
+# ----------------------------------------------------------------------------
 
 # # 安装 locales 包
 RUN apt-get update && apt-get install -y locales && \
@@ -138,25 +158,6 @@ RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc && \
     echo "source /opt/ros/noetic/setup.zsh" >> ~/.zshrc
 # RUN apt install sshpass && which sshpass
 
-# 设置环境变量
-# ----------------------------------------------------------------------------
-# 安装 nvm 和 Node.js 20
-USER root
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | NVM_DIR=/usr/local/nvm bash && \
-    export NVM_DIR="/usr/local/nvm" && \
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
-    nvm install 20 && \
-    nvm use 20 && \
-    nvm alias default 20 && \
-    chmod -R 777 /usr/local/nvm && \
-    for rc in /root/.bashrc /home/ros/.bashrc /root/.zshrc /home/ros/.zshrc; do \
-        if [ -f "$rc" ]; then \
-            echo 'export NVM_DIR="/usr/local/nvm"' >> "$rc"; \
-            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm' >> "$rc"; \
-            echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion' >> "$rc"; \
-        fi; \
-    done
-# ----------------------------------------------------------------------------
 ENV DISPLAY=:0
 USER ros
 WORKDIR /home/ros
@@ -166,4 +167,3 @@ EXPOSE 10023
 
 # 启动 sshd 服务并保持容器不退出
 CMD ["sshpass", "-p", "1234", "sudo", "/usr/sbin/sshd", "-D"]
-

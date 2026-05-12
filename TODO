@@ -9,3 +9,9 @@
 ✔ Noetic on Focal 支持 @done(25-10-12 22:25)
 ✔ Noetic on Jammy 支持 @done(25-10-12 22:25)
 ✔ docker-compose 支持 @done(25-10-12 22:25)
+
+
+☐ 将构建需要用的脚本工具都内置进来哦
+☐ gen_deb 支持普通deb的构建
+☐ gen_deb 支持ROS2编译不检查 加快构建速度
+

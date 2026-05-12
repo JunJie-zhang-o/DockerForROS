@@ -21,6 +21,7 @@ case $1 in
   HumbleOnFoxy)
     DOCKERFILE="Dockerfile.HumbleOnFocal"
     IMAGE_NAME="cros20-humble"
+    BASE_IMAGE_ARG="--build-arg BASE_IMAGE=${BASE_IMAGE:-docker.m.daocloud.io/library/ubuntu:20.04}"
     ;;
   foxy)
     DOCKERFILE="Dockerfile.FoxyOnFocal"
@@ -36,6 +37,7 @@ esac
 docker build --platform=linux/amd64 \
              --build-arg UID="$(id -u)" \
              --build-arg GID="$(id -g)" \
+             ${BASE_IMAGE_ARG} \
              -t $IMAGE_NAME \
              -f $DOCKERFILE .
 

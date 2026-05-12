@@ -1,0 +1,246 @@
+# Humble on Focal overrides for rosdep resolution during bloom debian generation.
+# Keep this file in-repo and iteratively extend when new unresolved rosdep keys appear.
+
+rclpy:
+  ubuntu:
+    focal: [ros-humble-rclpy]
+
+builtin_interfaces:
+  ubuntu:
+    focal: [ros-humble-builtin-interfaces]
+
+launch_xml:
+  ubuntu:
+    focal: [ros-humble-launch-xml]
+
+launch_yaml:
+  ubuntu:
+    focal: [ros-humble-launch-yaml]
+
+camera_calibration_parsers:
+  ubuntu:
+    focal: [ros-humble-camera-calibration-parsers]
+
+tf2_msgs:
+  ubuntu:
+    focal: [ros-humble-tf2-msgs]
+
+launch:
+  ubuntu:
+    focal: [ros-humble-launch]
+
+rosidl_default_runtime:
+  ubuntu:
+    focal: [ros-humble-rosidl-default-runtime]
+
+rosbag2:
+  ubuntu:
+    focal: [ros-humble-rosbag2]
+
+rclcpp:
+  ubuntu:
+    focal: [ros-humble-rclcpp]
+
+ament_index_python:
+  ubuntu:
+    focal: [ros-humble-ament-index-python]
+
+action_msgs:
+  ubuntu:
+    focal: [ros-humble-action-msgs]
+
+ament_index_cpp:
+  ubuntu:
+    focal: [ros-humble-ament-index-cpp]
+
+lifecycle_msgs:
+  ubuntu:
+    focal: [ros-humble-lifecycle-msgs]
+
+ament_copyright:
+  ubuntu:
+    focal: [ros-humble-ament-copyright]
+
+rcutils:
+  ubuntu:
+    focal: [ros-humble-rcutils]
+
+python_qt_binding:
+  ubuntu:
+    focal: [ros-humble-python-qt-binding]
+
+qt_gui:
+  ubuntu:
+    focal: [ros-humble-qt-gui]
+
+ament_cmake:
+  ubuntu:
+    focal: [ros-humble-ament-cmake]
+
+rqt_bag:
+  ubuntu:
+    focal: [ros-humble-rqt-bag]
+
+rosidl_default_generators:
+  ubuntu:
+    focal: [ros-humble-rosidl-default-generators]
+
+rcl_interfaces:
+  ubuntu:
+    focal: [ros-humble-rcl-interfaces]
+
+libstatistics_collector:
+  ubuntu:
+    focal: [ros-humble-libstatistics-collector]
+
+action_tutorials_interfaces:
+  ubuntu:
+    focal: [ros-humble-action-tutorials-interfaces]
+
+example_interfaces:
+  ubuntu:
+    focal: [ros-humble-example-interfaces]
+
+launch_testing:
+  ubuntu:
+    focal: [ros-humble-launch-testing]
+
+zstd_vendor:
+  ubuntu:
+    focal: [ros-humble-zstd-vendor]
+
+ament_cmake_lint_cmake:
+  ubuntu:
+    focal: [ros-humble-ament-cmake-lint-cmake]
+
+ament_cmake_xmllint:
+  ubuntu:
+    focal: [ros-humble-ament-cmake-xmllint]
+
+ament_cmake_test:
+  ubuntu:
+    focal: [ros-humble-ament-cmake-test]
+
+fastcdr:
+  ubuntu:
+    focal: [libfastcdr-dev]
+
+ament_cmake_core:
+  ubuntu:
+    focal: [ros-humble-ament-cmake-core]
+
+ament_flake8:
+  ubuntu:
+    focal: [ros-humble-ament-flake8]
+
+ament_lint:
+  ubuntu:
+    focal: [ros-humble-ament-lint]
+
+osrf_pycommon:
+  ubuntu:
+    focal: [ros-humble-osrf-pycommon]
+
+uncrustify_vendor:
+  ubuntu:
+    focal: [ros-humble-uncrustify-vendor]
+
+ament_package:
+  ubuntu:
+    focal: [ros-humble-ament-package]
+
+ament_pycodestyle:
+  ubuntu:
+    focal: [ros-humble-ament-pycodestyle]
+
+gtest_vendor:
+  ubuntu:
+    focal: [ros-humble-gtest-vendor]
+
+iceoryx_hoofs:
+  ubuntu:
+    focal: [ros-humble-iceoryx-hoofs]
+
+iceoryx_utils:
+  ubuntu:
+    focal: [ros-humble-iceoryx-utils]
+
+osrf_testing_tools_cpp:
+  ubuntu:
+    focal: [ros-humble-osrf-testing-tools-cpp]
+
+ament_cmake_gtest:
+  ubuntu:
+    focal: [ros-humble-ament-cmake-gtest]
+
+ament_lint_cmake:
+  ubuntu:
+    focal: [ros-humble-ament-lint-cmake]
+
+ament_pep257:
+  ubuntu:
+    focal: [ros-humble-ament-pep257]
+
+ament_mypy:
+  ubuntu:
+    focal: [ros-humble-ament-mypy]
+
+ament_lint_auto:
+  ubuntu:
+    focal: [ros-humble-ament-lint-auto]
+
+eigen3_cmake_module:
+  ubuntu:
+    focal: [ros-humble-eigen3-cmake-module]
+
+google_benchmark_vendor:
+  ubuntu:
+    focal: [ros-humble-google-benchmark-vendor]
+
+ament_cmake_pytest:
+  ubuntu:
+    focal: [ros-humble-ament-cmake-pytest]
+
+libcurl_vendor:
+  ubuntu:
+    focal: [ros-humble-libcurl-vendor]
+
+rpyutils:
+  ubuntu:
+    focal: [ros-humble-rpyutils]
+
+rqt_gui:
+  ubuntu:
+    focal: [ros-humble-rqt-gui]
+
+ros2bag:
+  ubuntu:
+    focal: [ros-humble-ros2bag]
+
+rqt_gui_py:
+  ubuntu:
+    focal: [ros-humble-rqt-gui-py]
+
+ament_cmake_auto:
+  ubuntu:
+    focal: [ros-humble-ament-cmake-auto]
+
+rqt_plot:
+  ubuntu:
+    focal: [ros-humble-rqt-plot]
+
+ament_lint_common:
+  ubuntu:
+    focal: [ros-humble-ament-lint-common]
+
+rmw_connextdds_common:
+  ubuntu:
+    focal: [ros-humble-rmw-connextdds-common]
+
+rcpputils:
+  ubuntu:
+    focal: [ros-humble-rcpputils]
+
+orocos_kdl_vendor:
+  ubuntu:
+    focal: [ros-humble-orocos-kdl-vendor]

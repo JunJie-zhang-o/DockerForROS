@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from re import A
 from typing import List, Optional
 from plumbum import CommandNotFound, ProcessExecutionError, local , FG
 from plumbum.cmd import sudo, chmod, echo, cat, git, sed
@@ -20,7 +21,6 @@ if ROS_VERSION is None:
 
 
 rospack           = local["/opt/ros/noetic/bin/rospack"]
-catkin_make       = local["/opt/ros/noetic/bin/catkin_make"]
 rosdep            = local["/usr/bin/rosdep"]
 bloom_generate    = local["bloom-generate"]
 fakeroot          = local["fakeroot"]
@@ -113,13 +113,110 @@ def get_workspace_packages(workspace_path):
     return package_infos
 
 
-
-class ROSPackageBuilder:
+from abc import ABC, abstractmethod
+class Builder(ABC):
 
 
     def __init__(self, pkg:PackageInfo) -> None:
         self.__pkg = pkg
         self.deb_path, self.deb_name = None, None
+
+    @abstractmethod
+    def build(self):
+        pass
+
+
+    def clear(self):
+        with local.cwd(self.__pkg.abs_path):
+            logger.info("🧹 Removing old debian and build directories...")
+            sudo["rm", "-rf", "debian", ".obj-x86_64-linux-gnu", "obj-x86_64-linux-gnu"]()
+
+
+    def install(self):
+        sudo["apt-get", "install", "-y", "--allow-downgrades", "--reinstall",self.deb_path] & FG
+
+
+    def uninstall(self):
+        sudo["apt-get", "purge", "-y", self.__pkg.deb_name] & FG
+
+    def modify_deb_name(self, prefix: str="zj-humanoid", suffix: str=None):
+        sed["-i", f"s/^Source: /Source: {prefix}-/", "debian/control"]()
+        sed["-i", f"s/^Package: /Package: {prefix}-/", "debian/control"]()
+        # sed["-i", f"1s/^\(\S\+\) (/$(echo \"{prefix}-\1\") (/", "debian/changelog"]()
+        sed["-i", f"1s/^\\(\\S\\+\\) (/{prefix}-\\1 (/", "debian/changelog"]()
+
+
+    def modify_deb_arch(self, arch: str="all"):
+        sed["-i", f"s/^Architecture: .*/Architecture: {arch}/", "debian/control"]()
+
+
+    def modify_debian_rules(self):
+        raw_context = [
+            "",
+            "override_dh_strip:",
+            "	true",
+            "",
+            "override_dh_shlibdeps:",
+            "	true",
+        ]
+        context = "\n".join(raw_context)
+        (echo[f"{context}"] >> "debian/rules")()
+        # 开启多核编译
+        context = Path("debian/rules").read_text()
+
+        # 普通包不需要 catkin 二进制包参数，仅移除该行，保留其余 configure 配置
+        context = context.replace('\t\t-DCATKIN_BUILD_BINARY_PACKAGE="1" \\', "")
+
+        context = context.replace("dh $@ -v", "dh $@ -v --parallel")
+        # 调整 catkin 二进制包安装前缀
+        context = context.replace('-DCMAKE_INSTALL_PREFIX="/usr"', '-DCMAKE_INSTALL_PREFIX="/opt/zj_humanoid"')
+        context = context.replace('-DCMAKE_PREFIX_PATH="/usr"', '-DCMAKE_PREFIX_PATH="/opt/zj_humanoid"')
+        Path("debian/rules").write_text(context)
+
+
+    def get_deb_info(self):
+        text = Path(self.__pkg.abs_path).joinpath("debian", "files").read_text()
+        self.deb_name = text.split(" ")[0]
+        self.deb_path = str(Path(self.__pkg.abs_path).joinpath("..", self.deb_name))
+        text = Path(self.__pkg.abs_path).joinpath("debian", "control").read_text()
+        for line in text.split("\n"):
+            if line.startswith("Package:"):
+                self.__pkg.deb_name = line.split(" ")[1]
+
+
+    def mv(self, dest_path:Path):
+        dest_path.mkdir(parents=True, exist_ok=True)
+        Path(self.deb_path).rename(dest_path.joinpath(self.deb_name))
+        return dest_path.joinpath(self.deb_name)
+
+
+
+
+class DebPackageBuilder(Builder):
+
+    def build(self, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False):
+        logger.info(f"📦 Building package: {self.__pkg.name} at {self.__pkg.abs_path}")
+
+        self.clear()
+        with local.cwd(self.__pkg.abs_path):
+            logger.info("🛠  Generating debian package...")
+            if os.environ.get("IS_TAG_TRIGGER") == "true" or local_build:        # 打tag的时候云端也上传 tag名称就是v1.0.0等
+            # TODO 根据构建的规则进行生成，是否要生成一个时间戳
+                bloom_generate["debian", "--native", "--unsafe"]()
+            else:
+                bloom_generate["debian", "--native", "--debian-inc", f"{get_branch_info()}", "--unsafe"]()
+            logger.info("🛠  Modifying debian/rules...")
+            self.modify_debian_rules()
+            self.modify_deb_name()
+            logger.info("📦 Building debian package...")
+            # TODO 判断当前系统的CPU核心数量，如果超过10核的情况下 在根据实际情况是否要进行多核编译
+            with local.env(DEB_BUILD_OPTIONS="parallel=4 nocheck"):
+                fakeroot["debian/rules", "binary"] & FG
+        self.get_deb_info()
+        self.clear()
+
+
+class ROSPackageBuilder(Builder):
 
 
     def build(self, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False):
@@ -151,49 +248,6 @@ class ROSPackageBuilder:
                 fakeroot["debian/rules", "binary"] & FG
         self.get_deb_info()
         self.clear()
-
-
-    def clear(self):
-        with local.cwd(self.__pkg.abs_path):
-            logger.info("🧹 Removing old debian and build directories...")
-            sudo["rm", "-rf", "debian", ".obj-x86_64-linux-gnu", "obj-x86_64-linux-gnu"]()
-
-    
-    def modify_deb_name(self, prefix: str="zj-humanoid", suffix: str=None):
-        sed["-i", f"s/^Source: /Source: {prefix}-/", "debian/control"]()
-        sed["-i", f"s/^Package: /Package: {prefix}-/", "debian/control"]()
-        # sed["-i", f"1s/^\(\S\+\) (/$(echo \"{prefix}-\1\") (/", "debian/changelog"]()
-        sed["-i", f"1s/^\\(\\S\\+\\) (/{prefix}-\\1 (/", "debian/changelog"]()
-
-
-    def modify_deb_arch(self, arch: str="all"):
-        sed["-i", f"s/^Architecture: .*/Architecture: {arch}/", "debian/control"]()
-
-
-    def install(self):
-        sudo["apt-get", "install", "-y", "--allow-downgrades", self.deb_path] & FG
-
-
-
-    def uninstall(self):
-        sudo["apt-get", "purge", "-y", self.__pkg.deb_name] & FG
-    
-
-
-    def modify_debian_rules(self):
-        raw_context = [
-            "",
-            "override_dh_strip:",
-            "	true",
-            "",
-            "override_dh_shlibdeps:",
-            "	true",
-        ]
-        context = "\n".join(raw_context)
-        (echo[f"{context}"] >> "debian/rules")()
-        # 开启多核编译
-        context = Path("debian/rules").read_text().replace("dh $@ -v", "dh $@ -v --parallel")
-        Path("debian/rules").write_text(context)
     
 
     def postrm(self):
@@ -260,19 +314,7 @@ class ROSPackageBuilder:
         return bool(is_have_msg + is_have_srv + is_have_action)
 
 
-    def get_deb_info(self):
-        text = Path(self.__pkg.abs_path).joinpath("debian", "files").read_text()
-        self.deb_name = text.split(" ")[0]
-        self.deb_path = str(Path(self.__pkg.abs_path).joinpath("..", self.deb_name))
-        text = Path(self.__pkg.abs_path).joinpath("debian", "control").read_text()
-        for line in text.split("\n"):
-            if line.startswith("Package:"):
-                self.__pkg.deb_name = line.split(" ")[1]
 
-    def mv(self, dest_path:Path):
-        dest_path.mkdir(parents=True, exist_ok=True)
-        Path(self.deb_path).rename(dest_path.joinpath(self.deb_name))
-        return dest_path.joinpath(self.deb_name)
 
 
 class RosDebCli:

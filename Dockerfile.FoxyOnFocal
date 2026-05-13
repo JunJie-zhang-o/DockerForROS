@@ -38,6 +38,8 @@ RUN apt-get update && \
     x11-apps \
     iproute2 \
     jq \
+    ripgrep \
+    clangd-18 \
     iputils-ping \
     libgoogle-glog-dev \
     sshpass \
@@ -49,6 +51,7 @@ RUN apt-get update && \
     ros-foxy-rmw-cyclonedds-cpp && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+RUN update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-18 100
 
 # 生成 locale，兼容宿主机通过 SSH 传入的 zh_CN.UTF-8 类别变量
 RUN sed -i 's/^# *\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen && \
@@ -84,6 +87,7 @@ RUN if [ "$USE_CN_MIRROR" = "true" ]; then \
         fire \
         plumbum \
         dataclasses-json \
+        yq \
         -i https://pypi.tuna.tsinghua.edu.cn/simple; \
     else \
     pip3 install \
@@ -96,7 +100,8 @@ RUN if [ "$USE_CN_MIRROR" = "true" ]; then \
         loguru \
         fire \
         plumbum \
-        dataclasses-json; \
+        dataclasses-json \
+        yq; \
     fi
 # ----------------------------------------------------------------------------
 # 安装 nvm 和 Node.js 20

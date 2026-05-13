@@ -39,6 +39,7 @@ RUN apt-get update && \
     iproute2 \
     jq \
     ripgrep \
+    bubblewrap \
     clangd-18 \
     iputils-ping \
     libgoogle-glog-dev \

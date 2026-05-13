@@ -27,6 +27,7 @@ RUN apt-get update && \
     x11-apps \
     jq \
     ripgrep \
+    bubblewrap \
     clangd-18 \
     iputils-ping \
     libgoogle-glog-dev \

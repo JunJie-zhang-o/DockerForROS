@@ -37,6 +37,7 @@ RUN apt-get update && \
     jq \
     yq \
     ripgrep \
+    bubblewrap \
     clangd-18 \
     iputils-ping \
     libgoogle-glog-dev \

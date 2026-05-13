@@ -36,6 +36,7 @@ RUN apt-get update && \
             wget \
             jq \
             ripgrep \
+            bubblewrap \
             clangd-18 \
             python3-pip \
             unzip \

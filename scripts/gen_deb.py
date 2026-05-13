@@ -288,7 +288,7 @@ class RosDebCli:
 
         if not self._local_build:
             if not is_git_repo(workspace):
-                logger.error(f"工作空间路径 {workspace} 不是一个有效的 Git 仓库，请确保在 Git 仓库中运行，或者使用 --local-build 参数进行本地构建")
+                logger.error(f"工作空间路径 {workspace} 不是一个有效的 Git 仓库，请确保在 Git 仓库中运行，或者使用 --local_build 参数进行本地构建")
                 exit(1)
             with local.cwd(workspace):
                 self._packages = PackgesInfo(

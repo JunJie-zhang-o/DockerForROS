@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import select
 from typing import List, Optional
 from plumbum import CommandNotFound, ProcessExecutionError, local , FG
 from plumbum.cmd import sudo, chmod, echo, cat, git, sed
@@ -283,7 +284,7 @@ class RosDebCli:
         self._packages = PackgesInfo()
 
 
-    def __call__(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False) -> None:
+    def __call__(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False, selected_package: Optional[str]=None) -> None:
         self._local_build = local_build
 
         if not self._local_build:
@@ -296,10 +297,10 @@ class RosDebCli:
                     commit_count = git("rev-list", "--count", "HEAD").strip(),
                     commit_hash  = git("log", "-1", "--format=%h").strip()
                 )
-        self.build(workspace=workspace, prefix=prefix, arch=arch)
+        self.build(workspace=workspace, prefix=prefix, arch=arch, selected_package=selected_package)
 
 
-    def build(self, workspace: str, prefix: str="zj-humanoid", arch: str="all") -> None:
+    def build(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", selected_package: Optional[str]=None) -> None:
         sudo["su"]()
         workspace_path = Path(workspace).expanduser().resolve()
         if not workspace_path.exists():
@@ -309,6 +310,12 @@ class RosDebCli:
         if not packages:
             logger.warning(f"未在 {workspace_path} 下找到可构建的包")
             return
+        
+        if selected_package:
+            packages = [pkg for pkg in packages if pkg.name == selected_package]
+            if not packages:
+                logger.error(f"未找到指定包: {selected_package}")
+                return
 
         builders: List[ROSPackageBuilder] = []
         for pkg in packages:
@@ -332,4 +339,4 @@ class RosDebCli:
 # /tmp/deb.json json文件
 
 if __name__ == "__main__":
-    fire.Fire(RosDebCli)
+    fire.Fire(RosDebCli())

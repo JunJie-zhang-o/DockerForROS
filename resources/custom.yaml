@@ -16,6 +16,12 @@ legged_messages:
   ubuntu: [zj-humanoid-ros-noetic-legged-messages]
 legged_nav_description:
   ubuntu: [zj-humanoid-ros-noetic-legged-nav-description]
+legged_nav_fsm:
+  ubuntu: [zj-humanoid-ros-noetic-legged-nav-fsm]
+legged_nav_libonnxruntime:
+  ubuntu: [zj-humanoid-ros-noetic-legged-nav-libonnxruntime]
+legged_nav_libbase_fsm:
+  ubuntu: [zj-humanoid-ros-noetic-legged-nav-libbase-fsm]
 legged_nav2_hw:
   ubuntu: [zj-humanoid-ros-noetic-legged-nav2-hw]
 legged_nav3t_hw:

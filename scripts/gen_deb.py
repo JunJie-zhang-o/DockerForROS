@@ -160,10 +160,10 @@ class Builder(ABC):
         raw_context = [
             "",
             "override_dh_strip:",
-            "   true",
+            "	true",
             "",
             "override_dh_shlibdeps:",
-            "   true",
+            "	true",
         ]
         context = "\n".join(raw_context)
         (echo[f"{context}"] >> "debian/rules")()

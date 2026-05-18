@@ -342,10 +342,10 @@ class RosDebCli:
         self._packages = PackgesInfo()
 
 
-    def __call__(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False, type:str="rosdebian") -> None:
+    def __call__(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False, deb_type:str="rosdebian") -> None:
         self._local_build = local_build
-        if type not in ("rosdebian", "debian"):
-            raise ValueError(f"不支持的构建类型: {type}, 仅支持 rosdebian 或 debian")
+        if deb_type not in ("rosdebian", "debian"):
+            raise ValueError(f"不支持的构建类型: {deb_type}, 仅支持 rosdebian 或 debian")
 
         if not self._local_build:
             if not is_git_repo(workspace):
@@ -357,10 +357,10 @@ class RosDebCli:
                     commit_count = git("rev-list", "--count", "HEAD").strip(),
                     commit_hash  = git("log", "-1", "--format=%h").strip()
                 )
-        self.build(workspace=workspace, prefix=prefix, arch=arch, type=type)
+        self.build(workspace=workspace, prefix=prefix, arch=arch, deb_type=deb_type)
 
 
-    def build(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", type: str="rosdebian") -> None:
+    def build(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", deb_type: str="rosdebian") -> None:
         sudo["su"]()
         workspace_path = Path(workspace).expanduser().resolve()
         if not workspace_path.exists():
@@ -372,7 +372,7 @@ class RosDebCli:
             return
 
         builders: List[Builder] = []
-        builder_cls = ROSPackageBuilder if type == "rosdebian" else DebPackageBuilder
+        builder_cls = ROSPackageBuilder if deb_type == "rosdebian" else DebPackageBuilder
         for pkg in packages:
             pkg:PackageInfo
             builder = builder_cls(pkg)

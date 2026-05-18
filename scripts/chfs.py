@@ -145,7 +145,7 @@ class Chfs:
             return False
 
         try:
-            sudo["apt", "install", "-y", str(local_path)] & FG
+            sudo["apt", "install", "-y", "--allow-downgrades", str(local_path)] & FG
         except Exception as exc:
             print(f"安装失败: {exc}")
             return False

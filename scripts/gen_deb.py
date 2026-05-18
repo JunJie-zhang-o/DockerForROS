@@ -119,11 +119,15 @@ class Builder(ABC):
 
     def __init__(self, pkg:PackageInfo) -> None:
         self.__pkg = pkg
+        self._pkg = pkg
         self.deb_path, self.deb_name = None, None
 
-    @abstractmethod
+    # @abstractmethod
     def build(self):
-        pass
+        # pass
+        # TODO 判断当前系统的CPU核心数量，如果超过10核的情况下 在根据实际情况是否要进行多核编译
+        with local.env(DEB_BUILD_OPTIONS="parallel=4 nocheck"):
+            fakeroot["debian/rules", "binary"] & FG
 
 
     def clear(self):
@@ -163,14 +167,7 @@ class Builder(ABC):
         (echo[f"{context}"] >> "debian/rules")()
         # 开启多核编译
         context = Path("debian/rules").read_text()
-
-        # 普通包不需要 catkin 二进制包参数，仅移除该行，保留其余 configure 配置
-        context = context.replace('\t\t-DCATKIN_BUILD_BINARY_PACKAGE="1" \\', "")
-
         context = context.replace("dh $@ -v", "dh $@ -v --parallel")
-        # 调整 catkin 二进制包安装前缀
-        context = context.replace('-DCMAKE_INSTALL_PREFIX="/usr"', '-DCMAKE_INSTALL_PREFIX="/opt/zj_humanoid"')
-        context = context.replace('-DCMAKE_PREFIX_PATH="/usr"', '-DCMAKE_PREFIX_PATH="/opt/zj_humanoid"')
         Path("debian/rules").write_text(context)
 
 
@@ -194,38 +191,58 @@ class Builder(ABC):
 
 class DebPackageBuilder(Builder):
 
+    def modify_debian_rules(self):
+        super().modify_debian_rules()
+        context = Path("debian/rules").read_text()
+        # 普通包不需要 catkin 二进制包参数，仅移除该行，保留其余 configure 配置
+        context = context.replace('\t\t-DCATKIN_BUILD_BINARY_PACKAGE="1" \\\n', "")
+        context = context.replace('-DCMAKE_INSTALL_PREFIX="/usr"', '-DCMAKE_INSTALL_PREFIX="/opt/zj_humanoid"')
+        context = context.replace("-DCMAKE_INSTALL_PREFIX=/usr", "-DCMAKE_INSTALL_PREFIX=/opt/zj_humanoid")
+        context = context.replace('-DCMAKE_PREFIX_PATH="/usr"', '-DCMAKE_PREFIX_PATH="/opt/zj_humanoid"')
+        context = context.replace("-DCMAKE_PREFIX_PATH=/usr", "-DCMAKE_PREFIX_PATH=/opt/zj_humanoid")
+        if "CMAKE_INSTALL_LIBDIR" not in context:
+            package_libdir = f"lib/{self._pkg.name}"
+            context = context.replace(
+                '\t\t-DCMAKE_INSTALL_PREFIX="/opt/zj_humanoid" \\\n',
+                f'\t\t-DCMAKE_INSTALL_PREFIX="/opt/zj_humanoid" \\\n\t\t-DCMAKE_INSTALL_LIBDIR="{package_libdir}" \\\n',
+            )
+        context = context.replace("dh_auto_configure -- \\\n\n", "dh_auto_configure -- \\\n")
+        Path("debian/rules").write_text(context)
+
+
     def build(self, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False):
-        logger.info(f"📦 Building package: {self.__pkg.name} at {self.__pkg.abs_path}")
+        logger.info(f"📦 Building package: {self._pkg.name} at {self._pkg.abs_path}")
 
         self.clear()
-        with local.cwd(self.__pkg.abs_path):
+        with local.cwd(self._pkg.abs_path):
             logger.info("🛠  Generating debian package...")
-            if os.environ.get("IS_TAG_TRIGGER") == "true" or local_build:        # 打tag的时候云端也上传 tag名称就是v1.0.0等
+            if os.environ.get("IS_TAG_TRIGGER") == "true" or local_build == True:        # 打tag的时候云端也上传 tag名称就是v1.0.0等
             # TODO 根据构建的规则进行生成，是否要生成一个时间戳
                 bloom_generate["debian", "--native", "--unsafe"]()
             else:
-                bloom_generate["debian", "--native", "--debian-inc", f"{get_branch_info()}", "--unsafe"]()
+                bloom_generate["debian", "--debian-inc", f"{get_branch_info()}", "--unsafe"]()
             logger.info("🛠  Modifying debian/rules...")
             self.modify_debian_rules()
-            self.modify_deb_name()
+            self.modify_deb_name(prefix)
             logger.info("📦 Building debian package...")
-            # TODO 判断当前系统的CPU核心数量，如果超过10核的情况下 在根据实际情况是否要进行多核编译
-            with local.env(DEB_BUILD_OPTIONS="parallel=4 nocheck"):
-                fakeroot["debian/rules", "binary"] & FG
+            super().build()
         self.get_deb_info()
-        self.clear()
+        # self.clear()
 
 
 class ROSPackageBuilder(Builder):
 
+    def modify_debian_rules(self):
+        super().modify_debian_rules()
+
 
     def build(self, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False):
-        logger.info(f"📦 Building package: {self.__pkg.name} at {self.__pkg.abs_path}")
+        logger.info(f"📦 Building package: {self._pkg.name} at {self._pkg.abs_path}")
 
         self.clear()
-        with local.cwd(self.__pkg.abs_path):
+        with local.cwd(self._pkg.abs_path):
 
-            logger.info("🛠  Generating debian package...")
+            logger.info("🛠  Generating rosdebian package...")
             if os.environ.get("IS_TAG_TRIGGER") == "true" or local_build:        # 打tag的时候云端也上传 tag名称就是v1.0.0等
             # TODO 根据构建的规则进行生成，是否要生成一个时间戳
                 bloom_generate["rosdebian", "--ros-distro", f"{ROS_VERSION}", "--unsafe"]()
@@ -242,16 +259,14 @@ class ROSPackageBuilder(Builder):
                 self.postinst()
                 self.postrm()
 
-            logger.info("📦 Building debian package...")
-            # TODO 判断当前系统的CPU核心数量，如果超过10核的情况下 在根据实际情况是否要进行多核编译
-            with local.env(DEB_BUILD_OPTIONS="parallel=4 nocheck"):
-                fakeroot["debian/rules", "binary"] & FG
+            logger.info("📦 Building rosdebian package...")
+            super().build()
         self.get_deb_info()
         self.clear()
     
 
     def postrm(self):
-        PKG = self.__pkg.name
+        PKG = self._pkg.name
         raw_context = [
             "",
             f"_PATH_INCLUDE_PKG=/opt/ros/noetic/include/zj_humanoid/{PKG}",
@@ -291,7 +306,7 @@ class ROSPackageBuilder(Builder):
 
 
     def postinst(self):
-        PKG = self.__pkg.name
+        PKG = self._pkg.name
         raw_context = [
             "mkdir -p /opt/ros/noetic/include/zj_humanoid",
             "mkdir -p /opt/ros/noetic/lib/python3/dist-packages/zj_humanoid",
@@ -308,9 +323,9 @@ class ROSPackageBuilder(Builder):
 
     def is_data_package(self):  
         # TODO 判断是否为数据包
-        is_have_msg = len(list(Path(self.__pkg.abs_path).rglob("*.msg")))
-        is_have_srv = len(list(Path(self.__pkg.abs_path).rglob("*.srv")))
-        is_have_action = len(list(Path(self.__pkg.abs_path).rglob("*.action")))
+        is_have_msg = len(list(Path(self._pkg.abs_path).rglob("*.msg")))
+        is_have_srv = len(list(Path(self._pkg.abs_path).rglob("*.srv")))
+        is_have_action = len(list(Path(self._pkg.abs_path).rglob("*.action")))
         return bool(is_have_msg + is_have_srv + is_have_action)
 
 
@@ -325,8 +340,10 @@ class RosDebCli:
         self._packages = PackgesInfo()
 
 
-    def __call__(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False) -> None:
+    def __call__(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False, type:str="rosdebian") -> None:
         self._local_build = local_build
+        if type not in ("rosdebian", "debian"):
+            raise ValueError(f"不支持的构建类型: {type}, 仅支持 rosdebian 或 debian")
 
         if not self._local_build:
             if not is_git_repo(workspace):
@@ -338,10 +355,10 @@ class RosDebCli:
                     commit_count = git("rev-list", "--count", "HEAD").strip(),
                     commit_hash  = git("log", "-1", "--format=%h").strip()
                 )
-        self.build(workspace=workspace, prefix=prefix, arch=arch)
+        self.build(workspace=workspace, prefix=prefix, arch=arch, type=type)
 
 
-    def build(self, workspace: str, prefix: str="zj-humanoid", arch: str="all") -> None:
+    def build(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", type: str="rosdebian") -> None:
         sudo["su"]()
         workspace_path = Path(workspace).expanduser().resolve()
         if not workspace_path.exists():
@@ -352,12 +369,13 @@ class RosDebCli:
             logger.warning(f"未在 {workspace_path} 下找到可构建的包")
             return
 
-        builders: List[ROSPackageBuilder] = []
+        builders: List[Builder] = []
+        builder_cls = ROSPackageBuilder if type == "rosdebian" else DebPackageBuilder
         for pkg in packages:
             pkg:PackageInfo
-            builder = ROSPackageBuilder(pkg)
+            builder = builder_cls(pkg)
             builders.append(builder)
-            builder.build(prefix=prefix, arch=arch)
+            builder.build(prefix=prefix, arch=arch, local_build=self._local_build)
             builder.install()
             deb_name = builder.mv(workspace_path.joinpath("dist").resolve())
             pkg.deb_name = str(deb_name)

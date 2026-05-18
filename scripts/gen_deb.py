@@ -10,6 +10,7 @@ from dataclasses import asdict, dataclass, field
 from dataclasses_json import dataclass_json
 import json
 import os
+import multiprocessing
 
 VERSION = "0.1.0"
 
@@ -125,8 +126,9 @@ class Builder(ABC):
     # @abstractmethod
     def build(self):
         # pass
-        # TODO 判断当前系统的CPU核心数量，如果超过10核的情况下 在根据实际情况是否要进行多核编译
-        with local.env(DEB_BUILD_OPTIONS="parallel=4 nocheck"):
+        cpu_count = multiprocessing.cpu_count()
+        parallel_jobs = min(max(1, cpu_count // 4), 8)
+        with local.env(DEB_BUILD_OPTIONS=f"parallel={parallel_jobs} nocheck"):
             fakeroot["debian/rules", "binary"] & FG
 
 
@@ -158,10 +160,10 @@ class Builder(ABC):
         raw_context = [
             "",
             "override_dh_strip:",
-            "	true",
+            "   true",
             "",
             "override_dh_shlibdeps:",
-            "	true",
+            "   true",
         ]
         context = "\n".join(raw_context)
         (echo[f"{context}"] >> "debian/rules")()
@@ -227,7 +229,7 @@ class DebPackageBuilder(Builder):
             logger.info("📦 Building debian package...")
             super().build()
         self.get_deb_info()
-        # self.clear()
+        self.clear()
 
 
 class ROSPackageBuilder(Builder):

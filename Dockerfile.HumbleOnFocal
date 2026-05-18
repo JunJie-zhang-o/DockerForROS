@@ -302,6 +302,7 @@ RUN chmod +x /usr/local/bin/gen_deb && \
 RUN for rc in /root/.bashrc /home/ros/.bashrc; do \
         touch "$rc"; \
         printf '%s\n' 'if [ -f /opt/ros/humble/setup.bash ]; then source /opt/ros/humble/setup.bash; fi' >> "$rc"; \
+        printf '%s\n' 'export CMAKE_PREFIX_PATH=/opt/zj_humanoid:$CMAKE_PREFIX_PATH' >> "$rc"; \
         printf '%s\n' '# 可选: 使用 CycloneDDS' >> "$rc"; \
         printf '%s\n' '# export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp' >> "$rc"; \
         printf '%s\n' 'alias rm="echo \"Use trash instead of rm, or use /bin/rm to force delete\""' >> "$rc"; \
@@ -310,6 +311,7 @@ RUN for rc in /root/.bashrc /home/ros/.bashrc; do \
     for rc in /root/.zshrc /home/ros/.zshrc; do \
         touch "$rc"; \
         printf '%s\n' 'if [ -f /opt/ros/humble/setup.zsh ]; then source /opt/ros/humble/setup.zsh; fi' >> "$rc"; \
+        printf '%s\n' 'export CMAKE_PREFIX_PATH=/opt/zj_humanoid:$CMAKE_PREFIX_PATH' >> "$rc"; \
         printf '%s\n' '# 可选: 使用 CycloneDDS' >> "$rc"; \
         printf '%s\n' '# export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp' >> "$rc"; \
         printf '%s\n' 'alias rm="echo \"Use trash instead of rm, or use /bin/rm to force delete\""' >> "$rc"; \

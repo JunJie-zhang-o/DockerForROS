@@ -1,6 +1,13 @@
 services:
   ros-noetic-focal:
     image: cros20
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: Dockerfile.NoeticOnFocal
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
     container_name: ros-noetic-focal
     platform: linux/amd64
     privileged: true
@@ -39,6 +46,13 @@ services:
 
   ros-noetic-jammy:
     image: cros22
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: Dockerfile.NoeticOnJammy
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
     container_name: ros-noetic-jammy
     platform: linux/amd64
     privileged: true
@@ -76,6 +90,13 @@ services:
 
   ros-humble-jammy:
     image: cros22-humble
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: Dockerfile.HumbleOnJammy
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
     container_name: ros-humble-jammy
     platform: linux/amd64
     privileged: true
@@ -112,6 +133,13 @@ services:
 
   ros-foxy-focal:
     image: cros20-foxy
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: Dockerfile.FoxyOnFocal
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
     container_name: ros-foxy-focal
     platform: linux/amd64
     privileged: true

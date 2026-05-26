@@ -13,6 +13,16 @@ RUN if [ "$USE_CN_MIRROR" = "true" ]; then \
     fi
 # ----------------------------------------------------------------------------
 
+RUN apt-get update && \
+    apt-get install -y ca-certificates curl gnupg && \
+    curl -fsSL -o /tmp/llvm-snapshot.gpg.key https://apt.llvm.org/llvm-snapshot.gpg.key && \
+    gpg --dearmor -o /usr/share/keyrings/apt.llvm.org.gpg /tmp/llvm-snapshot.gpg.key && \
+    rm /tmp/llvm-snapshot.gpg.key && \
+    . /etc/os-release && \
+    echo "deb [signed-by=/usr/share/keyrings/apt.llvm.org.gpg] http://apt.llvm.org/${UBUNTU_CODENAME}/ llvm-toolchain-${UBUNTU_CODENAME}-20 main" > /etc/apt/sources.list.d/llvm.list && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # ----------------------------------------------------------------------------
 # 配置ROS2 apt源为清华镜像加速
 # RUN if [ "$USE_CN_MIRROR" = "true" ]; then \

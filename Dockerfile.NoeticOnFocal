@@ -10,6 +10,16 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak
 RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirrors.aliyun.com/ubuntu/|g' /etc/apt/sources.list
 # ----------------------------------------------------------------------------
 
+RUN apt-get update && \
+    apt-get install -y ca-certificates curl gnupg && \
+    curl -fsSL -o /tmp/llvm-snapshot.gpg.key https://apt.llvm.org/llvm-snapshot.gpg.key && \
+    gpg --dearmor -o /usr/share/keyrings/apt.llvm.org.gpg /tmp/llvm-snapshot.gpg.key && \
+    rm /tmp/llvm-snapshot.gpg.key && \
+    . /etc/os-release && \
+    echo "deb [signed-by=/usr/share/keyrings/apt.llvm.org.gpg] http://apt.llvm.org/${UBUNTU_CODENAME}/ llvm-toolchain-${UBUNTU_CODENAME}-20 main" > /etc/apt/sources.list.d/llvm.list && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
     
 # ----------------------------------------------------------------------------
 # 系统依赖

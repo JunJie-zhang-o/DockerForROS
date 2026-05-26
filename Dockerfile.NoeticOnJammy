@@ -207,7 +207,11 @@ COPY resources/custom.yaml /etc/ros/rosdep/sources.list.d/custom.yaml
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc && \
     rm -f /etc/ros/rosdep/sources.list.d/20-default.list && \
     rosdep init && \
+    rm -f /etc/ros/rosdep/sources.list.d/20-default.list && \
     echo "yaml file:///etc/ros/rosdep/sources.list.d/rosdep.yaml" > /etc/ros/rosdep/sources.list.d/99-default.list && \
+    echo "yaml file:///opt/rosdistro/rosdep/base.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list && \
+    echo "yaml file:///opt/rosdistro/rosdep/python.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list && \
+    echo "yaml file:///opt/rosdistro/rosdep/ruby.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list && \
     echo "yaml file:///etc/ros/rosdep/sources.list.d/custom.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list 
     # rosdep update --rosdistro=noetic
 # 切换到 ros 用户更新数据库，这样生成的 .ros 属于 ros 用户

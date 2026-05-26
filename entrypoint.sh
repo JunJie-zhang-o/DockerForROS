@@ -6,6 +6,7 @@ DOMAINS="github.com raw.githubusercontent.com github.global.ssl.fastly.net asset
 
 # 定义hosts文件路径
 HOSTS_FILE="/etc/hosts"
+ENV_FILE="/etc/environment"
 
 echo "--- Docker Entry: Starting host configuration ---"
 
@@ -28,6 +29,11 @@ for domain in $DOMAINS; do
         sshpass -p 1234 sudo bash -c "echo \"$ip $domain\" >> $HOSTS_FILE"
     done
 done
+
+if [ -f "$ENV_FILE" ]; then
+    # ssh -X 会为每个会话设置 DISPLAY；不要让 /etc/environment 覆盖它。
+    sshpass -p 1234 sudo bash -c "sed -i '/^DISPLAY=/d' $ENV_FILE"
+fi
 
 echo "Host configuration complete."
 echo "--- Docker Entry: Handing over to final command ---"

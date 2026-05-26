@@ -19,8 +19,8 @@ services:
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
       - QT_X11_NO_MITSHM=1
       # 设置 Master URI
-      # - ROS_MASTER_URI=http://127.0.0.1:11311
-      # - ROS_IP=127.0.0.1
+      - ROS_MASTER_URI=http://127.0.0.1:11311
+      - ROS_IP=127.0.0.1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev
@@ -34,6 +34,8 @@ services:
       # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
     # 使用默认网络，确保能正常访问外网
     network_mode: "host"
+    extra_hosts:
+      - "hp-pro:127.0.1.1"
     # networks:
     #   ros_network:
     #     ipv4_address: 192.168.50.60
@@ -64,8 +66,8 @@ services:
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
       - QT_X11_NO_MITSHM=1
       # 设置 Master URI
-      # - ROS_MASTER_URI=http://127.0.0.1:11311
-      # - ROS_IP=127.0.0.1
+      - ROS_MASTER_URI=http://127.0.0.1:11311
+      - ROS_IP=127.0.0.1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev
@@ -78,6 +80,8 @@ services:
       - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/02-Ros2Space
       # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
     network_mode: "host"
+    extra_hosts:
+      - "hp-pro:127.0.1.1"
     # networks:
     #   ros_network:
     #     ipv4_address: 192.168.50.70
@@ -121,6 +125,8 @@ services:
       - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/01-Ros2Space
       # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
     network_mode: "host"
+    extra_hosts:
+      - "hp-pro:127.0.1.1"
     # networks:
     #   ros_network:
     #     ipv4_address: 192.168.50.80
@@ -164,6 +170,8 @@ services:
       - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/01-Ros2Space
       # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
     network_mode: "host"
+    extra_hosts:
+      - "hp-pro:127.0.1.1"
     # networks:
     #   ros_network:
     #     ipv4_address: 192.168.50.90

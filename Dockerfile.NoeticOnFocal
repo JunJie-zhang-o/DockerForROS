@@ -97,6 +97,30 @@ RUN mkdir -p /usr/local/nvm && \
         fi; \
     done
 
+# ----------------------------------------------------------------------------
+# pinocchio 3.4
+RUN mkdir -p /etc/apt/keyrings && \
+    apt-get update && \
+    apt-get install -qqy lsb-release curl && \
+    curl http://robotpkg.openrobots.org/packages/debian/robotpkg.asc \
+    | tee /etc/apt/keyrings/robotpkg.asc && \
+    echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/robotpkg.asc] http://robotpkg.openrobots.org/packages/debian/pub $(lsb_release -cs) robotpkg" \
+    | tee /etc/apt/sources.list.d/robotpkg.list && \
+    apt-get update && \
+    apt-get install -qqy \
+        robotpkg-casadi=3.6.7 \
+        robotpkg-py38-casadi=3.6.7 \
+        robotpkg-pinocchio=3.4.0 \
+        robotpkg-py38-pinocchio=3.4.0 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+ENV PATH=/opt/openrobots/bin:$PATH \
+    PKG_CONFIG_PATH=/opt/openrobots/lib/pkgconfig:$PKG_CONFIG_PATH \
+    LD_LIBRARY_PATH=/opt/openrobots/lib:$LD_LIBRARY_PATH \
+    PYTHONPATH=/opt/openrobots/lib/python3.8/site-packages:$PYTHONPATH \
+    CMAKE_PREFIX_PATH=/opt/openrobots:$CMAKE_PREFIX_PATH
+# ----------------------------------------------------------------------------
+
 
 
 # ----------------------------------------------------------------------------

@@ -22,38 +22,15 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # ----------------------------------------------------------------------------
-# 系统依赖
+# Noetic 离线 deb 安装前只保留必需依赖，保证后续加工具包时不打穿 ROS 安装缓存
 RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get install -y \
             locales \
-            bash-completion \
-            openssh-server \
-            net-tools \
-            nano \
-            zsh \
-            curl \
-            x11-apps \
-            language-pack-zh-hans \
-            libeigen3-dev \
-            git \
-            sudo \
-            iputils-ping \
-            clangd-20 \
-            sshpass \
-            trash-cli \
-            build-essential \
-            cmake \
-            wget \
-            python3-pip \
             unzip \
-            tree \
-            libyaml-cpp-dev \
-            libgoogle-glog-dev \
-            libzmq3-dev && \
+            language-pack-zh-hans && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-RUN update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
 
 # 生成 locale，兼容宿主机通过 SSH 传入的 zh_CN.UTF-8 类别变量
 RUN sed -i 's/^# *\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen && \
@@ -76,15 +53,39 @@ RUN unzip /tmp/*.zip -d /tmp/ && \
 
 # ----------------------------------------------------------------------------
 # 打包工具以及Python依赖安装
+# 放在 Noetic 安装层之后：之后增减开发工具/额外依赖时，可以复用上面的 ROS deb 安装缓存
 RUN apt-get update && \
-    apt-get -y upgrade && \
     apt-get install -y \
+    bash-completion \
+    openssh-server \
+    net-tools \
+    nano \
+    zsh \
+    curl \
+    bubblewrap \
+    x11-apps \
+    libeigen3-dev \
+    git \
+    sudo \
+    iputils-ping \
+    clangd-20 \
+    sshpass \
+    trash-cli \
+    build-essential \
+    cmake \
+    wget \
+    python3-pip \
+    tree \
+    libyaml-cpp-dev \
+    libgoogle-glog-dev \
+    libzmq3-dev \
     fakeroot \
     debhelper \
     makeself \
     dnsutils && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+RUN update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-20 100
 RUN pip3 install \
     pytest \
     pytest-dependency \

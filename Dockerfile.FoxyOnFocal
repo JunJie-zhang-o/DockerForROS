@@ -45,6 +45,7 @@ RUN apt-get update && \
     zsh \
     git \
     curl \
+    bubblewrap \
     x11-apps \
     iproute2 \
     jq \

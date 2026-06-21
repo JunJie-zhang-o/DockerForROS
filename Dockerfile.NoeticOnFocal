@@ -34,6 +34,7 @@ RUN apt-get update && \
     zsh \
     git \
     curl \
+    bubblewrap \
     x11-apps \
     iputils-ping \
     clangd-20 \

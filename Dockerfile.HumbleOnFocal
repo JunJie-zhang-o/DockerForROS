@@ -32,6 +32,7 @@ RUN apt-get update && \
     zsh \
     git \
     curl \
+    bubblewrap \
     wget \
     x11-apps \
     iproute2 \

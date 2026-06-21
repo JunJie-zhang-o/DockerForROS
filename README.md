@@ -53,7 +53,49 @@ esac
 ```
 
 
-## 图形化方式1 xhost
+## 图形化方式1 本机直连 X11/Wayland
+
+适合容器跑在本机 Linux 上时使用。RViz、rqt、Gazebo、OpenCV `imshow` 直接走宿主机图形 socket，不经过 `ssh -X`，带宽占用最低，性能最好。
+
+### Ubuntu / Linux
+
+宿主机执行：
+
+```bash
+xhost +local:docker
+export DISPLAY=${DISPLAY:-:0}
+export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
+export WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-0}
+```
+
+然后启动或重启容器：
+
+```bash
+docker compose up -d ros-noetic-focal
+# 或使用仓库脚本
+noetic restart
+```
+
+容器内验证：
+
+```bash
+echo $DISPLAY
+echo $XDG_RUNTIME_DIR
+echo $WAYLAND_DISPLAY
+xeyes
+```
+
+如果 `xeyes` 能弹窗，X11 已经走本机 Unix socket。Wayland 程序会通过挂载的 `$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY` 连接宿主机 Wayland socket；RViz/Gazebo 这类程序仍可继续走 X11。
+
+如果想每次登录自动允许本机 Docker 访问 X server：
+
+```bash
+echo "xhost +local:docker >/dev/null 2>&1" >> ~/.zshrc
+```
+
+> 使用 Powerlevel10k instant prompt 时，`xhost +local:docker` 的正常输出也会触发 zsh 初始化 warning，所以需要重定向输出。
+
+> Ubuntu 默认使用 Unix Domain Socket。`docker-compose.yml` 已经映射 `/tmp/.X11-unix`、`DISPLAY`、`XDG_RUNTIME_DIR` 和 `WAYLAND_DISPLAY`，本机场景不需要通过 SSH 转发图形。
 
 ### MAC + Orbstack
 
@@ -69,26 +111,31 @@ esac
 
 `xeyes` 使用该命令进行测试
 
-### Ubuntu
-
-> Ubuntu默认使用Unix Domain Socket进行通信,所以我们已经映射了对应的文件,不需要设置IP即可
-
-主机执行 `echo "xhost +local:docker" >> ~/.bashrc`,该命令用来设置主机允许本地的docker用户访问 X server
-
-主机执行 `echo $DISPLAY` 查看索引号，如`:1`,
-
-从机中确认`echo $DISPLAY` 其中应该为`:1`
-
-`xeyes` 使用该命令进行测试
-
 
 ## 图形化方式2 ssh开启转发
 
-由于我们给容器添加了ssh以及自定义的ip，所以可以通过ssh进行访问
+由于我们给容器添加了 SSH，所以可以通过 SSH 进入容器开发。
 
-`ssh -X ros@192.168.50.50`，执行过命令之后进入容器,使用`xeyes`进行测试
+本机 Linux 推荐直接 SSH 进入，不使用 `-X`：
 
-如果你有sshpass的话，可以使用 `sshpass -p '1234' ssh -X ros@192.168.50.50 -p 10022` 进行自定义命令访问
+```bash
+ssh ros@127.0.0.1 -p 10022
+```
+
+容器启动时会把 Docker Compose 注入的 `DISPLAY`、`XDG_RUNTIME_DIR`、`WAYLAND_DISPLAY` 写入 `/etc/environment`，所以 SSH 登录后可以直接使用本机挂载的 X11/Wayland socket：
+
+```bash
+echo $DISPLAY
+xeyes
+```
+
+如果连接远程机器上的容器，才使用 `ssh -X` 走 SSH 图形转发：
+
+```bash
+ssh -X ros@192.168.50.50 -p 10022
+```
+
+如果你有 `sshpass`，可以使用 `sshpass -p '1234' ssh ros@127.0.0.1 -p 10022` 进行自定义命令访问。
 
 
 ## 解决文件映射后的权限问题

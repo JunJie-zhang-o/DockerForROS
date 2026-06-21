@@ -31,8 +31,15 @@ for domain in $DOMAINS; do
 done
 
 if [ -f "$ENV_FILE" ]; then
-    # ssh -X 会为每个会话设置 DISPLAY；不要让 /etc/environment 覆盖它。
-    sshpass -p 1234 sudo bash -c "sed -i '/^DISPLAY=/d' $ENV_FILE"
+    # SSH login does not inherit Docker Compose environment variables.
+    # Persist the local graphics socket variables so plain SSH sessions can use them.
+    for name in DISPLAY XDG_RUNTIME_DIR WAYLAND_DISPLAY; do
+        value=$(eval "printf '%s' \"\${$name}\"")
+        sshpass -p 1234 sudo bash -c "sed -i '/^${name}=/d' $ENV_FILE"
+        if [ -n "$value" ]; then
+            sshpass -p 1234 sudo bash -c "printf '%s\n' '${name}=${value}' >> $ENV_FILE"
+        fi
+    done
 fi
 
 echo "Host configuration complete."

@@ -18,7 +18,7 @@ services:
       - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
       - WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-0}
       - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics,display
       - QT_X11_NO_MITSHM=1
       # 设置 Master URI
       - ROS_MASTER_URI=http://127.0.0.1:${ROS1_MASTER_PORT:-11311}
@@ -71,7 +71,7 @@ services:
       - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
       - WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-0}
       - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics,display
       - QT_X11_NO_MITSHM=1
       # 设置 Master URI
       - ROS_MASTER_URI=http://127.0.0.1:${ROS1_MASTER_PORT:-11311}
@@ -123,7 +123,7 @@ services:
       - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
       - WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-0}
       - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics,display
       - QT_X11_NO_MITSHM=1
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       # ROS2 域ID，同一网络内不同机器人需使用不同的ID
@@ -175,7 +175,7 @@ services:
       - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
       - WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-0}
       - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics,display
       - QT_X11_NO_MITSHM=1
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       # ROS2 域ID，同一网络内不同机器人需使用不同的ID

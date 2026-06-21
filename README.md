@@ -138,6 +138,117 @@ ssh -X ros@192.168.50.50 -p 10022
 如果你有 `sshpass`，可以使用 `sshpass -p '1234' ssh ros@127.0.0.1 -p 10022` 进行自定义命令访问。
 
 
+## 图形化方式3 远程高性能 3D
+
+远程机器上跑 RViz、Gazebo 这类 OpenGL 3D 程序时，推荐使用 VirtualGL + TurboVNC。远程 GPU 负责渲染，TurboVNC 只传输压缩后的画面，比 `ssh -X` 更适合 3D GUI。
+
+镜像内已安装 VirtualGL、TurboVNC、noVNC、Openbox 和 xterm，并提供 `start-vnc` 命令。启动容器后，先 SSH 进入远程容器：
+
+```bash
+ssh ros@REMOTE_HOST -p 10022
+```
+
+容器内启动 VNC 桌面：
+
+```bash
+start-vnc
+```
+
+默认配置：
+
+```text
+VNC display: :10
+VNC port: 5910
+noVNC port: 6080
+Geometry: 1920x1080
+Password: 1234
+TurboVNC listen: 127.0.0.1 only
+noVNC listen: 0.0.0.0
+VirtualGL display: egl
+```
+
+如果使用 VNC Viewer，从本机建立 SSH 隧道：
+
+```bash
+ssh -L 5910:127.0.0.1:5910 ros@REMOTE_HOST -p 10022
+```
+
+然后用 VNC Viewer 连接：
+
+```text
+localhost:5910
+```
+
+如果使用浏览器 noVNC，可以直接打开：
+
+```text
+http://REMOTE_HOST:6080/vnc.html
+```
+
+如果远程防火墙没有开放 6080，也可以从本机建立 SSH 隧道：
+
+```bash
+ssh -L 6080:127.0.0.1:6080 ros@REMOTE_HOST -p 10022
+```
+
+然后浏览器打开：
+
+```text
+http://localhost:6080/vnc.html
+```
+
+在 VNC 桌面的终端里运行 3D 程序：
+
+```bash
+echo $DISPLAY
+export DISPLAY=:10
+vglrun -d egl rviz
+vglrun -d egl gazebo
+```
+
+`echo $DISPLAY` 应该显示当前 VNC display，例如 `:10`。如果显示宿主机的 `:0`、`:1` 或 `jay-ZBOX:1`，RViz 窗口会弹到主机显示器上，需要先 `export DISPLAY=:10`。
+
+普通 2D 程序不需要 `vglrun`，例如：
+
+```bash
+rqt
+xterm
+xeyes
+```
+
+可选参数：
+
+```bash
+VNC_DISPLAY=2 VNC_GEOMETRY=2560x1440 VNC_PASSWORD=1234 start-vnc
+```
+
+如果使用 `VNC_DISPLAY=2`，VNC Viewer 隧道和端口对应改为 `5902`。noVNC 端口默认仍是 `6080`，也可以用 `NOVNC_PORT=6082 start-vnc` 修改。
+
+如果出现 `jay-ZBOX:1 is taken because of /tmp/.X11-unix/X1`，说明 `:1` 已被宿主机 X11 socket 或已有 VNC 会话占用。默认 `start-vnc` 会从 `:10` 开始自动找空闲 display；如果你手动设置了 `VNC_DISPLAY=1`，改成 `VNC_DISPLAY=10 start-vnc` 或先关闭旧会话：
+
+```bash
+/opt/TurboVNC/bin/vncserver -kill :1
+```
+
+如果不想让 noVNC 监听所有 IP，可以改回本地监听：
+
+```bash
+NOVNC_HOST=127.0.0.1 start-vnc
+```
+
+如果 `vglrun` 报错不能打开 `display :0`，说明容器访问不到宿主机的物理 Xorg。远程容器默认使用 EGL 后端，重新启动 VNC：
+
+```bash
+VGL_DISPLAY=egl start-vnc
+```
+
+只有确认容器能访问宿主机物理 X server 时，才使用：
+
+```bash
+VGL_DISPLAY=:0 start-vnc
+```
+
+
 ## 解决文件映射后的权限问题
 使用ros用户开发即可.
 

@@ -64,8 +64,6 @@ esac
 ```bash
 xhost +local:docker
 export DISPLAY=${DISPLAY:-:0}
-export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
-export WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-0}
 ```
 
 然后启动或重启容器：
@@ -80,12 +78,10 @@ noetic restart
 
 ```bash
 echo $DISPLAY
-echo $XDG_RUNTIME_DIR
-echo $WAYLAND_DISPLAY
 xeyes
 ```
 
-如果 `xeyes` 能弹窗，X11 已经走本机 Unix socket。Wayland 程序会通过挂载的 `$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY` 连接宿主机 Wayland socket；RViz/Gazebo 这类程序仍可继续走 X11。
+如果 `xeyes` 能弹窗，X11 已经走本机 Unix socket；RViz/Gazebo 这类程序可继续走 X11。
 
 如果想每次登录自动允许本机 Docker 访问 X server：
 
@@ -95,7 +91,7 @@ echo "xhost +local:docker >/dev/null 2>&1" >> ~/.zshrc
 
 > 使用 Powerlevel10k instant prompt 时，`xhost +local:docker` 的正常输出也会触发 zsh 初始化 warning，所以需要重定向输出。
 
-> Ubuntu 默认使用 Unix Domain Socket。`docker-compose.yml` 已经映射 `/tmp/.X11-unix`、`DISPLAY`、`XDG_RUNTIME_DIR` 和 `WAYLAND_DISPLAY`，本机场景不需要通过 SSH 转发图形。
+> Ubuntu 默认使用 Unix Domain Socket。`docker-compose.yml` 已经映射 `/tmp/.X11-unix` 和 `DISPLAY`，本机场景不需要通过 SSH 转发图形。
 
 ### MAC + Orbstack
 
@@ -122,7 +118,7 @@ echo "xhost +local:docker >/dev/null 2>&1" >> ~/.zshrc
 ssh ros@127.0.0.1 -p 10022
 ```
 
-容器启动时会把 Docker Compose 注入的 `DISPLAY`、`XDG_RUNTIME_DIR`、`WAYLAND_DISPLAY` 写入 `/etc/environment`，所以 SSH 登录后可以直接使用本机挂载的 X11/Wayland socket：
+容器启动时会把 Docker Compose 注入的 `DISPLAY` 写入 `/etc/environment`，所以 SSH 登录后可以直接使用本机挂载的 X11 socket：
 
 ```bash
 echo $DISPLAY
@@ -159,6 +155,36 @@ Host MyRos
 ## 设置容器开机自启动
 
 `docker update --restart=always ros-noetic`
+
+## 在 Ubuntu 22.04 容器中使用 perf
+
+`Dockerfile.NoeticOnJammy` 和 `Dockerfile.HumbleOnJammy` 已安装 `linux-tools-common`、`linux-tools-generic`。
+
+当前 `docker-compose.yml` 已对 22.04 服务启用 `privileged: true`，通常不需要再额外添加 capability。如果改成非 privileged 启动，至少需要增加：
+
+```yaml
+cap_add:
+  - PERFMON
+  - SYS_PTRACE
+security_opt:
+  - seccomp=unconfined
+```
+
+宿主机可能还需要放宽 perf 权限：
+
+```bash
+sudo sysctl kernel.perf_event_paranoid=1
+```
+
+重新构建并重建容器后验证：
+
+```bash
+docker compose build ros-noetic-jammy
+docker compose up -d --force-recreate ros-noetic-jammy
+docker exec -it ros-noetic-jammy perf stat sleep 1
+```
+
+运行中的容器不能补加 capability；如果不能重建容器，建议在宿主机运行 `perf`，针对容器进程 PID 采样。
 
 ## 一键管理 ROS 容器
 

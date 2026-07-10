@@ -15,8 +15,6 @@ services:
     runtime: nvidia
     environment:
       - DISPLAY=${DISPLAY:-:0}
-      - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
-      - WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-0}
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
       - QT_X11_NO_MITSHM=1
@@ -25,15 +23,10 @@ services:
       - ROS_IP=127.0.0.1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${XDG_RUNTIME_DIR:-/run/user/1000}:${XDG_RUNTIME_DIR:-/run/user/1000}
       - /dev:/dev
       - ${HOME}/.ssh:/home/ros/.ssh
-      # - ${HOME}/.codex:/home/ros/.codex
-      - ${HOME}/.codex/auth.json:/home/ros/.codex/auth.json
-      - ${HOME}/.codex/config.toml:/home/ros/.codex/config.toml:ro
-      - ${HOME}/.codex/skills:/home/ros/.codex/skills:ro
-      - ${HOME}/.codex/memories:/home/ros/.codex/memories
-      - ${HOME}/.claude:/home/ros/.claude
+      - ${HOME}/.codex:/home/ros/.codex
+      # - ${HOME}/.claude:/home/ros/.claude
       - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
       - ./resources/custom.yaml:/etc/ros/rosdep/sources.list.d/custom.yaml:ro
       # TODO: 这里的挂载路径需要改成自己的
@@ -72,8 +65,6 @@ services:
     runtime: nvidia
     environment:
       - DISPLAY=${DISPLAY:-:0}
-      - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
-      - WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-0}
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
       - QT_X11_NO_MITSHM=1
@@ -82,15 +73,10 @@ services:
       - ROS_IP=127.0.0.1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${XDG_RUNTIME_DIR:-/run/user/1000}:${XDG_RUNTIME_DIR:-/run/user/1000}
       - /dev:/dev
       - ${HOME}/.ssh:/home/ros/.ssh
-      # - ${HOME}/.codex:/home/ros/.codex
-      - ${HOME}/.codex/auth.json:/home/ros/.codex/auth.json
-      - ${HOME}/.codex/config.toml:/home/ros/.codex/config.toml:ro
-      - ${HOME}/.codex/skills:/home/ros/.codex/skills:ro
-      - ${HOME}/.codex/memories:/home/ros/.codex/memories
-      - ${HOME}/.claude:/home/ros/.claude
+      # - ${HOME}/.codex-ros-noetic-jammy:/home/ros/.codex
+      # - ${HOME}/.claude:/home/ros/.claude
       - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
       - ./resources/custom.yaml:/etc/ros/rosdep/sources.list.d/custom.yaml:ro
       # TODO: 这里的挂载路径需要改成自己的
@@ -128,8 +114,6 @@ services:
     runtime: nvidia
     environment:
       - DISPLAY=${DISPLAY:-:0}
-      - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
-      - WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-0}
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
       - QT_X11_NO_MITSHM=1
@@ -138,15 +122,10 @@ services:
       # - ROS_DOMAIN_ID=0
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${XDG_RUNTIME_DIR:-/run/user/1000}:${XDG_RUNTIME_DIR:-/run/user/1000}
       - /dev:/dev
       - ${HOME}/.ssh:/home/ros/.ssh
-      # - ${HOME}/.codex:/home/ros/.codex
-      - ${HOME}/.codex/auth.json:/home/ros/.codex/auth.json
-      - ${HOME}/.codex/config.toml:/home/ros/.codex/config.toml:ro
-      - ${HOME}/.codex/skills:/home/ros/.codex/skills:ro
-      - ${HOME}/.codex/memories:/home/ros/.codex/memories
-      - ${HOME}/.claude:/home/ros/.claude
+      # - ${HOME}/.codex-ros-humble-jammy:/home/ros/.codex
+      # - ${HOME}/.claude:/home/ros/.claude
       - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
       - ./resources/custom2.yaml:/etc/ros/rosdep/sources.list.d/custom2.yaml:ro
       # TODO: 这里的挂载路径需要改成自己的
@@ -184,8 +163,6 @@ services:
     runtime: nvidia
     environment:
       - DISPLAY=${DISPLAY:-:0}
-      - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
-      - WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-0}
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
       - QT_X11_NO_MITSHM=1
@@ -194,15 +171,10 @@ services:
       # - ROS_DOMAIN_ID=0
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${XDG_RUNTIME_DIR:-/run/user/1000}:${XDG_RUNTIME_DIR:-/run/user/1000}
       - /dev:/dev
       - ${HOME}/.ssh:/home/ros/.ssh
-      # - ${HOME}/.codex:/home/ros/.codex
-      - ${HOME}/.codex/auth.json:/home/ros/.codex/auth.json
-      - ${HOME}/.codex/config.toml:/home/ros/.codex/config.toml:ro
-      - ${HOME}/.codex/skills:/home/ros/.codex/skills:ro
-      - ${HOME}/.codex/memories:/home/ros/.codex/memories
-      - ${HOME}/.claude:/home/ros/.claude
+      # - ${HOME}/.codex-ros-foxy-focal:/home/ros/.codex
+      # - ${HOME}/.claude:/home/ros/.claude
       - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
       - ./resources/custom2.yaml:/etc/ros/rosdep/sources.list.d/custom2.yaml:ro
       # TODO: 这里的挂载路径需要改成自己的

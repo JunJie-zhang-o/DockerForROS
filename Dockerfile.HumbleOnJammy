@@ -45,6 +45,9 @@ RUN apt-get update && \
     zsh \
     git \
     curl \
+    htop \
+    linux-tools-common \
+    linux-tools-generic \
     bubblewrap \
     x11-apps \
     iproute2 \

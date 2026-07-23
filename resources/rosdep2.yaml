@@ -1,173 +1,173 @@
 
 actionlib:
-  ubuntu: ros-noetic-actionlib
+  ubuntu: ros-foxy-actionlib
 actionlib_msgs:
-  ubuntu: ros-noetic-actionlib-msgs
+  ubuntu: ros-foxy-actionlib-msgs
 bond:
-  ubuntu: ros-noetic-bond
+  ubuntu: ros-foxy-bond
 bond_core:
-  ubuntu: ros-noetic-bond-core
+  ubuntu: ros-foxy-bond-core
 bondcpp:
-  ubuntu: ros-noetic-bondcpp
+  ubuntu: ros-foxy-bondcpp
 bondpy:
-  ubuntu: ros-noetic-bondpy
+  ubuntu: ros-foxy-bondpy
 catkin:
-  ubuntu: ros-noetic-catkin
+  ubuntu: ros-foxy-catkin
 class_loader:
-  ubuntu: ros-noetic-class-loader
+  ubuntu: ros-foxy-class-loader
 cmake_modules:
-  ubuntu: ros-noetic-cmake-modules
+  ubuntu: ros-foxy-cmake-modules
 common_msgs:
-  ubuntu: ros-noetic-common-msgs
+  ubuntu: ros-foxy-common-msgs
 cpp_common:
-  ubuntu: ros-noetic-cpp-common
+  ubuntu: ros-foxy-cpp-common
 diagnostic_msgs:
-  ubuntu: ros-noetic-diagnostic-msgs
+  ubuntu: ros-foxy-diagnostic-msgs
 dynamic_reconfigure:
-  ubuntu: ros-noetic-dynamic-reconfigure
+  ubuntu: ros-foxy-dynamic-reconfigure
 gencpp:
-  ubuntu: ros-noetic-gencpp
+  ubuntu: ros-foxy-gencpp
 geneus:
-  ubuntu: ros-noetic-geneus
+  ubuntu: ros-foxy-geneus
 genlisp:
-  ubuntu: ros-noetic-genlisp
+  ubuntu: ros-foxy-genlisp
 genmsg:
-  ubuntu: ros-noetic-genmsg
+  ubuntu: ros-foxy-genmsg
 gennodejs:
-  ubuntu: ros-noetic-gennodejs
+  ubuntu: ros-foxy-gennodejs
 genpy:
-  ubuntu: ros-noetic-genpy
+  ubuntu: ros-foxy-genpy
 geometry_msgs:
-  ubuntu: ros-noetic-geometry-msgs
+  ubuntu: ros-foxy-geometry-msgs
 message_filters:
-  ubuntu: ros-noetic-message-filters
+  ubuntu: ros-foxy-message-filters
 message_generation:
-  ubuntu: ros-noetic-message-generation
+  ubuntu: ros-foxy-message-generation
 message_runtime:
-  ubuntu: ros-noetic-message-runtime
+  ubuntu: ros-foxy-message-runtime
 mk:
-  ubuntu: ros-noetic-mk
+  ubuntu: ros-foxy-mk
 nav_msgs:
-  ubuntu: ros-noetic-nav-msgs
+  ubuntu: ros-foxy-nav-msgs
 nodelet:
-  ubuntu: ros-noetic-nodelet
+  ubuntu: ros-foxy-nodelet
 nodelet_core:
-  ubuntu: ros-noetic-nodelet-core
+  ubuntu: ros-foxy-nodelet-core
 nodelet_topic_tools:
-  ubuntu: ros-noetic-nodelet-topic-tools
+  ubuntu: ros-foxy-nodelet-topic-tools
 pluginlib:
-  ubuntu: ros-noetic-pluginlib
+  ubuntu: ros-foxy-pluginlib
 ros:
-  ubuntu: ros-noetic-ros
+  ubuntu: ros-foxy-ros
 ros_base:
-  ubuntu: ros-noetic-ros-base
+  ubuntu: ros-foxy-ros-base
 ros_comm:
-  ubuntu: ros-noetic-ros-comm
+  ubuntu: ros-foxy-ros-comm
 ros_core:
-  ubuntu: ros-noetic-ros-core
+  ubuntu: ros-foxy-ros-core
 ros_environment:
-  ubuntu: ros-noetic-ros-environment
+  ubuntu: ros-foxy-ros-environment
 rosbag:
-  ubuntu: ros-noetic-rosbag
+  ubuntu: ros-foxy-rosbag
 rosbag_migration_rule:
-  ubuntu: ros-noetic-rosbag-migration-rule
+  ubuntu: ros-foxy-rosbag-migration-rule
 rosbag_storage:
-  ubuntu: ros-noetic-rosbag-storage
+  ubuntu: ros-foxy-rosbag-storage
 rosbash:
-  ubuntu: ros-noetic-rosbash
+  ubuntu: ros-foxy-rosbash
 rosboost_cfg:
-  ubuntu: ros-noetic-rosboost-cfg
+  ubuntu: ros-foxy-rosboost-cfg
 rosbuild:
-  ubuntu: ros-noetic-rosbuild
+  ubuntu: ros-foxy-rosbuild
 rosclean:
-  ubuntu: ros-noetic-rosclean
+  ubuntu: ros-foxy-rosclean
 rosconsole:
-  ubuntu: ros-noetic-rosconsole
+  ubuntu: ros-foxy-rosconsole
 rosconsole_bridge:
-  ubuntu: ros-noetic-rosconsole-bridge
+  ubuntu: ros-foxy-rosconsole-bridge
 roscpp:
-  ubuntu: ros-noetic-roscpp
+  ubuntu: ros-foxy-roscpp
 roscpp_core:
-  ubuntu: ros-noetic-roscpp-core
+  ubuntu: ros-foxy-roscpp-core
 roscpp_serialization:
-  ubuntu: ros-noetic-roscpp-serialization
+  ubuntu: ros-foxy-roscpp-serialization
 roscpp_traits:
-  ubuntu: ros-noetic-roscpp-traits
+  ubuntu: ros-foxy-roscpp-traits
 roscreate:
-  ubuntu: ros-noetic-roscreate
+  ubuntu: ros-foxy-roscreate
 rosgraph:
-  ubuntu: ros-noetic-rosgraph
+  ubuntu: ros-foxy-rosgraph
 rosgraph_msgs:
-  ubuntu: ros-noetic-rosgraph-msgs
+  ubuntu: ros-foxy-rosgraph-msgs
 roslang:
-  ubuntu: ros-noetic-roslang
+  ubuntu: ros-foxy-roslang
 roslaunch:
-  ubuntu: ros-noetic-roslaunch
+  ubuntu: ros-foxy-roslaunch
 roslib:
-  ubuntu: ros-noetic-roslib
+  ubuntu: ros-foxy-roslib
 roslisp:
-  ubuntu: ros-noetic-roslisp
+  ubuntu: ros-foxy-roslisp
 roslz4:
-  ubuntu: ros-noetic-roslz4
+  ubuntu: ros-foxy-roslz4
 rosmake:
-  ubuntu: ros-noetic-rosmake
+  ubuntu: ros-foxy-rosmake
 rosmaster:
-  ubuntu: ros-noetic-rosmaster
+  ubuntu: ros-foxy-rosmaster
 rosmsg:
-  ubuntu: ros-noetic-rosmsg
+  ubuntu: ros-foxy-rosmsg
 rosnode:
-  ubuntu: ros-noetic-rosnode
+  ubuntu: ros-foxy-rosnode
 rosout:
-  ubuntu: ros-noetic-rosout
+  ubuntu: ros-foxy-rosout
 rospack:
-  ubuntu: ros-noetic-rospack
+  ubuntu: ros-foxy-rospack
 rosparam:
-  ubuntu: ros-noetic-rosparam
+  ubuntu: ros-foxy-rosparam
 rospy:
-  ubuntu: ros-noetic-rospy
+  ubuntu: ros-foxy-rospy
 rosservice:
-  ubuntu: ros-noetic-rosservice
+  ubuntu: ros-foxy-rosservice
 rostest:
-  ubuntu: ros-noetic-rostest
+  ubuntu: ros-foxy-rostest
 rostime:
-  ubuntu: ros-noetic-rostime
+  ubuntu: ros-foxy-rostime
 rostopic:
-  ubuntu: ros-noetic-rostopic
+  ubuntu: ros-foxy-rostopic
 rosunit:
-  ubuntu: ros-noetic-rosunit
+  ubuntu: ros-foxy-rosunit
 roswtf:
-  ubuntu: ros-noetic-roswtf
+  ubuntu: ros-foxy-roswtf
 sensor_msgs:
-  ubuntu: ros-noetic-sensor-msgs
+  ubuntu: ros-foxy-sensor-msgs
 shape_msgs:
-  ubuntu: ros-noetic-shape-msgs
+  ubuntu: ros-foxy-shape-msgs
 smclib:
-  ubuntu: ros-noetic-smclib
+  ubuntu: ros-foxy-smclib
 std_msgs:
-  ubuntu: ros-noetic-std-msgs
+  ubuntu: ros-foxy-std-msgs
 std_srvs:
-  ubuntu: ros-noetic-std-srvs
+  ubuntu: ros-foxy-std-srvs
 stereo_msgs:
-  ubuntu: ros-noetic-stereo-msgs
+  ubuntu: ros-foxy-stereo-msgs
 topic_tools:
-  ubuntu: ros-noetic-topic-tools
+  ubuntu: ros-foxy-topic-tools
 trajectory_msgs:
-  ubuntu: ros-noetic-trajectory-msgs
+  ubuntu: ros-foxy-trajectory-msgs
 visualization_msgs:
-  ubuntu: ros-noetic-visualization-msgs
+  ubuntu: ros-foxy-visualization-msgs
 xmlrpcpp:
-  ubuntu: ros-noetic-xmlrpcpp
+  ubuntu: ros-foxy-xmlrpcpp
 robot_state_publisher:
-  ubuntu: ros-noetic-robot-state-publisher
+  ubuntu: ros-foxy-robot-state-publisher
 rviz:
-  ubuntu: ros-noetic-rviz
+  ubuntu: ros-foxy-rviz
 joint_state_publisher_gui:
-  ubuntu: ros-noetic-joint-state-publisher-gui
+  ubuntu: ros-foxy-joint-state-publisher-gui
 gazebo_ros:
-  ubuntu: ros-noetic-gazebo-ros
+  ubuntu: ros-foxy-gazebo-ros
 hardware_interface:
-  ubuntu: ros-noetic-hardware-interface
+  ubuntu: ros-foxy-hardware-interface
 controller_manager:
-  ubuntu: ros-noetic-controller-manager
+  ubuntu: ros-foxy-controller-manager
 urdf:
-  ubuntu: ros-noetic-urdf
+  ubuntu: ros-foxy-urdf

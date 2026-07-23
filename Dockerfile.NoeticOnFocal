@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.7
 FROM osrf/ros:noetic-desktop-full
 # ----------------------------------------------------------------------------
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -10,7 +11,8 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak
 RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirrors.aliyun.com/ubuntu/|g' /etc/apt/sources.list
 # ----------------------------------------------------------------------------
 
-RUN apt-get update && \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    apt-get update && \
     apt-get install -y ca-certificates curl gnupg && \
     curl -fsSL -o /tmp/llvm-snapshot.gpg.key https://apt.llvm.org/llvm-snapshot.gpg.key && \
     gpg --dearmor -o /usr/share/keyrings/apt.llvm.org.gpg /tmp/llvm-snapshot.gpg.key && \
@@ -23,8 +25,8 @@ RUN apt-get update && \
     
 # ----------------------------------------------------------------------------
 # 系统依赖
-RUN apt-get update && \
-    apt-get upgrade -y && \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    apt-get update && \
     apt-get install -y \
     locales \
     bash-completion \
@@ -54,8 +56,8 @@ RUN sed -i 's/^# *\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen && \
 
 # ----------------------------------------------------------------------------
 # 打包工具以及Python依赖安装
-RUN apt-get update && \
-    apt-get upgrade -y && \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    apt-get update && \
     apt-get install -y \
     fakeroot \
     debhelper \
@@ -67,7 +69,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip3 install \
     pytest \
     pytest-dependency \
     pytest-env \
@@ -89,6 +92,7 @@ RUN mkdir -p /usr/local/nvm && \
     nvm install 20 && \
     nvm use 20 && \
     nvm alias default 20 && \
+    nvm cache clear && \
     chmod -R 777 /usr/local/nvm && \
     for rc in /root/.bashrc /home/ros/.bashrc /root/.zshrc /home/ros/.zshrc; do \
         if [ -f "$rc" ]; then \
@@ -100,7 +104,8 @@ RUN mkdir -p /usr/local/nvm && \
 
 # ----------------------------------------------------------------------------
 # pinocchio 3.4
-RUN mkdir -p /etc/apt/keyrings && \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    mkdir -p /etc/apt/keyrings && \
     apt-get update && \
     apt-get install -qqy lsb-release curl && \
     curl http://robotpkg.openrobots.org/packages/debian/robotpkg.asc \
@@ -150,8 +155,8 @@ USER ros
 ENV HOME=/home/ros
 RUN sh -c "$(wget -O- https://install.ohmyz.sh/)" --unattended
 RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+RUN git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+RUN git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 RUN sed -i 's/^ZSH_THEME=".*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc 
 RUN sed -i 's/^plugins=(.*)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc
 # 修复p10k配置无法rainbow的问题

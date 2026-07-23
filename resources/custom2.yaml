@@ -32,10 +32,14 @@ legged_nav3t_hw:
   ubuntu: [zj-humanoid-ros-foxy-legged-nav3t-hw]
 upperlimb:
   ubuntu: [zj-humanoid-ros-foxy-upperlimb]
+upperlimb_msgs:
+  ubuntu: [zj-humanoid-ros-foxy-upperlimb-msgs]
 uplimb_interface:
   ubuntu: [zj-humanoid-ros-foxy-uplimb-interface]
 hand:
   ubuntu: [zj-humanoid-ros-foxy-hand]
+hand_msgs:
+  ubuntu: [zj-humanoid-ros-foxy-hand-msgs]
 dexhand_interface:
   ubuntu: [zj-humanoid-ros-foxy-dexhand-interface]
 zj_robot:

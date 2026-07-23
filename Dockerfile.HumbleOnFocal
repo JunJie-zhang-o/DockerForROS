@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.7
 ARG BASE_IMAGE=ubuntu:20.04
 FROM ${BASE_IMAGE}
 
@@ -21,8 +22,8 @@ RUN if [ "$USE_CN_MIRROR" = "true" ]; then \
 # ----------------------------------------------------------------------------
 # 基础工具和 Humble 源码编译依赖
 # 说明: Humble 官方目标平台是 Ubuntu 22.04，这里在 20.04 上采用源码编译方案
-RUN apt-get update && \
-    apt-get upgrade -y && \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    apt-get update && \
     apt-get install -y \
     locales \
     bash-completion \
@@ -96,7 +97,8 @@ RUN sed -i 's/^# *\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen && \
 
 # ----------------------------------------------------------------------------
 # Python 依赖
-RUN if [ "$USE_CN_MIRROR" = "true" ]; then \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    if [ "$USE_CN_MIRROR" = "true" ]; then \
     pip3 install \
         pytest \
         pytest-dependency \
@@ -148,6 +150,7 @@ RUN mkdir -p /usr/local/nvm && \
     nvm install 20 && \
     nvm use 20 && \
     nvm alias default 20 && \
+    nvm cache clear && \
     chmod -R 777 /usr/local/nvm && \
     for rc in /root/.bashrc /home/ros/.bashrc /root/.zshrc /home/ros/.zshrc; do \
         if [ -f "$rc" ]; then \
@@ -196,7 +199,8 @@ RUN mkdir -p src && \
     rm -f /tmp/ros2.repos
 
 # 说明: Focal 上构建 Humble 属于非官方组合，保守跳过一部分常见问题依赖键
-RUN apt-get update && \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    apt-get update && \
     rosdep install \
         --from-paths src \
         --ignore-src \
@@ -218,7 +222,8 @@ RUN if [ -f /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash ]; then .
     ln -s /opt/ros/humble_ws/install /opt/ros/humble
 
 # 将源码包构建为 deb 并安装，保留所有 deb 文件
-RUN set -eo pipefail && \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    set -eo pipefail && \
     source /opt/ros/humble_ws/install/setup.bash && \
     mkdir -p /opt/ros/humble_ws/debs && \
     cd /opt/ros/humble_ws && \
@@ -274,8 +279,8 @@ USER ros
 ENV HOME=/home/ros
 RUN sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
 RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+RUN git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+RUN git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 RUN sed -i 's/^ZSH_THEME=".*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc
 RUN sed -i 's/^plugins=(.*)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc
 RUN echo "[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh" >> ~/.zshrc && \

@@ -1,0 +1,10 @@
+.git/
+.docker-cache/
+.agents/
+.codex/
+.vscode/
+log/
+tests/
+debs/
+FiraCode.zip
+*.log

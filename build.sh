@@ -34,12 +34,24 @@ case $1 in
     ;;
 esac
 # 执行 docker build 命令
-docker build --platform=linux/amd64 \
-             --build-arg UID="$(id -u)" \
-             --build-arg GID="$(id -g)" \
-             ${BASE_IMAGE_ARG} \
-             -t $IMAGE_NAME \
-             -f $DOCKERFILE .
+CACHE_ROOT="${CACHE_ROOT:-.docker-cache}"
+CACHE_DIR="$CACHE_ROOT/$IMAGE_NAME"
+CACHE_FROM=()
+
+mkdir -p "$CACHE_ROOT"
+if [ -f "$CACHE_DIR/index.json" ]; then
+  CACHE_FROM=(--cache-from "type=local,src=$CACHE_DIR")
+fi
+
+docker buildx build --platform=linux/amd64 \
+                   --build-arg UID="$(id -u)" \
+                   --build-arg GID="$(id -g)" \
+                   "${CACHE_FROM[@]}" \
+                   --cache-to "type=local,dest=$CACHE_DIR,mode=max" \
+                   --load \
+                   ${BASE_IMAGE_ARG} \
+                   -t "$IMAGE_NAME" \
+                   -f "$DOCKERFILE" .
 
 
 # How to test containers:

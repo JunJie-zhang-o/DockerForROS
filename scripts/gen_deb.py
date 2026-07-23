@@ -122,6 +122,7 @@ class Builder(ABC):
         self.__pkg = pkg
         self._pkg = pkg
         self.deb_path, self.deb_name = None, None
+        self.debug_deb_paths = []
 
     # @abstractmethod
     def build(self):
@@ -158,9 +159,10 @@ class Builder(ABC):
 
     def modify_debian_rules(self):
         raw_context = [
-            "",
-            "override_dh_strip:",
-            "	true",
+            # 剥离调试符号并单独生成ddeb调试包
+            # "",
+            # "override_dh_strip:",
+            # "	true",
             "",
             "override_dh_shlibdeps:",
             "	true",
@@ -175,17 +177,24 @@ class Builder(ABC):
 
     def get_deb_info(self):
         text = Path(self.__pkg.abs_path).joinpath("debian", "files").read_text()
-        self.deb_name = text.split(" ")[0]
-        self.deb_path = str(Path(self.__pkg.abs_path).joinpath("..", self.deb_name))
-        text = Path(self.__pkg.abs_path).joinpath("debian", "control").read_text()
-        for line in text.split("\n"):
-            if line.startswith("Package:"):
-                self.__pkg.deb_name = line.split(" ")[1]
+        parent = Path(self.__pkg.abs_path).parent
+        for line in text.splitlines():
+            artifact = line.split(" ")[0]
+            artifact_path = parent.joinpath(artifact)
+            if artifact.endswith(".ddeb") or "-dbgsym_" in artifact:
+                self.debug_deb_paths.append(str(artifact_path))
+            elif artifact.endswith(".deb") and self.deb_path is None:
+                self.deb_name = artifact
+                self.deb_path = str(artifact_path)
 
 
     def mv(self, dest_path:Path):
         dest_path.mkdir(parents=True, exist_ok=True)
         Path(self.deb_path).rename(dest_path.joinpath(self.deb_name))
+        for debug_deb_path in self.debug_deb_paths:
+            debug_deb_path = Path(debug_deb_path)
+            if debug_deb_path.exists():
+                debug_deb_path.rename(dest_path.joinpath(debug_deb_path.name))
         return dest_path.joinpath(self.deb_name)
 
 
@@ -255,7 +264,7 @@ class ROSPackageBuilder(Builder):
             self.modify_debian_rules()
             self.modify_deb_name(prefix)
 
-            if self.is_data_package():
+            if self.is_data_package() and os.environ.get("ROS_VERSION") == "1":
                 self.modify_deb_arch(arch="all")
                 logger.info("📦 Detected data package, modifying debian/postrm and debian/postinst...")
                 self.postinst()

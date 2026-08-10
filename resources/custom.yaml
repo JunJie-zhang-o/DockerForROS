@@ -67,3 +67,28 @@ naviai_mic_driver:
   ubuntu: [zj-humanoid-ros-noetic-naviai-mic-driver]
 naviai_audio_launch:
   ubuntu: [zj-humanoid-ros-noetic-naviai-audio-launch]
+
+logging:
+  ubuntu: [zj-humanoid-logging]
+bbox_collision_model:
+  ubuntu: [zj-humanoid-ros-noetic-bbox-collision-model]
+i2_s_description:
+  ubuntu: [zj-humanoid-ros-noetic-i2-s-description]
+jk1_description:
+  ubuntu: [zj-humanoid-ros-noetic-jk1-description]
+jk2_description:
+  ubuntu: [zj-humanoid-ros-noetic-jk2-description]
+u1_description:
+  ubuntu: [zj-humanoid-ros-noetic-u1-description]
+wa1_400l_description:
+  ubuntu: [zj-humanoid-ros-noetic-wa1-400l-description]
+wa1_d11_description:
+  ubuntu: [zj-humanoid-ros-noetic-wa1-d11-description]
+wa2_a2_lite_description:
+  ubuntu: [zj-humanoid-ros-noetic-wa2-a2-lite-description]
+wa2_l_ty20_description:
+  ubuntu: [zj-humanoid-ros-noetic-wa2-l-ty20-description]
+wa2_ls_description:
+  ubuntu: [zj-humanoid-ros-noetic-wa2-ls-description]
+zyd_description:
+  ubuntu: [zj-humanoid-ros-noetic-zyd-description]

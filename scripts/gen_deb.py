@@ -125,11 +125,14 @@ class Builder(ABC):
         self.debug_deb_paths = []
 
     # @abstractmethod
-    def build(self):
+    def build(self, strip_debug_symbols: bool=True):
         # pass
         cpu_count = multiprocessing.cpu_count()
         parallel_jobs = min(max(1, cpu_count // 4), 8)
-        with local.env(DEB_BUILD_OPTIONS=f"parallel={parallel_jobs} nocheck"):
+        deb_build_options = [f"parallel={parallel_jobs}", "nocheck"]
+        if not strip_debug_symbols:
+            deb_build_options.append("nostrip")
+        with local.env(DEB_BUILD_OPTIONS=" ".join(deb_build_options)):
             fakeroot["debian/rules", "binary"] & FG
 
 
@@ -221,7 +224,7 @@ class DebPackageBuilder(Builder):
         Path("debian/rules").write_text(context)
 
 
-    def build(self, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False):
+    def build(self, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False, strip_debug_symbols: bool=True):
         logger.info(f"📦 Building package: {self._pkg.name} at {self._pkg.abs_path}")
 
         self.clear()
@@ -236,7 +239,7 @@ class DebPackageBuilder(Builder):
             self.modify_debian_rules()
             self.modify_deb_name(prefix)
             logger.info("📦 Building debian package...")
-            super().build()
+            super().build(strip_debug_symbols=strip_debug_symbols)
         self.get_deb_info()
         self.clear()
 
@@ -247,7 +250,7 @@ class ROSPackageBuilder(Builder):
         super().modify_debian_rules()
 
 
-    def build(self, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False):
+    def build(self, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False, strip_debug_symbols: bool=True):
         logger.info(f"📦 Building package: {self._pkg.name} at {self._pkg.abs_path}")
 
         self.clear()
@@ -271,7 +274,7 @@ class ROSPackageBuilder(Builder):
                 self.postrm()
 
             logger.info("📦 Building rosdebian package...")
-            super().build()
+            super().build(strip_debug_symbols=strip_debug_symbols)
         self.get_deb_info()
         self.clear()
     
@@ -348,11 +351,13 @@ class RosDebCli:
 
     def __init__(self):
         self._local_build = False
+        self._strip_debug_symbols = True
         self._packages = PackgesInfo()
 
 
-    def __call__(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False, deb_type:str="rosdebian") -> None:
+    def __call__(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False, deb_type:str="rosdebian", strip_debug_symbols: bool=True) -> None:
         self._local_build = local_build
+        self._strip_debug_symbols = strip_debug_symbols
         if deb_type not in ("rosdebian", "debian"):
             raise ValueError(f"不支持的构建类型: {deb_type}, 仅支持 rosdebian 或 debian")
 
@@ -366,10 +371,11 @@ class RosDebCli:
                     commit_count = git("rev-list", "--count", "HEAD").strip(),
                     commit_hash  = git("log", "-1", "--format=%h").strip()
                 )
-        self.build(workspace=workspace, prefix=prefix, arch=arch, deb_type=deb_type)
+        self.build(workspace=workspace, prefix=prefix, arch=arch, deb_type=deb_type, strip_debug_symbols=strip_debug_symbols)
 
 
-    def build(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", deb_type: str="rosdebian") -> None:
+    def build(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", deb_type: str="rosdebian", strip_debug_symbols: bool=True) -> None:
+        self._strip_debug_symbols = strip_debug_symbols
         sudo["su"]()
         workspace_path = Path(workspace).expanduser().resolve()
         if not workspace_path.exists():
@@ -386,7 +392,7 @@ class RosDebCli:
             pkg:PackageInfo
             builder = builder_cls(pkg)
             builders.append(builder)
-            builder.build(prefix=prefix, arch=arch, local_build=self._local_build)
+            builder.build(prefix=prefix, arch=arch, local_build=self._local_build, strip_debug_symbols=self._strip_debug_symbols)
             builder.install()
             deb_name = builder.mv(workspace_path.joinpath("dist").resolve())
             pkg.deb_name = str(deb_name)

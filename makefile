@@ -26,11 +26,11 @@ check:
 
 help:
 	@printf '%s\n' \
-		'build-focal            Build Noetic on Focal (cros20)' \
-		'build-jammy            Build Noetic on Jammy (cros22)' \
-		'build-humble           Build Humble on Jammy (cros22-humble)' \
-		'build-humble-on-foxy   Build Humble from source on Focal (cros20-humble)' \
-		'build-foxy             Build Foxy on Focal (cros20-foxy)' \
+		'build-focal            Build Noetic on Focal (ros-noetic-focal)' \
+		'build-jammy            Build Noetic on Jammy (ros-noetic-jammy)' \
+		'build-humble           Build Humble on Jammy (ros-humble-jammy)' \
+		'build-humble-on-foxy   Build Humble from source on Focal (ros-humble-focal)' \
+		'build-foxy             Build Foxy on Focal (ros-foxy-focal)' \
 		'build-all              Build all images' \
 		'check                  Validate build.sh and docker-compose.yml' \
 		'CACHE_ROOT=<path>      Override the local BuildKit cache directory'

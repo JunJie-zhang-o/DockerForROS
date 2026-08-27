@@ -172,7 +172,7 @@ ENV ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
 
 # ----------------------------------------------------------------------------
 # rosdep 配置
-COPY resources/rosdep.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
+COPY resources/rosdep2.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
 COPY resources/rosdep_humble_focal.yaml /etc/ros/rosdep/sources.list.d/rosdep_humble_focal.yaml
 COPY resources/custom2.yaml /etc/ros/rosdep/sources.list.d/custom2.yaml
 RUN rosdep init || true && \

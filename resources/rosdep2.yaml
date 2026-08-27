@@ -1,173 +1,433 @@
 
 actionlib:
-  ubuntu: ros-foxy-actionlib
+  ubuntu:
+    focal: ros-foxy-actionlib
+    jammy: ros-humble-actionlib
+    noble: ros-jazzy-actionlib
 actionlib_msgs:
-  ubuntu: ros-foxy-actionlib-msgs
+  ubuntu:
+    focal: ros-foxy-actionlib-msgs
+    jammy: ros-humble-actionlib-msgs
+    noble: ros-jazzy-actionlib-msgs
 bond:
-  ubuntu: ros-foxy-bond
+  ubuntu:
+    focal: ros-foxy-bond
+    jammy: ros-humble-bond
+    noble: ros-jazzy-bond
 bond_core:
-  ubuntu: ros-foxy-bond-core
+  ubuntu:
+    focal: ros-foxy-bond-core
+    jammy: ros-humble-bond-core
+    noble: ros-jazzy-bond-core
 bondcpp:
-  ubuntu: ros-foxy-bondcpp
+  ubuntu:
+    focal: ros-foxy-bondcpp
+    jammy: ros-humble-bondcpp
+    noble: ros-jazzy-bondcpp
 bondpy:
-  ubuntu: ros-foxy-bondpy
+  ubuntu:
+    focal: ros-foxy-bondpy
+    jammy: ros-humble-bondpy
+    noble: ros-jazzy-bondpy
 catkin:
-  ubuntu: ros-foxy-catkin
+  ubuntu:
+    focal: ros-foxy-catkin
+    jammy: ros-humble-catkin
+    noble: ros-jazzy-catkin
 class_loader:
-  ubuntu: ros-foxy-class-loader
+  ubuntu:
+    focal: ros-foxy-class-loader
+    jammy: ros-humble-class-loader
+    noble: ros-jazzy-class-loader
 cmake_modules:
-  ubuntu: ros-foxy-cmake-modules
+  ubuntu:
+    focal: ros-foxy-cmake-modules
+    jammy: ros-humble-cmake-modules
+    noble: ros-jazzy-cmake-modules
 common_msgs:
-  ubuntu: ros-foxy-common-msgs
+  ubuntu:
+    focal: ros-foxy-common-msgs
+    jammy: ros-humble-common-msgs
+    noble: ros-jazzy-common-msgs
 cpp_common:
-  ubuntu: ros-foxy-cpp-common
+  ubuntu:
+    focal: ros-foxy-cpp-common
+    jammy: ros-humble-cpp-common
+    noble: ros-jazzy-cpp-common
 diagnostic_msgs:
-  ubuntu: ros-foxy-diagnostic-msgs
+  ubuntu:
+    focal: ros-foxy-diagnostic-msgs
+    jammy: ros-humble-diagnostic-msgs
+    noble: ros-jazzy-diagnostic-msgs
 dynamic_reconfigure:
-  ubuntu: ros-foxy-dynamic-reconfigure
+  ubuntu:
+    focal: ros-foxy-dynamic-reconfigure
+    jammy: ros-humble-dynamic-reconfigure
+    noble: ros-jazzy-dynamic-reconfigure
 gencpp:
-  ubuntu: ros-foxy-gencpp
+  ubuntu:
+    focal: ros-foxy-gencpp
+    jammy: ros-humble-gencpp
+    noble: ros-jazzy-gencpp
 geneus:
-  ubuntu: ros-foxy-geneus
+  ubuntu:
+    focal: ros-foxy-geneus
+    jammy: ros-humble-geneus
+    noble: ros-jazzy-geneus
 genlisp:
-  ubuntu: ros-foxy-genlisp
+  ubuntu:
+    focal: ros-foxy-genlisp
+    jammy: ros-humble-genlisp
+    noble: ros-jazzy-genlisp
 genmsg:
-  ubuntu: ros-foxy-genmsg
+  ubuntu:
+    focal: ros-foxy-genmsg
+    jammy: ros-humble-genmsg
+    noble: ros-jazzy-genmsg
 gennodejs:
-  ubuntu: ros-foxy-gennodejs
+  ubuntu:
+    focal: ros-foxy-gennodejs
+    jammy: ros-humble-gennodejs
+    noble: ros-jazzy-gennodejs
 genpy:
-  ubuntu: ros-foxy-genpy
+  ubuntu:
+    focal: ros-foxy-genpy
+    jammy: ros-humble-genpy
+    noble: ros-jazzy-genpy
 geometry_msgs:
-  ubuntu: ros-foxy-geometry-msgs
+  ubuntu:
+    focal: ros-foxy-geometry-msgs
+    jammy: ros-humble-geometry-msgs
+    noble: ros-jazzy-geometry-msgs
 message_filters:
-  ubuntu: ros-foxy-message-filters
+  ubuntu:
+    focal: ros-foxy-message-filters
+    jammy: ros-humble-message-filters
+    noble: ros-jazzy-message-filters
 message_generation:
-  ubuntu: ros-foxy-message-generation
+  ubuntu:
+    focal: ros-foxy-message-generation
+    jammy: ros-humble-message-generation
+    noble: ros-jazzy-message-generation
 message_runtime:
-  ubuntu: ros-foxy-message-runtime
+  ubuntu:
+    focal: ros-foxy-message-runtime
+    jammy: ros-humble-message-runtime
+    noble: ros-jazzy-message-runtime
 mk:
-  ubuntu: ros-foxy-mk
+  ubuntu:
+    focal: ros-foxy-mk
+    jammy: ros-humble-mk
+    noble: ros-jazzy-mk
 nav_msgs:
-  ubuntu: ros-foxy-nav-msgs
+  ubuntu:
+    focal: ros-foxy-nav-msgs
+    jammy: ros-humble-nav-msgs
+    noble: ros-jazzy-nav-msgs
 nodelet:
-  ubuntu: ros-foxy-nodelet
+  ubuntu:
+    focal: ros-foxy-nodelet
+    jammy: ros-humble-nodelet
+    noble: ros-jazzy-nodelet
 nodelet_core:
-  ubuntu: ros-foxy-nodelet-core
+  ubuntu:
+    focal: ros-foxy-nodelet-core
+    jammy: ros-humble-nodelet-core
+    noble: ros-jazzy-nodelet-core
 nodelet_topic_tools:
-  ubuntu: ros-foxy-nodelet-topic-tools
+  ubuntu:
+    focal: ros-foxy-nodelet-topic-tools
+    jammy: ros-humble-nodelet-topic-tools
+    noble: ros-jazzy-nodelet-topic-tools
 pluginlib:
-  ubuntu: ros-foxy-pluginlib
+  ubuntu:
+    focal: ros-foxy-pluginlib
+    jammy: ros-humble-pluginlib
+    noble: ros-jazzy-pluginlib
 ros:
-  ubuntu: ros-foxy-ros
+  ubuntu:
+    focal: ros-foxy-ros
+    jammy: ros-humble-ros
+    noble: ros-jazzy-ros
 ros_base:
-  ubuntu: ros-foxy-ros-base
+  ubuntu:
+    focal: ros-foxy-ros-base
+    jammy: ros-humble-ros-base
+    noble: ros-jazzy-ros-base
 ros_comm:
-  ubuntu: ros-foxy-ros-comm
+  ubuntu:
+    focal: ros-foxy-ros-comm
+    jammy: ros-humble-ros-comm
+    noble: ros-jazzy-ros-comm
 ros_core:
-  ubuntu: ros-foxy-ros-core
+  ubuntu:
+    focal: ros-foxy-ros-core
+    jammy: ros-humble-ros-core
+    noble: ros-jazzy-ros-core
 ros_environment:
-  ubuntu: ros-foxy-ros-environment
+  ubuntu:
+    focal: ros-foxy-ros-environment
+    jammy: ros-humble-ros-environment
+    noble: ros-jazzy-ros-environment
 rosbag:
-  ubuntu: ros-foxy-rosbag
+  ubuntu:
+    focal: ros-foxy-rosbag
+    jammy: ros-humble-rosbag
+    noble: ros-jazzy-rosbag
 rosbag_migration_rule:
-  ubuntu: ros-foxy-rosbag-migration-rule
+  ubuntu:
+    focal: ros-foxy-rosbag-migration-rule
+    jammy: ros-humble-rosbag-migration-rule
+    noble: ros-jazzy-rosbag-migration-rule
 rosbag_storage:
-  ubuntu: ros-foxy-rosbag-storage
+  ubuntu:
+    focal: ros-foxy-rosbag-storage
+    jammy: ros-humble-rosbag-storage
+    noble: ros-jazzy-rosbag-storage
 rosbash:
-  ubuntu: ros-foxy-rosbash
+  ubuntu:
+    focal: ros-foxy-rosbash
+    jammy: ros-humble-rosbash
+    noble: ros-jazzy-rosbash
 rosboost_cfg:
-  ubuntu: ros-foxy-rosboost-cfg
+  ubuntu:
+    focal: ros-foxy-rosboost-cfg
+    jammy: ros-humble-rosboost-cfg
+    noble: ros-jazzy-rosboost-cfg
 rosbuild:
-  ubuntu: ros-foxy-rosbuild
+  ubuntu:
+    focal: ros-foxy-rosbuild
+    jammy: ros-humble-rosbuild
+    noble: ros-jazzy-rosbuild
 rosclean:
-  ubuntu: ros-foxy-rosclean
+  ubuntu:
+    focal: ros-foxy-rosclean
+    jammy: ros-humble-rosclean
+    noble: ros-jazzy-rosclean
 rosconsole:
-  ubuntu: ros-foxy-rosconsole
+  ubuntu:
+    focal: ros-foxy-rosconsole
+    jammy: ros-humble-rosconsole
+    noble: ros-jazzy-rosconsole
 rosconsole_bridge:
-  ubuntu: ros-foxy-rosconsole-bridge
+  ubuntu:
+    focal: ros-foxy-rosconsole-bridge
+    jammy: ros-humble-rosconsole-bridge
+    noble: ros-jazzy-rosconsole-bridge
 roscpp:
-  ubuntu: ros-foxy-roscpp
+  ubuntu:
+    focal: ros-foxy-roscpp
+    jammy: ros-humble-roscpp
+    noble: ros-jazzy-roscpp
 roscpp_core:
-  ubuntu: ros-foxy-roscpp-core
+  ubuntu:
+    focal: ros-foxy-roscpp-core
+    jammy: ros-humble-roscpp-core
+    noble: ros-jazzy-roscpp-core
 roscpp_serialization:
-  ubuntu: ros-foxy-roscpp-serialization
+  ubuntu:
+    focal: ros-foxy-roscpp-serialization
+    jammy: ros-humble-roscpp-serialization
+    noble: ros-jazzy-roscpp-serialization
 roscpp_traits:
-  ubuntu: ros-foxy-roscpp-traits
+  ubuntu:
+    focal: ros-foxy-roscpp-traits
+    jammy: ros-humble-roscpp-traits
+    noble: ros-jazzy-roscpp-traits
 roscreate:
-  ubuntu: ros-foxy-roscreate
+  ubuntu:
+    focal: ros-foxy-roscreate
+    jammy: ros-humble-roscreate
+    noble: ros-jazzy-roscreate
 rosgraph:
-  ubuntu: ros-foxy-rosgraph
+  ubuntu:
+    focal: ros-foxy-rosgraph
+    jammy: ros-humble-rosgraph
+    noble: ros-jazzy-rosgraph
 rosgraph_msgs:
-  ubuntu: ros-foxy-rosgraph-msgs
+  ubuntu:
+    focal: ros-foxy-rosgraph-msgs
+    jammy: ros-humble-rosgraph-msgs
+    noble: ros-jazzy-rosgraph-msgs
 roslang:
-  ubuntu: ros-foxy-roslang
+  ubuntu:
+    focal: ros-foxy-roslang
+    jammy: ros-humble-roslang
+    noble: ros-jazzy-roslang
 roslaunch:
-  ubuntu: ros-foxy-roslaunch
+  ubuntu:
+    focal: ros-foxy-roslaunch
+    jammy: ros-humble-roslaunch
+    noble: ros-jazzy-roslaunch
 roslib:
-  ubuntu: ros-foxy-roslib
+  ubuntu:
+    focal: ros-foxy-roslib
+    jammy: ros-humble-roslib
+    noble: ros-jazzy-roslib
 roslisp:
-  ubuntu: ros-foxy-roslisp
+  ubuntu:
+    focal: ros-foxy-roslisp
+    jammy: ros-humble-roslisp
+    noble: ros-jazzy-roslisp
 roslz4:
-  ubuntu: ros-foxy-roslz4
+  ubuntu:
+    focal: ros-foxy-roslz4
+    jammy: ros-humble-roslz4
+    noble: ros-jazzy-roslz4
 rosmake:
-  ubuntu: ros-foxy-rosmake
+  ubuntu:
+    focal: ros-foxy-rosmake
+    jammy: ros-humble-rosmake
+    noble: ros-jazzy-rosmake
 rosmaster:
-  ubuntu: ros-foxy-rosmaster
+  ubuntu:
+    focal: ros-foxy-rosmaster
+    jammy: ros-humble-rosmaster
+    noble: ros-jazzy-rosmaster
 rosmsg:
-  ubuntu: ros-foxy-rosmsg
+  ubuntu:
+    focal: ros-foxy-rosmsg
+    jammy: ros-humble-rosmsg
+    noble: ros-jazzy-rosmsg
 rosnode:
-  ubuntu: ros-foxy-rosnode
+  ubuntu:
+    focal: ros-foxy-rosnode
+    jammy: ros-humble-rosnode
+    noble: ros-jazzy-rosnode
 rosout:
-  ubuntu: ros-foxy-rosout
+  ubuntu:
+    focal: ros-foxy-rosout
+    jammy: ros-humble-rosout
+    noble: ros-jazzy-rosout
 rospack:
-  ubuntu: ros-foxy-rospack
+  ubuntu:
+    focal: ros-foxy-rospack
+    jammy: ros-humble-rospack
+    noble: ros-jazzy-rospack
 rosparam:
-  ubuntu: ros-foxy-rosparam
+  ubuntu:
+    focal: ros-foxy-rosparam
+    jammy: ros-humble-rosparam
+    noble: ros-jazzy-rosparam
 rospy:
-  ubuntu: ros-foxy-rospy
+  ubuntu:
+    focal: ros-foxy-rospy
+    jammy: ros-humble-rospy
+    noble: ros-jazzy-rospy
 rosservice:
-  ubuntu: ros-foxy-rosservice
+  ubuntu:
+    focal: ros-foxy-rosservice
+    jammy: ros-humble-rosservice
+    noble: ros-jazzy-rosservice
 rostest:
-  ubuntu: ros-foxy-rostest
+  ubuntu:
+    focal: ros-foxy-rostest
+    jammy: ros-humble-rostest
+    noble: ros-jazzy-rostest
 rostime:
-  ubuntu: ros-foxy-rostime
+  ubuntu:
+    focal: ros-foxy-rostime
+    jammy: ros-humble-rostime
+    noble: ros-jazzy-rostime
 rostopic:
-  ubuntu: ros-foxy-rostopic
+  ubuntu:
+    focal: ros-foxy-rostopic
+    jammy: ros-humble-rostopic
+    noble: ros-jazzy-rostopic
 rosunit:
-  ubuntu: ros-foxy-rosunit
+  ubuntu:
+    focal: ros-foxy-rosunit
+    jammy: ros-humble-rosunit
+    noble: ros-jazzy-rosunit
 roswtf:
-  ubuntu: ros-foxy-roswtf
+  ubuntu:
+    focal: ros-foxy-roswtf
+    jammy: ros-humble-roswtf
+    noble: ros-jazzy-roswtf
 sensor_msgs:
-  ubuntu: ros-foxy-sensor-msgs
+  ubuntu:
+    focal: ros-foxy-sensor-msgs
+    jammy: ros-humble-sensor-msgs
+    noble: ros-jazzy-sensor-msgs
 shape_msgs:
-  ubuntu: ros-foxy-shape-msgs
+  ubuntu:
+    focal: ros-foxy-shape-msgs
+    jammy: ros-humble-shape-msgs
+    noble: ros-jazzy-shape-msgs
 smclib:
-  ubuntu: ros-foxy-smclib
+  ubuntu:
+    focal: ros-foxy-smclib
+    jammy: ros-humble-smclib
+    noble: ros-jazzy-smclib
 std_msgs:
-  ubuntu: ros-foxy-std-msgs
+  ubuntu:
+    focal: ros-foxy-std-msgs
+    jammy: ros-humble-std-msgs
+    noble: ros-jazzy-std-msgs
 std_srvs:
-  ubuntu: ros-foxy-std-srvs
+  ubuntu:
+    focal: ros-foxy-std-srvs
+    jammy: ros-humble-std-srvs
+    noble: ros-jazzy-std-srvs
 stereo_msgs:
-  ubuntu: ros-foxy-stereo-msgs
+  ubuntu:
+    focal: ros-foxy-stereo-msgs
+    jammy: ros-humble-stereo-msgs
+    noble: ros-jazzy-stereo-msgs
 topic_tools:
-  ubuntu: ros-foxy-topic-tools
+  ubuntu:
+    focal: ros-foxy-topic-tools
+    jammy: ros-humble-topic-tools
+    noble: ros-jazzy-topic-tools
 trajectory_msgs:
-  ubuntu: ros-foxy-trajectory-msgs
+  ubuntu:
+    focal: ros-foxy-trajectory-msgs
+    jammy: ros-humble-trajectory-msgs
+    noble: ros-jazzy-trajectory-msgs
 visualization_msgs:
-  ubuntu: ros-foxy-visualization-msgs
+  ubuntu:
+    focal: ros-foxy-visualization-msgs
+    jammy: ros-humble-visualization-msgs
+    noble: ros-jazzy-visualization-msgs
 xmlrpcpp:
-  ubuntu: ros-foxy-xmlrpcpp
+  ubuntu:
+    focal: ros-foxy-xmlrpcpp
+    jammy: ros-humble-xmlrpcpp
+    noble: ros-jazzy-xmlrpcpp
 robot_state_publisher:
-  ubuntu: ros-foxy-robot-state-publisher
+  ubuntu:
+    focal: ros-foxy-robot-state-publisher
+    jammy: ros-humble-robot-state-publisher
+    noble: ros-jazzy-robot-state-publisher
 rviz:
-  ubuntu: ros-foxy-rviz
+  ubuntu:
+    focal: ros-foxy-rviz
+    jammy: ros-humble-rviz
+    noble: ros-jazzy-rviz
 joint_state_publisher_gui:
-  ubuntu: ros-foxy-joint-state-publisher-gui
+  ubuntu:
+    focal: ros-foxy-joint-state-publisher-gui
+    jammy: ros-humble-joint-state-publisher-gui
+    noble: ros-jazzy-joint-state-publisher-gui
 gazebo_ros:
-  ubuntu: ros-foxy-gazebo-ros
+  ubuntu:
+    focal: ros-foxy-gazebo-ros
+    jammy: ros-humble-gazebo-ros
+    noble: ros-jazzy-gazebo-ros
 hardware_interface:
-  ubuntu: ros-foxy-hardware-interface
+  ubuntu:
+    focal: ros-foxy-hardware-interface
+    jammy: ros-humble-hardware-interface
+    noble: ros-jazzy-hardware-interface
 controller_manager:
-  ubuntu: ros-foxy-controller-manager
+  ubuntu:
+    focal: ros-foxy-controller-manager
+    jammy: ros-humble-controller-manager
+    noble: ros-jazzy-controller-manager
 urdf:
-  ubuntu: ros-foxy-urdf
+  ubuntu:
+    focal: ros-foxy-urdf
+    jammy: ros-humble-urdf
+    noble: ros-jazzy-urdf
+python3-catkin-pkg-modules:
+  ubuntu: [python3-catkin-pkg]

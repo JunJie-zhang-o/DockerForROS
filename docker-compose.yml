@@ -1,7 +1,6 @@
 services:
   ros-noetic-focal:
-    image: cros20
-    pull_policy: build
+    image: ros-noetic-focal
     build:
       context: .
       dockerfile: Dockerfile.NoeticOnFocal
@@ -9,7 +8,7 @@ services:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
       cache_to:
-        - type=local,dest=.docker-cache/cros20,mode=max
+        - type=local,dest=.docker-cache/ros-noetic-focal,mode=max
     container_name: ros-noetic-focal
     platform: linux/amd64
     privileged: true
@@ -55,8 +54,7 @@ services:
     restart: unless-stopped
 
   ros-noetic-jammy:
-    image: cros22
-    pull_policy: build
+    image: ros-noetic-jammy
     build:
       context: .
       dockerfile: Dockerfile.NoeticOnJammy
@@ -64,7 +62,7 @@ services:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
       cache_to:
-        - type=local,dest=.docker-cache/cros22,mode=max
+        - type=local,dest=.docker-cache/ros-noetic-jammy,mode=max
     container_name: ros-noetic-jammy
     platform: linux/amd64
     privileged: true
@@ -109,8 +107,7 @@ services:
     restart: unless-stopped
 
   ros-humble-jammy:
-    image: cros22-humble
-    pull_policy: build
+    image: ros-humble-jammy
     build:
       context: .
       dockerfile: Dockerfile.HumbleOnJammy
@@ -118,7 +115,7 @@ services:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
       cache_to:
-        - type=local,dest=.docker-cache/cros22-humble,mode=max
+        - type=local,dest=.docker-cache/ros-humble-jammy,mode=max
     container_name: ros-humble-jammy
     platform: linux/amd64
     privileged: true
@@ -162,8 +159,7 @@ services:
     restart: unless-stopped
 
   ros-jazzy-noble:
-    image: cros24-jazzy
-    pull_policy: build
+    image: ros-jazzy-noble
     build:
       context: .
       dockerfile: Dockerfile.JazzyOnNoble
@@ -171,7 +167,7 @@ services:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
       cache_to:
-        - type=local,dest=.docker-cache/cros24-jazzy,mode=max
+        - type=local,dest=.docker-cache/ros-jazzy-noble,mode=max
     container_name: ros-jazzy-noble
     platform: linux/amd64
     privileged: true
@@ -216,8 +212,7 @@ services:
     restart: unless-stopped
 
   ros-foxy-focal:
-    image: cros20-foxy
-    pull_policy: build
+    image: ros-foxy-focal
     build:
       context: .
       dockerfile: Dockerfile.FoxyOnFocal
@@ -225,7 +220,7 @@ services:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
       cache_to:
-        - type=local,dest=.docker-cache/cros20-foxy,mode=max
+        - type=local,dest=.docker-cache/ros-foxy-focal,mode=max
     container_name: ros-foxy-focal
     platform: linux/amd64
     privileged: true

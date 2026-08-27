@@ -8,24 +8,24 @@ fi
 case $1 in
   focal|ubuntu2004)
     DOCKERFILE="Dockerfile.NoeticOnFocal"
-    IMAGE_NAME="cros20"
+    IMAGE_NAME="ros-noetic-focal"
     ;;
   jammy|ubuntu2204)
     DOCKERFILE="Dockerfile.NoeticOnJammy"
-    IMAGE_NAME="cros22"
+    IMAGE_NAME="ros-noetic-jammy"
     ;;
   humble)
     DOCKERFILE="Dockerfile.HumbleOnJammy"
-    IMAGE_NAME="cros22-humble"
+    IMAGE_NAME="ros-humble-jammy"
     ;;
   HumbleOnFoxy)
     DOCKERFILE="Dockerfile.HumbleOnFocal"
-    IMAGE_NAME="cros20-humble"
+    IMAGE_NAME="ros-humble-focal"
     BASE_IMAGE_ARG="--build-arg BASE_IMAGE=${BASE_IMAGE:-docker.m.daocloud.io/library/ubuntu:20.04}"
     ;;
   foxy)
     DOCKERFILE="Dockerfile.FoxyOnFocal"
-    IMAGE_NAME="cros20-foxy"
+    IMAGE_NAME="ros-foxy-focal"
     ;;
   *)
     echo "Invalid argument: $1"
@@ -55,5 +55,5 @@ docker buildx build --platform=linux/amd64 \
 
 
 # How to test containers:
-# docker run -it --rm cros20
-# docker run -it --rm cros22
+# docker run -it --rm ros-noetic-focal
+# docker run -it --rm ros-noetic-jammy

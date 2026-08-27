@@ -165,7 +165,15 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/robotpkg.asc] http://robotpkg.openrobots.org/packages/debian/pub $(lsb_release -cs) robotpkg" \
     | tee /etc/apt/sources.list.d/robotpkg.list && \
     apt-get update && \
-    apt-get install -qqy robotpkg-py3*-pinocchio && \
+    apt-get install -qqy \
+    robotpkg-py312-eigenpy=3.10.3 \
+    robotpkg-py312-coal=3.0.1 \
+    robotpkg-qpoases=3.2.1r1 \
+    robotpkg-casadi=3.6.7 \
+    robotpkg-py312-casadi=3.6.7 \
+    robotpkg-pinocchio=3.4.0 \
+    robotpkg-coal=3.0.1 \
+    robotpkg-py312-pinocchio=3.4.0 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 ENV PATH=/opt/openrobots/bin:$PATH \
@@ -245,7 +253,7 @@ ENV ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
 
 # ----------------------------------------------------------------------------
 # 处理rosdep 的依赖问题
-COPY resources/rosdep.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
+COPY resources/rosdep2.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
 COPY resources/custom2.yaml /etc/ros/rosdep/sources.list.d/custom2.yaml
 RUN echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc && \
     rm -f /etc/ros/rosdep/sources.list.d/20-default.list && \

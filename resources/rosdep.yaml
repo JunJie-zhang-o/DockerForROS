@@ -1,175 +1,519 @@
 
 actionlib:
-  ubuntu: ros-noetic-actionlib
+  ubuntu:
+    noetic: ros-noetic-actionlib
+    foxy: ros-foxy-actionlib
+    humble: ros-humble-actionlib
+    jazzy: ros-jazzy-actionlib
 actionlib_msgs:
-  ubuntu: ros-noetic-actionlib-msgs
+  ubuntu:
+    noetic: ros-noetic-actionlib-msgs
+    foxy: ros-foxy-actionlib-msgs
+    humble: ros-humble-actionlib-msgs
+    jazzy: ros-jazzy-actionlib-msgs
 bond:
-  ubuntu: ros-noetic-bond
+  ubuntu:
+    noetic: ros-noetic-bond
+    foxy: ros-foxy-bond
+    humble: ros-humble-bond
+    jazzy: ros-jazzy-bond
 bond_core:
-  ubuntu: ros-noetic-bond-core
+  ubuntu:
+    noetic: ros-noetic-bond-core
+    foxy: ros-foxy-bond-core
+    humble: ros-humble-bond-core
+    jazzy: ros-jazzy-bond-core
 bondcpp:
-  ubuntu: ros-noetic-bondcpp
+  ubuntu:
+    noetic: ros-noetic-bondcpp
+    foxy: ros-foxy-bondcpp
+    humble: ros-humble-bondcpp
+    jazzy: ros-jazzy-bondcpp
 bondpy:
-  ubuntu: ros-noetic-bondpy
+  ubuntu:
+    noetic: ros-noetic-bondpy
+    foxy: ros-foxy-bondpy
+    humble: ros-humble-bondpy
+    jazzy: ros-jazzy-bondpy
 catkin:
-  ubuntu: ros-noetic-catkin
+  ubuntu:
+    noetic: ros-noetic-catkin
+    foxy: ros-foxy-catkin
+    humble: ros-humble-catkin
+    jazzy: ros-jazzy-catkin
 class_loader:
-  ubuntu: ros-noetic-class-loader
+  ubuntu:
+    noetic: ros-noetic-class-loader
+    foxy: ros-foxy-class-loader
+    humble: ros-humble-class-loader
+    jazzy: ros-jazzy-class-loader
 cmake_modules:
-  ubuntu: ros-noetic-cmake-modules
+  ubuntu:
+    noetic: ros-noetic-cmake-modules
+    foxy: ros-foxy-cmake-modules
+    humble: ros-humble-cmake-modules
+    jazzy: ros-jazzy-cmake-modules
 common_msgs:
-  ubuntu: ros-noetic-common-msgs
+  ubuntu:
+    noetic: ros-noetic-common-msgs
+    foxy: ros-foxy-common-msgs
+    humble: ros-humble-common-msgs
+    jazzy: ros-jazzy-common-msgs
 cpp_common:
-  ubuntu: ros-noetic-cpp-common
+  ubuntu:
+    noetic: ros-noetic-cpp-common
+    foxy: ros-foxy-cpp-common
+    humble: ros-humble-cpp-common
+    jazzy: ros-jazzy-cpp-common
 diagnostic_msgs:
-  ubuntu: ros-noetic-diagnostic-msgs
+  ubuntu:
+    noetic: ros-noetic-diagnostic-msgs
+    foxy: ros-foxy-diagnostic-msgs
+    humble: ros-humble-diagnostic-msgs
+    jazzy: ros-jazzy-diagnostic-msgs
 dynamic_reconfigure:
-  ubuntu: ros-noetic-dynamic-reconfigure
+  ubuntu:
+    noetic: ros-noetic-dynamic-reconfigure
+    foxy: ros-foxy-dynamic-reconfigure
+    humble: ros-humble-dynamic-reconfigure
+    jazzy: ros-jazzy-dynamic-reconfigure
 gencpp:
-  ubuntu: ros-noetic-gencpp
+  ubuntu:
+    noetic: ros-noetic-gencpp
+    foxy: ros-foxy-gencpp
+    humble: ros-humble-gencpp
+    jazzy: ros-jazzy-gencpp
 geneus:
-  ubuntu: ros-noetic-geneus
+  ubuntu:
+    noetic: ros-noetic-geneus
+    foxy: ros-foxy-geneus
+    humble: ros-humble-geneus
+    jazzy: ros-jazzy-geneus
 genlisp:
-  ubuntu: ros-noetic-genlisp
+  ubuntu:
+    noetic: ros-noetic-genlisp
+    foxy: ros-foxy-genlisp
+    humble: ros-humble-genlisp
+    jazzy: ros-jazzy-genlisp
 genmsg:
-  ubuntu: ros-noetic-genmsg
+  ubuntu:
+    noetic: ros-noetic-genmsg
+    foxy: ros-foxy-genmsg
+    humble: ros-humble-genmsg
+    jazzy: ros-jazzy-genmsg
 gennodejs:
-  ubuntu: ros-noetic-gennodejs
+  ubuntu:
+    noetic: ros-noetic-gennodejs
+    foxy: ros-foxy-gennodejs
+    humble: ros-humble-gennodejs
+    jazzy: ros-jazzy-gennodejs
 genpy:
-  ubuntu: ros-noetic-genpy
+  ubuntu:
+    noetic: ros-noetic-genpy
+    foxy: ros-foxy-genpy
+    humble: ros-humble-genpy
+    jazzy: ros-jazzy-genpy
 geometry_msgs:
-  ubuntu: ros-noetic-geometry-msgs
+  ubuntu:
+    noetic: ros-noetic-geometry-msgs
+    foxy: ros-foxy-geometry-msgs
+    humble: ros-humble-geometry-msgs
+    jazzy: ros-jazzy-geometry-msgs
 message_filters:
-  ubuntu: ros-noetic-message-filters
+  ubuntu:
+    noetic: ros-noetic-message-filters
+    foxy: ros-foxy-message-filters
+    humble: ros-humble-message-filters
+    jazzy: ros-jazzy-message-filters
 message_generation:
-  ubuntu: ros-noetic-message-generation
+  ubuntu:
+    noetic: ros-noetic-message-generation
+    foxy: ros-foxy-message-generation
+    humble: ros-humble-message-generation
+    jazzy: ros-jazzy-message-generation
 message_runtime:
-  ubuntu: ros-noetic-message-runtime
+  ubuntu:
+    noetic: ros-noetic-message-runtime
+    foxy: ros-foxy-message-runtime
+    humble: ros-humble-message-runtime
+    jazzy: ros-jazzy-message-runtime
 mk:
-  ubuntu: ros-noetic-mk
+  ubuntu:
+    noetic: ros-noetic-mk
+    foxy: ros-foxy-mk
+    humble: ros-humble-mk
+    jazzy: ros-jazzy-mk
 nav_msgs:
-  ubuntu: ros-noetic-nav-msgs
+  ubuntu:
+    noetic: ros-noetic-nav-msgs
+    foxy: ros-foxy-nav-msgs
+    humble: ros-humble-nav-msgs
+    jazzy: ros-jazzy-nav-msgs
 nodelet:
-  ubuntu: ros-noetic-nodelet
+  ubuntu:
+    noetic: ros-noetic-nodelet
+    foxy: ros-foxy-nodelet
+    humble: ros-humble-nodelet
+    jazzy: ros-jazzy-nodelet
 nodelet_core:
-  ubuntu: ros-noetic-nodelet-core
+  ubuntu:
+    noetic: ros-noetic-nodelet-core
+    foxy: ros-foxy-nodelet-core
+    humble: ros-humble-nodelet-core
+    jazzy: ros-jazzy-nodelet-core
 nodelet_topic_tools:
-  ubuntu: ros-noetic-nodelet-topic-tools
+  ubuntu:
+    noetic: ros-noetic-nodelet-topic-tools
+    foxy: ros-foxy-nodelet-topic-tools
+    humble: ros-humble-nodelet-topic-tools
+    jazzy: ros-jazzy-nodelet-topic-tools
 pluginlib:
-  ubuntu: ros-noetic-pluginlib
+  ubuntu:
+    noetic: ros-noetic-pluginlib
+    foxy: ros-foxy-pluginlib
+    humble: ros-humble-pluginlib
+    jazzy: ros-jazzy-pluginlib
 ros:
-  ubuntu: ros-noetic-ros
+  ubuntu:
+    noetic: ros-noetic-ros
+    foxy: ros-foxy-ros
+    humble: ros-humble-ros
+    jazzy: ros-jazzy-ros
 ros_base:
-  ubuntu: ros-noetic-ros-base
+  ubuntu:
+    noetic: ros-noetic-ros-base
+    foxy: ros-foxy-ros-base
+    humble: ros-humble-ros-base
+    jazzy: ros-jazzy-ros-base
 ros_comm:
-  ubuntu: ros-noetic-ros-comm
+  ubuntu:
+    noetic: ros-noetic-ros-comm
+    foxy: ros-foxy-ros-comm
+    humble: ros-humble-ros-comm
+    jazzy: ros-jazzy-ros-comm
 ros_core:
-  ubuntu: ros-noetic-ros-core
+  ubuntu:
+    noetic: ros-noetic-ros-core
+    foxy: ros-foxy-ros-core
+    humble: ros-humble-ros-core
+    jazzy: ros-jazzy-ros-core
 ros_environment:
-  ubuntu: ros-noetic-ros-environment
+  ubuntu:
+    noetic: ros-noetic-ros-environment
+    foxy: ros-foxy-ros-environment
+    humble: ros-humble-ros-environment
+    jazzy: ros-jazzy-ros-environment
 rosbag:
-  ubuntu: ros-noetic-rosbag
+  ubuntu:
+    noetic: ros-noetic-rosbag
+    foxy: ros-foxy-rosbag
+    humble: ros-humble-rosbag
+    jazzy: ros-jazzy-rosbag
 rosbag_migration_rule:
-  ubuntu: ros-noetic-rosbag-migration-rule
+  ubuntu:
+    noetic: ros-noetic-rosbag-migration-rule
+    foxy: ros-foxy-rosbag-migration-rule
+    humble: ros-humble-rosbag-migration-rule
+    jazzy: ros-jazzy-rosbag-migration-rule
 rosbag_storage:
-  ubuntu: ros-noetic-rosbag-storage
+  ubuntu:
+    noetic: ros-noetic-rosbag-storage
+    foxy: ros-foxy-rosbag-storage
+    humble: ros-humble-rosbag-storage
+    jazzy: ros-jazzy-rosbag-storage
 rosbash:
-  ubuntu: ros-noetic-rosbash
+  ubuntu:
+    noetic: ros-noetic-rosbash
+    foxy: ros-foxy-rosbash
+    humble: ros-humble-rosbash
+    jazzy: ros-jazzy-rosbash
 rosboost_cfg:
-  ubuntu: ros-noetic-rosboost-cfg
+  ubuntu:
+    noetic: ros-noetic-rosboost-cfg
+    foxy: ros-foxy-rosboost-cfg
+    humble: ros-humble-rosboost-cfg
+    jazzy: ros-jazzy-rosboost-cfg
 rosbuild:
-  ubuntu: ros-noetic-rosbuild
+  ubuntu:
+    noetic: ros-noetic-rosbuild
+    foxy: ros-foxy-rosbuild
+    humble: ros-humble-rosbuild
+    jazzy: ros-jazzy-rosbuild
 rosclean:
-  ubuntu: ros-noetic-rosclean
+  ubuntu:
+    noetic: ros-noetic-rosclean
+    foxy: ros-foxy-rosclean
+    humble: ros-humble-rosclean
+    jazzy: ros-jazzy-rosclean
 rosconsole:
-  ubuntu: ros-noetic-rosconsole
+  ubuntu:
+    noetic: ros-noetic-rosconsole
+    foxy: ros-foxy-rosconsole
+    humble: ros-humble-rosconsole
+    jazzy: ros-jazzy-rosconsole
 rosconsole_bridge:
-  ubuntu: ros-noetic-rosconsole-bridge
+  ubuntu:
+    noetic: ros-noetic-rosconsole-bridge
+    foxy: ros-foxy-rosconsole-bridge
+    humble: ros-humble-rosconsole-bridge
+    jazzy: ros-jazzy-rosconsole-bridge
 roscpp:
-  ubuntu: ros-noetic-roscpp
+  ubuntu:
+    noetic: ros-noetic-roscpp
+    foxy: ros-foxy-roscpp
+    humble: ros-humble-roscpp
+    jazzy: ros-jazzy-roscpp
 roscpp_core:
-  ubuntu: ros-noetic-roscpp-core
+  ubuntu:
+    noetic: ros-noetic-roscpp-core
+    foxy: ros-foxy-roscpp-core
+    humble: ros-humble-roscpp-core
+    jazzy: ros-jazzy-roscpp-core
 roscpp_serialization:
-  ubuntu: ros-noetic-roscpp-serialization
+  ubuntu:
+    noetic: ros-noetic-roscpp-serialization
+    foxy: ros-foxy-roscpp-serialization
+    humble: ros-humble-roscpp-serialization
+    jazzy: ros-jazzy-roscpp-serialization
 roscpp_traits:
-  ubuntu: ros-noetic-roscpp-traits
+  ubuntu:
+    noetic: ros-noetic-roscpp-traits
+    foxy: ros-foxy-roscpp-traits
+    humble: ros-humble-roscpp-traits
+    jazzy: ros-jazzy-roscpp-traits
 roscreate:
-  ubuntu: ros-noetic-roscreate
+  ubuntu:
+    noetic: ros-noetic-roscreate
+    foxy: ros-foxy-roscreate
+    humble: ros-humble-roscreate
+    jazzy: ros-jazzy-roscreate
 rosgraph:
-  ubuntu: ros-noetic-rosgraph
+  ubuntu:
+    noetic: ros-noetic-rosgraph
+    foxy: ros-foxy-rosgraph
+    humble: ros-humble-rosgraph
+    jazzy: ros-jazzy-rosgraph
 rosgraph_msgs:
-  ubuntu: ros-noetic-rosgraph-msgs
+  ubuntu:
+    noetic: ros-noetic-rosgraph-msgs
+    foxy: ros-foxy-rosgraph-msgs
+    humble: ros-humble-rosgraph-msgs
+    jazzy: ros-jazzy-rosgraph-msgs
 roslang:
-  ubuntu: ros-noetic-roslang
+  ubuntu:
+    noetic: ros-noetic-roslang
+    foxy: ros-foxy-roslang
+    humble: ros-humble-roslang
+    jazzy: ros-jazzy-roslang
 roslaunch:
-  ubuntu: ros-noetic-roslaunch
+  ubuntu:
+    noetic: ros-noetic-roslaunch
+    foxy: ros-foxy-roslaunch
+    humble: ros-humble-roslaunch
+    jazzy: ros-jazzy-roslaunch
 roslib:
-  ubuntu: ros-noetic-roslib
+  ubuntu:
+    noetic: ros-noetic-roslib
+    foxy: ros-foxy-roslib
+    humble: ros-humble-roslib
+    jazzy: ros-jazzy-roslib
 roslisp:
-  ubuntu: ros-noetic-roslisp
+  ubuntu:
+    noetic: ros-noetic-roslisp
+    foxy: ros-foxy-roslisp
+    humble: ros-humble-roslisp
+    jazzy: ros-jazzy-roslisp
 roslz4:
-  ubuntu: ros-noetic-roslz4
+  ubuntu:
+    noetic: ros-noetic-roslz4
+    foxy: ros-foxy-roslz4
+    humble: ros-humble-roslz4
+    jazzy: ros-jazzy-roslz4
 rosmake:
-  ubuntu: ros-noetic-rosmake
+  ubuntu:
+    noetic: ros-noetic-rosmake
+    foxy: ros-foxy-rosmake
+    humble: ros-humble-rosmake
+    jazzy: ros-jazzy-rosmake
 rosmaster:
-  ubuntu: ros-noetic-rosmaster
+  ubuntu:
+    noetic: ros-noetic-rosmaster
+    foxy: ros-foxy-rosmaster
+    humble: ros-humble-rosmaster
+    jazzy: ros-jazzy-rosmaster
 rosmsg:
-  ubuntu: ros-noetic-rosmsg
+  ubuntu:
+    noetic: ros-noetic-rosmsg
+    foxy: ros-foxy-rosmsg
+    humble: ros-humble-rosmsg
+    jazzy: ros-jazzy-rosmsg
 rosnode:
-  ubuntu: ros-noetic-rosnode
+  ubuntu:
+    noetic: ros-noetic-rosnode
+    foxy: ros-foxy-rosnode
+    humble: ros-humble-rosnode
+    jazzy: ros-jazzy-rosnode
 rosout:
-  ubuntu: ros-noetic-rosout
+  ubuntu:
+    noetic: ros-noetic-rosout
+    foxy: ros-foxy-rosout
+    humble: ros-humble-rosout
+    jazzy: ros-jazzy-rosout
 rospack:
-  ubuntu: ros-noetic-rospack
+  ubuntu:
+    noetic: ros-noetic-rospack
+    foxy: ros-foxy-rospack
+    humble: ros-humble-rospack
+    jazzy: ros-jazzy-rospack
 rosparam:
-  ubuntu: ros-noetic-rosparam
+  ubuntu:
+    noetic: ros-noetic-rosparam
+    foxy: ros-foxy-rosparam
+    humble: ros-humble-rosparam
+    jazzy: ros-jazzy-rosparam
 rospy:
-  ubuntu: ros-noetic-rospy
+  ubuntu:
+    noetic: ros-noetic-rospy
+    foxy: ros-foxy-rospy
+    humble: ros-humble-rospy
+    jazzy: ros-jazzy-rospy
 rosservice:
-  ubuntu: ros-noetic-rosservice
+  ubuntu:
+    noetic: ros-noetic-rosservice
+    foxy: ros-foxy-rosservice
+    humble: ros-humble-rosservice
+    jazzy: ros-jazzy-rosservice
 rostest:
-  ubuntu: ros-noetic-rostest
+  ubuntu:
+    noetic: ros-noetic-rostest
+    foxy: ros-foxy-rostest
+    humble: ros-humble-rostest
+    jazzy: ros-jazzy-rostest
 rostime:
-  ubuntu: ros-noetic-rostime
+  ubuntu:
+    noetic: ros-noetic-rostime
+    foxy: ros-foxy-rostime
+    humble: ros-humble-rostime
+    jazzy: ros-jazzy-rostime
 rostopic:
-  ubuntu: ros-noetic-rostopic
+  ubuntu:
+    noetic: ros-noetic-rostopic
+    foxy: ros-foxy-rostopic
+    humble: ros-humble-rostopic
+    jazzy: ros-jazzy-rostopic
 rosunit:
-  ubuntu: ros-noetic-rosunit
+  ubuntu:
+    noetic: ros-noetic-rosunit
+    foxy: ros-foxy-rosunit
+    humble: ros-humble-rosunit
+    jazzy: ros-jazzy-rosunit
 roswtf:
-  ubuntu: ros-noetic-roswtf
+  ubuntu:
+    noetic: ros-noetic-roswtf
+    foxy: ros-foxy-roswtf
+    humble: ros-humble-roswtf
+    jazzy: ros-jazzy-roswtf
 sensor_msgs:
-  ubuntu: ros-noetic-sensor-msgs
+  ubuntu:
+    noetic: ros-noetic-sensor-msgs
+    foxy: ros-foxy-sensor-msgs
+    humble: ros-humble-sensor-msgs
+    jazzy: ros-jazzy-sensor-msgs
 shape_msgs:
-  ubuntu: ros-noetic-shape-msgs
+  ubuntu:
+    noetic: ros-noetic-shape-msgs
+    foxy: ros-foxy-shape-msgs
+    humble: ros-humble-shape-msgs
+    jazzy: ros-jazzy-shape-msgs
 smclib:
-  ubuntu: ros-noetic-smclib
+  ubuntu:
+    noetic: ros-noetic-smclib
+    foxy: ros-foxy-smclib
+    humble: ros-humble-smclib
+    jazzy: ros-jazzy-smclib
 std_msgs:
-  ubuntu: ros-noetic-std-msgs
+  ubuntu:
+    noetic: ros-noetic-std-msgs
+    foxy: ros-foxy-std-msgs
+    humble: ros-humble-std-msgs
+    jazzy: ros-jazzy-std-msgs
 std_srvs:
-  ubuntu: ros-noetic-std-srvs
+  ubuntu:
+    noetic: ros-noetic-std-srvs
+    foxy: ros-foxy-std-srvs
+    humble: ros-humble-std-srvs
+    jazzy: ros-jazzy-std-srvs
 stereo_msgs:
-  ubuntu: ros-noetic-stereo-msgs
+  ubuntu:
+    noetic: ros-noetic-stereo-msgs
+    foxy: ros-foxy-stereo-msgs
+    humble: ros-humble-stereo-msgs
+    jazzy: ros-jazzy-stereo-msgs
 topic_tools:
-  ubuntu: ros-noetic-topic-tools
+  ubuntu:
+    noetic: ros-noetic-topic-tools
+    foxy: ros-foxy-topic-tools
+    humble: ros-humble-topic-tools
+    jazzy: ros-jazzy-topic-tools
 trajectory_msgs:
-  ubuntu: ros-noetic-trajectory-msgs
+  ubuntu:
+    noetic: ros-noetic-trajectory-msgs
+    foxy: ros-foxy-trajectory-msgs
+    humble: ros-humble-trajectory-msgs
+    jazzy: ros-jazzy-trajectory-msgs
 visualization_msgs:
-  ubuntu: ros-noetic-visualization-msgs
+  ubuntu:
+    noetic: ros-noetic-visualization-msgs
+    foxy: ros-foxy-visualization-msgs
+    humble: ros-humble-visualization-msgs
+    jazzy: ros-jazzy-visualization-msgs
 xmlrpcpp:
-  ubuntu: ros-noetic-xmlrpcpp
+  ubuntu:
+    noetic: ros-noetic-xmlrpcpp
+    foxy: ros-foxy-xmlrpcpp
+    humble: ros-humble-xmlrpcpp
+    jazzy: ros-jazzy-xmlrpcpp
 robot_state_publisher:
-  ubuntu: ros-noetic-robot-state-publisher
+  ubuntu:
+    noetic: ros-noetic-robot-state-publisher
+    foxy: ros-foxy-robot-state-publisher
+    humble: ros-humble-robot-state-publisher
+    jazzy: ros-jazzy-robot-state-publisher
 rviz:
-  ubuntu: ros-noetic-rviz
+  ubuntu:
+    noetic: ros-noetic-rviz
+    foxy: ros-foxy-rviz
+    humble: ros-humble-rviz
+    jazzy: ros-jazzy-rviz
 joint_state_publisher_gui:
-  ubuntu: ros-noetic-joint-state-publisher-gui
+  ubuntu:
+    noetic: ros-noetic-joint-state-publisher-gui
+    foxy: ros-foxy-joint-state-publisher-gui
+    humble: ros-humble-joint-state-publisher-gui
+    jazzy: ros-jazzy-joint-state-publisher-gui
 gazebo_ros:
-  ubuntu: ros-noetic-gazebo-ros
+  ubuntu:
+    noetic: ros-noetic-gazebo-ros
+    foxy: ros-foxy-gazebo-ros
+    humble: ros-humble-gazebo-ros
+    jazzy: ros-jazzy-gazebo-ros
 hardware_interface:
-  ubuntu: ros-noetic-hardware-interface
+  ubuntu:
+    noetic: ros-noetic-hardware-interface
+    foxy: ros-foxy-hardware-interface
+    humble: ros-humble-hardware-interface
+    jazzy: ros-jazzy-hardware-interface
 controller_manager:
-  ubuntu: ros-noetic-controller-manager
+  ubuntu:
+    noetic: ros-noetic-controller-manager
+    foxy: ros-foxy-controller-manager
+    humble: ros-humble-controller-manager
+    jazzy: ros-jazzy-controller-manager
 urdf:
-  ubuntu: ros-noetic-urdf
+  ubuntu:
+    noetic: ros-noetic-urdf
+    foxy: ros-foxy-urdf
+    humble: ros-humble-urdf
+    jazzy: ros-jazzy-urdf
 python3-catkin-pkg-modules:
   ubuntu: [python3-catkin-pkg]

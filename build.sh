@@ -1,7 +1,7 @@
 #!/bin/bash
 # 检查参数是否正确
 if [ $# -ne 1 ]; then
-  echo "Usage: $0 {focal|jammy|ubuntu2004|ubuntu2204|humble|foxy}"
+  echo "Usage: $0 {focal|jammy|ubuntu2004|ubuntu2204|humble|humble-focal|HumbleOnFocal|foxy}"
   exit 1
 fi
 # 根据传入的参数设置 Dockerfile 和目标镜像名称
@@ -18,7 +18,7 @@ case $1 in
     DOCKERFILE="Dockerfile.HumbleOnJammy"
     IMAGE_NAME="ros-humble-jammy"
     ;;
-  HumbleOnFoxy)
+  humble-focal|HumbleOnFocal|HumbleOnFoxy)
     DOCKERFILE="Dockerfile.HumbleOnFocal"
     IMAGE_NAME="ros-humble-focal"
     BASE_IMAGE_ARG="--build-arg BASE_IMAGE=${BASE_IMAGE:-docker.m.daocloud.io/library/ubuntu:20.04}"
@@ -29,7 +29,7 @@ case $1 in
     ;;
   *)
     echo "Invalid argument: $1"
-    echo "Usage: $0 {focal|jammy|ubuntu2004|ubuntu2204|humble|foxy}"
+    echo "Usage: $0 {focal|jammy|ubuntu2004|ubuntu2204|humble|humble-focal|HumbleOnFocal|foxy}"
     exit 1
     ;;
 esac

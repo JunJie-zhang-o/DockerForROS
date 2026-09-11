@@ -49,31 +49,11 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # 安装 Focal 版 ROS 2 Humble 离线包
 COPY resources/ros-humble-focal.zip /tmp/ros-humble-focal.zip
 RUN set -eux; \
-    mkdir -p /opt/ros-humble-focal-offline; \
-    unzip /tmp/ros-humble-focal.zip -d /opt/ros-humble-focal-offline; \
-    cd /opt/ros-humble-focal-offline/pico; \
-    bundle="ros2-humble-focal-offline-bundle_latest_amd64.tar.gz"; \
-    checksum="$bundle.sha256"; \
-    expected_bundle="$(awk 'NR == 1 {print $2}' "$checksum")"; \
-    if [ -n "$expected_bundle" ] && [ "$expected_bundle" != "$bundle" ]; then \
-        ln -sf "$bundle" "$expected_bundle"; \
-        ln -sf "$checksum" "$expected_bundle.sha256"; \
-        bundle="$expected_bundle"; \
-    fi; \
-    sha256sum -c "$bundle.sha256"; \
-    bundle_tmp="$(mktemp -d)"; \
-    tar --no-same-owner -xzf "$bundle" -C "$bundle_tmp"; \
-    bundle_root="$(find "$bundle_tmp" -mindepth 1 -maxdepth 1 -type d -print -quit)"; \
-    REINSTALL_EXISTING=1 INSTALL_OVERLAY_TOOLS=0 "$bundle_root/install_offline_humble_bundle.sh"; \
-    set +u; \
-    source /opt/ros/humble/setup.bash; \
-    set -u; \
-    test "$ROS_DISTRO" = "humble"; \
-    ros2 pkg prefix rclcpp; \
-    ros2 pkg prefix rmw_cyclonedds_cpp; \
-    CYCLONEDDS_URI= ROS_LOCALHOST_ONLY=1 ROS_DOMAIN_ID=20 RMW_IMPLEMENTATION=rmw_cyclonedds_cpp \
-        python3 -c "import rclpy; rclpy.init(); node = rclpy.create_node('verify_humble_localhost'); node.destroy_node(); rclpy.shutdown()"; \
-    rm -rf /tmp/ros-humble-focal.zip /opt/ros-humble-focal-offline
+    mkdir -p /tmp/ros-humble-focal; \
+    unzip /tmp/ros-humble-focal.zip -d /tmp/; \
+    chmod +x /tmp/ros-humble-focal/install.sh; \
+    /tmp/ros-humble-focal/install.sh; \
+    rm -rf /tmp/ros-humble-focal.zip /tmp/ros-humble-focal
 # ----------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------
@@ -271,9 +251,9 @@ ENV ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
 
 # ----------------------------------------------------------------------------
 # 处理 rosdep 的依赖问题
-COPY resources/rosdep2.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
-COPY resources/rosdep_humble_focal.yaml /etc/ros/rosdep/sources.list.d/rosdep_humble_focal.yaml
-COPY resources/custom2.yaml /etc/ros/rosdep/sources.list.d/custom2.yaml
+COPY resources/rosdep.humble.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
+COPY resources/rosdep.humble.yaml /etc/ros/rosdep/sources.list.d/rosdep_humble_focal.yaml
+COPY resources/custom.humble.yaml /etc/ros/rosdep/sources.list.d/custom2.yaml
 RUN mkdir -p /etc/ros/rosdep/sources.list.d && \
     rm -f /etc/ros/rosdep/sources.list.d/20-default.list && \
     echo "yaml file:///etc/ros/rosdep/sources.list.d/rosdep_humble_focal.yaml" > /etc/ros/rosdep/sources.list.d/99-default.list && \

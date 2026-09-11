@@ -1,0 +1,173 @@
+
+actionlib:
+  ubuntu: ros-humble-actionlib
+actionlib_msgs:
+  ubuntu: ros-humble-actionlib-msgs
+bond:
+  ubuntu: ros-humble-bond
+bond_core:
+  ubuntu: ros-humble-bond-core
+bondcpp:
+  ubuntu: ros-humble-bondcpp
+bondpy:
+  ubuntu: ros-humble-bondpy
+catkin:
+  ubuntu: ros-humble-catkin
+class_loader:
+  ubuntu: ros-humble-class-loader
+cmake_modules:
+  ubuntu: ros-humble-cmake-modules
+common_msgs:
+  ubuntu: ros-humble-common-msgs
+cpp_common:
+  ubuntu: ros-humble-cpp-common
+diagnostic_msgs:
+  ubuntu: ros-humble-diagnostic-msgs
+dynamic_reconfigure:
+  ubuntu: ros-humble-dynamic-reconfigure
+gencpp:
+  ubuntu: ros-humble-gencpp
+geneus:
+  ubuntu: ros-humble-geneus
+genlisp:
+  ubuntu: ros-humble-genlisp
+genmsg:
+  ubuntu: ros-humble-genmsg
+gennodejs:
+  ubuntu: ros-humble-gennodejs
+genpy:
+  ubuntu: ros-humble-genpy
+geometry_msgs:
+  ubuntu: ros-humble-geometry-msgs
+message_filters:
+  ubuntu: ros-humble-message-filters
+message_generation:
+  ubuntu: ros-humble-message-generation
+message_runtime:
+  ubuntu: ros-humble-message-runtime
+mk:
+  ubuntu: ros-humble-mk
+nav_msgs:
+  ubuntu: ros-humble-nav-msgs
+nodelet:
+  ubuntu: ros-humble-nodelet
+nodelet_core:
+  ubuntu: ros-humble-nodelet-core
+nodelet_topic_tools:
+  ubuntu: ros-humble-nodelet-topic-tools
+pluginlib:
+  ubuntu: ros-humble-pluginlib
+ros:
+  ubuntu: ros-humble-ros
+ros_base:
+  ubuntu: ros-humble-ros-base
+ros_comm:
+  ubuntu: ros-humble-ros-comm
+ros_core:
+  ubuntu: ros-humble-ros-core
+ros_environment:
+  ubuntu: ros-humble-ros-environment
+rosbag:
+  ubuntu: ros-humble-rosbag
+rosbag_migration_rule:
+  ubuntu: ros-humble-rosbag-migration-rule
+rosbag_storage:
+  ubuntu: ros-humble-rosbag-storage
+rosbash:
+  ubuntu: ros-humble-rosbash
+rosboost_cfg:
+  ubuntu: ros-humble-rosboost-cfg
+rosbuild:
+  ubuntu: ros-humble-rosbuild
+rosclean:
+  ubuntu: ros-humble-rosclean
+rosconsole:
+  ubuntu: ros-humble-rosconsole
+rosconsole_bridge:
+  ubuntu: ros-humble-rosconsole-bridge
+roscpp:
+  ubuntu: ros-humble-roscpp
+roscpp_core:
+  ubuntu: ros-humble-roscpp-core
+roscpp_serialization:
+  ubuntu: ros-humble-roscpp-serialization
+roscpp_traits:
+  ubuntu: ros-humble-roscpp-traits
+roscreate:
+  ubuntu: ros-humble-roscreate
+rosgraph:
+  ubuntu: ros-humble-rosgraph
+rosgraph_msgs:
+  ubuntu: ros-humble-rosgraph-msgs
+roslang:
+  ubuntu: ros-humble-roslang
+roslaunch:
+  ubuntu: ros-humble-roslaunch
+roslib:
+  ubuntu: ros-humble-roslib
+roslisp:
+  ubuntu: ros-humble-roslisp
+roslz4:
+  ubuntu: ros-humble-roslz4
+rosmake:
+  ubuntu: ros-humble-rosmake
+rosmaster:
+  ubuntu: ros-humble-rosmaster
+rosmsg:
+  ubuntu: ros-humble-rosmsg
+rosnode:
+  ubuntu: ros-humble-rosnode
+rosout:
+  ubuntu: ros-humble-rosout
+rospack:
+  ubuntu: ros-humble-rospack
+rosparam:
+  ubuntu: ros-humble-rosparam
+rospy:
+  ubuntu: ros-humble-rospy
+rosservice:
+  ubuntu: ros-humble-rosservice
+rostest:
+  ubuntu: ros-humble-rostest
+rostime:
+  ubuntu: ros-humble-rostime
+rostopic:
+  ubuntu: ros-humble-rostopic
+rosunit:
+  ubuntu: ros-humble-rosunit
+roswtf:
+  ubuntu: ros-humble-roswtf
+sensor_msgs:
+  ubuntu: ros-humble-sensor-msgs
+shape_msgs:
+  ubuntu: ros-humble-shape-msgs
+smclib:
+  ubuntu: ros-humble-smclib
+std_msgs:
+  ubuntu: ros-humble-std-msgs
+std_srvs:
+  ubuntu: ros-humble-std-srvs
+stereo_msgs:
+  ubuntu: ros-humble-stereo-msgs
+topic_tools:
+  ubuntu: ros-humble-topic-tools
+trajectory_msgs:
+  ubuntu: ros-humble-trajectory-msgs
+visualization_msgs:
+  ubuntu: ros-humble-visualization-msgs
+xmlrpcpp:
+  ubuntu: ros-humble-xmlrpcpp
+robot_state_publisher:
+  ubuntu: ros-humble-robot-state-publisher
+rviz:
+  ubuntu: ros-humble-rviz
+joint_state_publisher_gui:
+  ubuntu: ros-humble-joint-state-publisher-gui
+gazebo_ros:
+  ubuntu: ros-humble-gazebo-ros
+hardware_interface:
+  ubuntu: ros-humble-hardware-interface
+controller_manager:
+  ubuntu: ros-humble-controller-manager
+urdf:
+  ubuntu: ros-humble-urdf

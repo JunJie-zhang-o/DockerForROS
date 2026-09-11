@@ -179,8 +179,8 @@ RUN echo 'Port 10022' >> /etc/ssh/sshd_config
 
 # ----------------------------------------------------------------------------
 # 处理rosdep 的依赖问题
-COPY resources/rosdep.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
-COPY resources/custom.yaml /etc/ros/rosdep/sources.list.d/custom.yaml
+COPY resources/rosdep.noetic.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
+COPY resources/custom.noetic.yaml /etc/ros/rosdep/sources.list.d/custom.yaml
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc && \
     rm -f /etc/ros/rosdep/sources.list.d/20-default.list && \
     rosdep init && \

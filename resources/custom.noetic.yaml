@@ -1,7 +1,9 @@
+
 # 示例:
-# actionlib:     # 功能包名称
-#   ubuntu: ros-noetic-actionlib  # deb包名,需要注意的是 如果功能包名称中有下划线,在deb包中需要更改为-
+# pico_runtime:     # 功能包名称
+#   ubuntu: [zj-humanoid-ros-noetic-pico-runtime]  # deb包名,需要注意的是 如果功能包名称中有下划线,在deb包中需要更改为-
 # 该文件用来标识ros依赖,即如果在功能包中有依赖 自定义的功能包的话,需要在该文件中列出
+
 rtipc_runtime:
   ubuntu: [zj-humanoid-rtipc-runtime]
 uplimb_runtime:
@@ -32,14 +34,10 @@ legged_nav3t_hw:
   ubuntu: [zj-humanoid-ros-noetic-legged-nav3t-hw]
 upperlimb:
   ubuntu: [zj-humanoid-ros-noetic-upperlimb]
-upperlimb_msgs:
-  ubuntu: [zj-humanoid-ros-noetic-upperlimb-msgs]
 uplimb_interface:
   ubuntu: [zj-humanoid-ros-noetic-uplimb-interface]
 hand:
   ubuntu: [zj-humanoid-ros-noetic-hand]
-hand_msgs:
-  ubuntu: [zj-humanoid-ros-noetic-hand-msgs]
 dexhand_interface:
   ubuntu: [zj-humanoid-ros-noetic-dexhand-interface]
 zj_robot:
@@ -71,6 +69,16 @@ naviai_mic_driver:
   ubuntu: [zj-humanoid-ros-noetic-naviai-mic-driver]
 naviai_audio_launch:
   ubuntu: [zj-humanoid-ros-noetic-naviai-audio-launch]
+eigen:
+  ubuntu:
+    focal: [libeigen3-dev]
+yaml-cpp:
+  ubuntu:
+    focal: [libyaml-cpp-dev]
+    jammy: [libyaml-cpp-dev]
+  debian:
+    bullseye: [libyaml-cpp-dev]
+
 
 logging:
   ubuntu: [zj-humanoid-logging]
@@ -96,3 +104,7 @@ wa2_ls_description:
   ubuntu: [zj-humanoid-ros-noetic-wa2-ls-description]
 zyd_description:
   ubuntu: [zj-humanoid-ros-noetic-zyd-description]
+led_controller:
+  ubuntu: [zj-humanoid-ros-noetic-led-controller]
+led_controller_msgs:
+  ubuntu: [zj-humanoid-ros-noetic-led-controller-msgs]

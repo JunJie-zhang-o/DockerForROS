@@ -1,0 +1,173 @@
+
+actionlib:
+  ubuntu: ros-jazzy-actionlib
+actionlib_msgs:
+  ubuntu: ros-jazzy-actionlib-msgs
+bond:
+  ubuntu: ros-jazzy-bond
+bond_core:
+  ubuntu: ros-jazzy-bond-core
+bondcpp:
+  ubuntu: ros-jazzy-bondcpp
+bondpy:
+  ubuntu: ros-jazzy-bondpy
+catkin:
+  ubuntu: ros-jazzy-catkin
+class_loader:
+  ubuntu: ros-jazzy-class-loader
+cmake_modules:
+  ubuntu: ros-jazzy-cmake-modules
+common_msgs:
+  ubuntu: ros-jazzy-common-msgs
+cpp_common:
+  ubuntu: ros-jazzy-cpp-common
+diagnostic_msgs:
+  ubuntu: ros-jazzy-diagnostic-msgs
+dynamic_reconfigure:
+  ubuntu: ros-jazzy-dynamic-reconfigure
+gencpp:
+  ubuntu: ros-jazzy-gencpp
+geneus:
+  ubuntu: ros-jazzy-geneus
+genlisp:
+  ubuntu: ros-jazzy-genlisp
+genmsg:
+  ubuntu: ros-jazzy-genmsg
+gennodejs:
+  ubuntu: ros-jazzy-gennodejs
+genpy:
+  ubuntu: ros-jazzy-genpy
+geometry_msgs:
+  ubuntu: ros-jazzy-geometry-msgs
+message_filters:
+  ubuntu: ros-jazzy-message-filters
+message_generation:
+  ubuntu: ros-jazzy-message-generation
+message_runtime:
+  ubuntu: ros-jazzy-message-runtime
+mk:
+  ubuntu: ros-jazzy-mk
+nav_msgs:
+  ubuntu: ros-jazzy-nav-msgs
+nodelet:
+  ubuntu: ros-jazzy-nodelet
+nodelet_core:
+  ubuntu: ros-jazzy-nodelet-core
+nodelet_topic_tools:
+  ubuntu: ros-jazzy-nodelet-topic-tools
+pluginlib:
+  ubuntu: ros-jazzy-pluginlib
+ros:
+  ubuntu: ros-jazzy-ros
+ros_base:
+  ubuntu: ros-jazzy-ros-base
+ros_comm:
+  ubuntu: ros-jazzy-ros-comm
+ros_core:
+  ubuntu: ros-jazzy-ros-core
+ros_environment:
+  ubuntu: ros-jazzy-ros-environment
+rosbag:
+  ubuntu: ros-jazzy-rosbag
+rosbag_migration_rule:
+  ubuntu: ros-jazzy-rosbag-migration-rule
+rosbag_storage:
+  ubuntu: ros-jazzy-rosbag-storage
+rosbash:
+  ubuntu: ros-jazzy-rosbash
+rosboost_cfg:
+  ubuntu: ros-jazzy-rosboost-cfg
+rosbuild:
+  ubuntu: ros-jazzy-rosbuild
+rosclean:
+  ubuntu: ros-jazzy-rosclean
+rosconsole:
+  ubuntu: ros-jazzy-rosconsole
+rosconsole_bridge:
+  ubuntu: ros-jazzy-rosconsole-bridge
+roscpp:
+  ubuntu: ros-jazzy-roscpp
+roscpp_core:
+  ubuntu: ros-jazzy-roscpp-core
+roscpp_serialization:
+  ubuntu: ros-jazzy-roscpp-serialization
+roscpp_traits:
+  ubuntu: ros-jazzy-roscpp-traits
+roscreate:
+  ubuntu: ros-jazzy-roscreate
+rosgraph:
+  ubuntu: ros-jazzy-rosgraph
+rosgraph_msgs:
+  ubuntu: ros-jazzy-rosgraph-msgs
+roslang:
+  ubuntu: ros-jazzy-roslang
+roslaunch:
+  ubuntu: ros-jazzy-roslaunch
+roslib:
+  ubuntu: ros-jazzy-roslib
+roslisp:
+  ubuntu: ros-jazzy-roslisp
+roslz4:
+  ubuntu: ros-jazzy-roslz4
+rosmake:
+  ubuntu: ros-jazzy-rosmake
+rosmaster:
+  ubuntu: ros-jazzy-rosmaster
+rosmsg:
+  ubuntu: ros-jazzy-rosmsg
+rosnode:
+  ubuntu: ros-jazzy-rosnode
+rosout:
+  ubuntu: ros-jazzy-rosout
+rospack:
+  ubuntu: ros-jazzy-rospack
+rosparam:
+  ubuntu: ros-jazzy-rosparam
+rospy:
+  ubuntu: ros-jazzy-rospy
+rosservice:
+  ubuntu: ros-jazzy-rosservice
+rostest:
+  ubuntu: ros-jazzy-rostest
+rostime:
+  ubuntu: ros-jazzy-rostime
+rostopic:
+  ubuntu: ros-jazzy-rostopic
+rosunit:
+  ubuntu: ros-jazzy-rosunit
+roswtf:
+  ubuntu: ros-jazzy-roswtf
+sensor_msgs:
+  ubuntu: ros-jazzy-sensor-msgs
+shape_msgs:
+  ubuntu: ros-jazzy-shape-msgs
+smclib:
+  ubuntu: ros-jazzy-smclib
+std_msgs:
+  ubuntu: ros-jazzy-std-msgs
+std_srvs:
+  ubuntu: ros-jazzy-std-srvs
+stereo_msgs:
+  ubuntu: ros-jazzy-stereo-msgs
+topic_tools:
+  ubuntu: ros-jazzy-topic-tools
+trajectory_msgs:
+  ubuntu: ros-jazzy-trajectory-msgs
+visualization_msgs:
+  ubuntu: ros-jazzy-visualization-msgs
+xmlrpcpp:
+  ubuntu: ros-jazzy-xmlrpcpp
+robot_state_publisher:
+  ubuntu: ros-jazzy-robot-state-publisher
+rviz:
+  ubuntu: ros-jazzy-rviz
+joint_state_publisher_gui:
+  ubuntu: ros-jazzy-joint-state-publisher-gui
+gazebo_ros:
+  ubuntu: ros-jazzy-gazebo-ros
+hardware_interface:
+  ubuntu: ros-jazzy-hardware-interface
+controller_manager:
+  ubuntu: ros-jazzy-controller-manager
+urdf:
+  ubuntu: ros-jazzy-urdf

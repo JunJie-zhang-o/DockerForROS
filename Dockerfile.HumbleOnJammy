@@ -215,8 +215,8 @@ ENV ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
 
 # ----------------------------------------------------------------------------
 # 处理rosdep 的依赖问题
-COPY resources/rosdep2.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
-COPY resources/custom2.yaml /etc/ros/rosdep/sources.list.d/custom2.yaml
+COPY resources/rosdep.humble.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
+COPY resources/custom.humble.yaml /etc/ros/rosdep/sources.list.d/custom2.yaml
 RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc && \
     rm -f /etc/ros/rosdep/sources.list.d/20-default.list && \
     rosdep init && \

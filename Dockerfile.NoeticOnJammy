@@ -146,15 +146,6 @@ ENV PATH=/opt/openrobots/bin:$PATH \
 
 
 # ----------------------------------------------------------------------------
-# 处理rosdep 的依赖问题
-COPY rosdep.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
-RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc && \
-    rosdep init && \
-    echo "yaml file:///etc/ros/rosdep/sources.list.d/99-default.list" > /etc/ros/rosdep/sources.list.d/20-default.list
-# ----------------------------------------------------------------------------
-
-
-# ----------------------------------------------------------------------------
 # 创建 用户 并指定 UID/GID,以便与宿主机用户保持一致,方便文件权限管理
 # 目的: 与宿主机用户保持相同的 UID/GID,方便文件共享,避免权限问题
 ARG USERNAME=ros
@@ -220,14 +211,13 @@ ENV ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
 COPY resources/rosdep.noetic.yaml /etc/ros/rosdep/sources.list.d/rosdep.yaml
 COPY resources/custom.noetic.yaml /etc/ros/rosdep/sources.list.d/custom.yaml
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc && \
-    rm -f /etc/ros/rosdep/sources.list.d/20-default.list && \
-    rosdep init && \
+    mkdir -p /etc/ros/rosdep/sources.list.d && \
     rm -f /etc/ros/rosdep/sources.list.d/20-default.list && \
     echo "yaml file:///etc/ros/rosdep/sources.list.d/rosdep.yaml" > /etc/ros/rosdep/sources.list.d/99-default.list && \
     echo "yaml file:///opt/rosdistro/rosdep/base.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list && \
     echo "yaml file:///opt/rosdistro/rosdep/python.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list && \
     echo "yaml file:///opt/rosdistro/rosdep/ruby.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list && \
-    echo "yaml file:///etc/ros/rosdep/sources.list.d/custom.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list 
+    echo "yaml file:///etc/ros/rosdep/sources.list.d/custom.yaml" >> /etc/ros/rosdep/sources.list.d/99-default.list
     # rosdep update --rosdistro=noetic
 # 切换到 ros 用户更新数据库，这样生成的 .ros 属于 ros 用户
 USER ros

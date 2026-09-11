@@ -98,7 +98,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     libhdf5-dev \
     libnl-3-dev \
     libspdlog-dev \
-    libyaml-cpp-dev \
     libzmq3-dev \
     sysstat && \
     apt-get clean && \
@@ -299,6 +298,8 @@ RUN for rc in /root/.bashrc /home/ros/.bashrc; do \
 ENV DISPLAY=:0
 
 COPY entrypoint.sh /
+COPY resources/depends.install.sh /tmp/depends.install.sh
+RUN bash /tmp/depends.install.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
 USER ros

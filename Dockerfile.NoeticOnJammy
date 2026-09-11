@@ -80,7 +80,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     wget \
     python3-pip \
     tree \
-    libyaml-cpp-dev \
     libgoogle-glog-dev \
     libzmq3-dev \
     fakeroot \
@@ -263,6 +262,8 @@ RUN for rc in /root/.zshrc /home/ros/.zshrc; do \
 ENV DISPLAY=:0
 
 COPY entrypoint.sh /
+COPY resources/depends.install.sh /tmp/depends.install.sh
+RUN bash /tmp/depends.install.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
 USER ros

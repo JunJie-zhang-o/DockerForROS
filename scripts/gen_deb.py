@@ -41,7 +41,7 @@ def get_branch_info():
     branch_name = branch_name.replace("_", "")
     commit_count = git("rev-list", "--count", "HEAD").strip()
     commit_hash = git("log", "-1", "--format=%h").strip()
-    return f"{branch_name}+{commit_count}-{commit_hash}"
+    return f"{branch_name}+{commit_count}.{commit_hash}"
 
 
 def create_rosdep_source(pkgs_name, script_dir):

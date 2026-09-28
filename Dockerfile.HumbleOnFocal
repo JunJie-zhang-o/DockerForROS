@@ -288,6 +288,11 @@ RUN for rc in /root/.bashrc /home/ros/.bashrc; do \
     for rc in /root/.zshrc /home/ros/.zshrc; do \
         touch "$rc"; \
         printf '%s\n' 'source /opt/ros/humble/setup.zsh' >> "$rc"; \
+        printf '%s\n' '# Re-register ROS 2 argcomplete after setup.zsh because later ROS hooks may rerun compinit.' >> "$rc"; \
+        printf '%s\n' 'autoload -Uz bashcompinit && bashcompinit' >> "$rc"; \
+        printf '%s\n' 'if command -v register-python-argcomplete3 >/dev/null 2>&1; then _ros2_argcomplete_register=register-python-argcomplete3; elif command -v register-python-argcomplete >/dev/null 2>&1; then _ros2_argcomplete_register=register-python-argcomplete; else _ros2_argcomplete_register=; fi' >> "$rc"; \
+        printf '%s\n' 'for _ros2_argcomplete_cmd in ros2 rosidl colcon; do [[ -n "$_ros2_argcomplete_register" ]] && command -v "$_ros2_argcomplete_cmd" >/dev/null 2>&1 && eval "$("$_ros2_argcomplete_register" "$_ros2_argcomplete_cmd" 2>/dev/null)"; done' >> "$rc"; \
+        printf '%s\n' 'unset _ros2_argcomplete_cmd _ros2_argcomplete_register' >> "$rc"; \
         printf '%s\n' 'if [ -f /etc/profile.d/ros2_humble_cyclone.sh ]; then source /etc/profile.d/ros2_humble_cyclone.sh; fi' >> "$rc"; \
         printf '%s\n' 'export CMAKE_PREFIX_PATH=/opt/zj_humanoid:$CMAKE_PREFIX_PATH' >> "$rc"; \
         printf '%s\n' 'alias rm="echo \"Use trash instead of rm, or use /bin/rm to force delete\""' >> "$rc"; \

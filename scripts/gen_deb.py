@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-from re import A
-from typing import List, Optional
+import re
+from typing import List, Optional, Tuple
 from plumbum import CommandNotFound, ProcessExecutionError, local , FG
 from plumbum.cmd import sudo, chmod, echo, cat, git, sed
 from pathlib import Path
@@ -44,6 +44,37 @@ def get_branch_info():
     return f"{branch_name}+{commit_count}.{commit_hash}"
 
 
+def is_tag_trigger() -> bool:
+    return os.environ.get("IS_TAG_TRIGGER") == "true"
+
+
+def current_tag_name() -> str:
+    tag_name = os.environ.get("TAG")
+    if tag_name is not None:
+        logger.debug(f"Using tag name from environment variable TAG: {tag_name}")
+        return tag_name
+
+    try:
+        return git("describe", "--tags", "--exact-match", "HEAD").strip()
+    except (ProcessExecutionError, CommandNotFound, FileNotFoundError) as exc:
+        raise RuntimeError("IS_TAG_TRIGGER=true but no tag name was found") from exc
+
+
+def parse_tag_revision(tag_name: str) -> Tuple[str, str]:
+    match = re.fullmatch(r"v([^-]+)(?:-(.+))?", tag_name)
+    if not match:
+        raise ValueError(f"TAG格式不正确: {tag_name}, 期望格式: v<package_version> 或 v<package_version>-<revision>, 例如 v1.0.0 或 v1.0.0-1")
+    logger.debug(f"Parsed tag name: {tag_name}, package version: {match.group(1)}, revision: {match.group(2) or '0'}")
+    return match.group(1), match.group(2) or "0"
+
+
+def get_tag_revision(pkg: "PackageInfo") -> str:
+    tag_version, revision = parse_tag_revision(current_tag_name())
+    if tag_version != pkg.version:
+        raise ValueError(f"TAG版本 {tag_version} 与 package.xml 版本 {pkg.version} 不一致")
+    return revision
+
+
 def create_rosdep_source(pkgs_name, script_dir):
     target_file=f"/etc/ros/rosdep/sources.list.d/100-local-{pkgs_name}.list"
 
@@ -72,6 +103,7 @@ class PackageInfo:
     version: str                                # 功能包版本
     abs_path: str                               # 功能包路径
     deb_name: Optional[str] = None              # 生成的deb包名称
+    debug_deb_path: Optional[str] = None        # 生成的ddeb调试包路径
 
 @dataclass_json
 @dataclass
@@ -194,11 +226,15 @@ class Builder(ABC):
     def mv(self, dest_path:Path):
         dest_path.mkdir(parents=True, exist_ok=True)
         Path(self.deb_path).rename(dest_path.joinpath(self.deb_name))
+        first_debug_deb_path = None
         for debug_deb_path in self.debug_deb_paths:
-            debug_deb_path = Path(debug_deb_path)
-            if debug_deb_path.exists():
-                debug_deb_path.rename(dest_path.joinpath(debug_deb_path.name))
-        return dest_path.joinpath(self.deb_name)
+            src_debug_deb_path = Path(debug_deb_path)
+            if src_debug_deb_path.exists():
+                moved_debug_deb_path = dest_path.joinpath(src_debug_deb_path.name)
+                src_debug_deb_path.rename(moved_debug_deb_path)
+                if first_debug_deb_path is None:
+                    first_debug_deb_path = moved_debug_deb_path
+        return dest_path.joinpath(self.deb_name), first_debug_deb_path
 
 
 
@@ -230,8 +266,10 @@ class DebPackageBuilder(Builder):
         self.clear()
         with local.cwd(self._pkg.abs_path):
             logger.info("🛠  Generating debian package...")
-            if os.environ.get("IS_TAG_TRIGGER") == "true" or local_build == True:        # 打tag的时候云端也上传 tag名称就是v1.0.0等
-            # TODO 根据构建的规则进行生成，是否要生成一个时间戳
+            if is_tag_trigger():
+                revision = get_tag_revision(self._pkg)
+                bloom_generate["debian", "--debian-inc", revision, "--unsafe"]()
+            elif local_build == True:
                 bloom_generate["debian", "--native", "--unsafe"]()
             else:
                 bloom_generate["debian", "--debian-inc", f"{get_branch_info()}", "--unsafe"]()
@@ -257,8 +295,10 @@ class ROSPackageBuilder(Builder):
         with local.cwd(self._pkg.abs_path):
 
             logger.info("🛠  Generating rosdebian package...")
-            if os.environ.get("IS_TAG_TRIGGER") == "true" or local_build:        # 打tag的时候云端也上传 tag名称就是v1.0.0等
-            # TODO 根据构建的规则进行生成，是否要生成一个时间戳
+            if is_tag_trigger():
+                revision = get_tag_revision(self._pkg)
+                bloom_generate["rosdebian", "--ros-distro", f"{ROS_VERSION}", "--debian-inc", revision, "--unsafe"]()
+            elif local_build:
                 bloom_generate["rosdebian", "--ros-distro", f"{ROS_VERSION}", "--unsafe"]()
             else:
                 bloom_generate["rosdebian", "--ros-distro", f"{ROS_VERSION}", "--debian-inc", f"{get_branch_info()}", "--unsafe"]()
@@ -394,8 +434,9 @@ class RosDebCli:
             builders.append(builder)
             builder.build(prefix=prefix, arch=arch, local_build=self._local_build, strip_debug_symbols=self._strip_debug_symbols)
             builder.install()
-            deb_name = builder.mv(workspace_path.joinpath("dist").resolve())
+            deb_name, debug_deb_path = builder.mv(workspace_path.joinpath("dist").resolve())
             pkg.deb_name = str(deb_name)
+            pkg.debug_deb_path = str(debug_deb_path) if debug_deb_path else None
             self._packages.packages.append(pkg)
             
 

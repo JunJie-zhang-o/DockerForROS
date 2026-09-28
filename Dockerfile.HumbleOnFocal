@@ -269,9 +269,12 @@ USER root
 # 安装 gen_deb 工具
 COPY scripts/gen_deb.py /usr/local/bin/gen_deb.py
 COPY scripts/gen_deb.py /usr/local/bin/gen_deb
+COPY scripts/gen_zip.py /usr/local/bin/gen_zip.py
+COPY scripts/gen_zip.py /usr/local/bin/gen_zip
 COPY scripts/chfs.py /usr/local/bin/chfs
 COPY scripts/postrm /usr/local/bin/postrm
 RUN chmod +x /usr/local/bin/gen_deb && \
+    chmod +x /usr/local/bin/gen_zip && \
     chmod +x /usr/local/bin/chfs
 # ----------------------------------------------------------------------------
 

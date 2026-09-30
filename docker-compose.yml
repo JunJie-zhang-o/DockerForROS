@@ -13,7 +13,7 @@ services:
     platform: linux/amd64
     privileged: true
     user: ros
-    # runtime: nvidia
+    runtime: nvidia
     environment:
       - DISPLAY=${DISPLAY:-:0}
       - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
@@ -124,7 +124,7 @@ services:
     platform: linux/amd64
     privileged: true
     user: ros
-    # runtime: nvidia
+    runtime: nvidia
     environment:
       - DISPLAY=${DISPLAY:-:0}
       - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
@@ -179,7 +179,7 @@ services:
     platform: linux/amd64
     privileged: true
     user: ros
-    # runtime: nvidia
+    runtime: nvidia
     environment:
       - DISPLAY=${DISPLAY:-:0}
       - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
@@ -234,7 +234,7 @@ services:
     platform: linux/amd64
     privileged: true
     user: ros
-    # runtime: nvidia
+    runtime: nvidia
     environment:
       - DISPLAY=${DISPLAY:-:0}
       - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
@@ -289,7 +289,7 @@ services:
     platform: linux/amd64
     privileged: true
     user: ros
-    # runtime: nvidia
+    runtime: nvidia
     environment:
       - DISPLAY=${DISPLAY:-:0}
       - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}

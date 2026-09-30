@@ -16,6 +16,13 @@ curl -fsSLO "https://archive.ubuntu.com/ubuntu/pool/main/l/lua5.3/liblua5.3-dev_
 
 apt-get update
 apt-get install -y --allow-downgrades "$DEB_DIR"/*.deb
+apt-get install -y \
+    novnc \
+    websockify \
+    x11vnc \
+    xvfb \
+    openbox \
+    dbus-x11
 
 check_version() {
     local package=$1

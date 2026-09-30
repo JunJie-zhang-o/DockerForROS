@@ -227,3 +227,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local offline ROS bundles
+resources/ros-humble-focal.zip

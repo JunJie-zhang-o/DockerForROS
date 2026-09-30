@@ -32,6 +32,9 @@ services:
       - /dev:/dev
       - ${HOME}/.ssh:/home/ros/.ssh
       - ${HOME}/.codex:/home/ros/.codex
+      - ${HOME}/.gemini:/home/ros/.gemini
+      - ${HOME}/.antigravity:/home/ros/.antigravity
+      - ${HOME}/.config/Antigravity:/home/ros/.config/Antigravity
       - ${HOME}/.claude:/home/ros/.claude
       - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
       - ./resources/custom.noetic.yaml:/etc/ros/rosdep/sources.list.d/custom.yaml:ro
@@ -88,6 +91,9 @@ services:
   #     - /dev:/dev
   #     - ${HOME}/.ssh:/home/ros/.ssh
   #     - ${HOME}/.codex:/home/ros/.codex
+  #     - ${HOME}/.gemini:/home/ros/.gemini
+  #     - ${HOME}/.antigravity:/home/ros/.antigravity
+  #     - ${HOME}/.config/Antigravity:/home/ros/.config/Antigravity
   #     - ${HOME}/.claude:/home/ros/.claude
   #     - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
   #     - ./resources/custom.noetic.yaml:/etc/ros/rosdep/sources.list.d/custom.yaml:ro
@@ -142,6 +148,10 @@ services:
       - ${XDG_RUNTIME_DIR:-/run/user/1000}:${XDG_RUNTIME_DIR:-/run/user/1000}
       - /dev:/dev
       - ${HOME}/.ssh:/home/ros/.ssh
+      - ${HOME}/.codex:/home/ros/.codex
+      - ${HOME}/.gemini:/home/ros/.gemini
+      - ${HOME}/.antigravity:/home/ros/.antigravity
+      - ${HOME}/.config/Antigravity:/home/ros/.config/Antigravity
       - ${HOME}/.claude:/home/ros/.claude
       - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
       - ./resources/custom.humble.yaml:/etc/ros/rosdep/sources.list.d/custom2.yaml:ro
@@ -198,6 +208,9 @@ services:
       - /dev:/dev
       - ${HOME}/.ssh:/home/ros/.ssh
       - ${HOME}/.codex:/home/ros/.codex
+      - ${HOME}/.gemini:/home/ros/.gemini
+      - ${HOME}/.antigravity:/home/ros/.antigravity
+      - ${HOME}/.config/Antigravity:/home/ros/.config/Antigravity
       - ${HOME}/.claude:/home/ros/.claude
       - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
       - ./resources/custom.humble.yaml:/etc/ros/rosdep/sources.list.d/custom2.yaml:ro
@@ -253,6 +266,9 @@ services:
       - /dev:/dev
       - ${HOME}/.ssh:/home/ros/.ssh
       - ${HOME}/.codex:/home/ros/.codex
+      - ${HOME}/.gemini:/home/ros/.gemini
+      - ${HOME}/.antigravity:/home/ros/.antigravity
+      - ${HOME}/.config/Antigravity:/home/ros/.config/Antigravity
       - ${HOME}/.claude:/home/ros/.claude
       - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
       - ./resources/custom.jazzy.yaml:/etc/ros/rosdep/sources.list.d/custom2.yaml:ro
@@ -308,6 +324,9 @@ services:
       - /dev:/dev
       - ${HOME}/.ssh:/home/ros/.ssh
       - ${HOME}/.codex:/home/ros/.codex
+      - ${HOME}/.gemini:/home/ros/.gemini
+      - ${HOME}/.antigravity:/home/ros/.antigravity
+      - ${HOME}/.config/Antigravity:/home/ros/.config/Antigravity
       - ${HOME}/.claude:/home/ros/.claude
       - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
       - ./resources/custom.foxy.yaml:/etc/ros/rosdep/sources.list.d/custom2.yaml:ro

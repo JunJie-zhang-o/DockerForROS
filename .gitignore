@@ -211,6 +211,9 @@ cython_debug/
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
 
+# Local Docker BuildKit cache
+.docker-cache/
+
 # Ruff stuff:
 .ruff_cache/
 
@@ -224,3 +227,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local offline ROS bundles
+resources/ros-humble-focal.zip

@@ -1,13 +1,14 @@
 services:
   ros-noetic-focal:
-    image: cros20
-    pull_policy: build
+    image: ros-noetic-focal
     build:
       context: .
       dockerfile: Dockerfile.NoeticOnFocal
       args:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
+      cache_to:
+        - type=local,dest=.docker-cache/ros-noetic-focal,mode=max
     container_name: ros-noetic-focal
     platform: linux/amd64
     privileged: true
@@ -18,6 +19,8 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
       - QT_X11_NO_MITSHM=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
       # 设置 Master URI
       - ROS_MASTER_URI=http://127.0.0.1:${ROS1_MASTER_PORT:-11311}
       - ROS_IP=127.0.0.1
@@ -26,15 +29,18 @@ services:
       - /dev:/dev
       - ${HOME}/.ssh:/home/ros/.ssh
       - ${HOME}/.codex:/home/ros/.codex
-      # - ${HOME}/.claude:/home/ros/.claude
+      - ${HOME}/.gemini:/home/ros/.gemini
+      - ${HOME}/.antigravity:/home/ros/.antigravity
+      - ${HOME}/.config/Antigravity:/home/ros/.config/Antigravity
+      - ${HOME}/.claude:/home/ros/.claude
       - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
-      - ./resources/custom.yaml:/etc/ros/rosdep/sources.list.d/custom.yaml:ro
+      - ./resources/custom.noetic.yaml:/etc/ros/rosdep/sources.list.d/custom.yaml:ro
       # TODO: 这里的挂载路径需要改成自己的
-      - /home/jay/00-CodeSpace/02-zj_humanoid/00-RosSpace:/home/ros/00-RosSpace
-      # - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-Ros1Space
-      # - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/02-Ros2Space
+      # - /home/jay/00-CodeSpace/02-zj_humanoid/00-RosSpace:/home/ros/00-RosSpace
+      - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-Ros1Space
+      - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/02-Ros2Space
       # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
-    # 使用默认网络，确保能正常访问外网
+      # 使用默认网络，确保能正常访问外网
     network_mode: "host"
     extra_hosts:
       - "hp-pro:127.0.1.1"
@@ -49,64 +55,74 @@ services:
     tty: true
     restart: unless-stopped
 
-  ros-noetic-jammy:
-    image: cros22
-    pull_policy: build
-    build:
-      context: .
-      dockerfile: Dockerfile.NoeticOnJammy
-      args:
-        UID: ${UID:-1000}
-        GID: ${GID:-1000}
-    container_name: ros-noetic-jammy
-    platform: linux/amd64
-    privileged: true
-    user: ros
-    runtime: nvidia
-    environment:
-      - DISPLAY=${DISPLAY:-:0}
-      - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
-      - QT_X11_NO_MITSHM=1
-      # 设置 Master URI
-      - ROS_MASTER_URI=http://127.0.0.1:${ROS1_MASTER_PORT:-11311}
-      - ROS_IP=127.0.0.1
-    volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - /dev:/dev
-      - ${HOME}/.ssh:/home/ros/.ssh
-      # - ${HOME}/.codex-ros-noetic-jammy:/home/ros/.codex
-      # - ${HOME}/.claude:/home/ros/.claude
-      - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
-      - ./resources/custom.yaml:/etc/ros/rosdep/sources.list.d/custom.yaml:ro
-      # TODO: 这里的挂载路径需要改成自己的
-      - /home/jay/00-CodeSpace/02-zj_humanoid/00-RosSpace:/home/ros/00-RosSpace
-      # - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-Ros1Space
-      # - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/02-Ros2Space
-      # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
-    network_mode: "host"
-    extra_hosts:
-      - "hp-pro:127.0.1.1"
-      - "jay-ZBOX:127.0.1.1"
-    # networks:
-    #   ros_network:
-    #     ipv4_address: 192.168.50.70
-    dns:
-      - 8.8.8.8
-      - 114.114.114.114
-    stdin_open: true
-    tty: true
-    restart: unless-stopped
+  # ros-noetic-jammy:
+  #   image: ros-noetic-jammy
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.NoeticOnJammy
+  #     args:
+  #       UID: ${UID:-1000}
+  #       GID: ${GID:-1000}
+  #     cache_to:
+  #       - type=local,dest=.docker-cache/ros-noetic-jammy,mode=max
+  #   container_name: ros-noetic-jammy
+  #   platform: linux/amd64
+  #   privileged: true
+  #   user: ros
+  #   runtime: nvidia
+  #   environment:
+  #     - DISPLAY=${DISPLAY:-:0}
+  #     - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
+  #     - WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-0}
+  #     - NVIDIA_VISIBLE_DEVICES=all
+  #     - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+  #     - QT_X11_NO_MITSHM=1
+  #     - PYTHONDONTWRITEBYTECODE=1
+  #     - ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
+  #     # 设置 Master URI
+  #     - ROS_MASTER_URI=http://127.0.0.1:${ROS1_MASTER_PORT:-11311}
+  #     - ROS_IP=127.0.0.1
+  #   volumes:
+  #     - /tmp/.X11-unix:/tmp/.X11-unix
+  #     - ${XDG_RUNTIME_DIR:-/run/user/1000}:${XDG_RUNTIME_DIR:-/run/user/1000}
+  #     - /dev:/dev
+  #     - ${HOME}/.ssh:/home/ros/.ssh
+  #     - ${HOME}/.codex:/home/ros/.codex
+  #     - ${HOME}/.gemini:/home/ros/.gemini
+  #     - ${HOME}/.antigravity:/home/ros/.antigravity
+  #     - ${HOME}/.config/Antigravity:/home/ros/.config/Antigravity
+  #     - ${HOME}/.claude:/home/ros/.claude
+  #     - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
+  #     - ./resources/custom.noetic.yaml:/etc/ros/rosdep/sources.list.d/custom.yaml:ro
+  #     # TODO: 这里的挂载路径需要改成自己的
+  #     # - /home/jay/00-CodeSpace/02-zj_humanoid/00-RosSpace:/home/ros/00-RosSpace
+  #     - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-Ros1Space
+  #     - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/02-Ros2Space
+  #     # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
+  #   network_mode: "host"
+  #   extra_hosts:
+  #     - "hp-pro:127.0.1.1"
+  #     - "jay-ZBOX:127.0.1.1"
+  #   # networks:
+  #   #   ros_network:
+  #   #     ipv4_address: 192.168.50.70
+  #   dns:
+  #     - 8.8.8.8
+  #     - 114.114.114.114
+  #   stdin_open: true
+  #   tty: true
+  #   restart: unless-stopped
 
   ros-humble-jammy:
-    image: cros22-humble
-    pull_policy: build
+    image: ros-humble-jammy
     build:
       context: .
       dockerfile: Dockerfile.HumbleOnJammy
       args:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
+      cache_to:
+        - type=local,dest=.docker-cache/ros-humble-jammy,mode=max
     container_name: ros-humble-jammy
     platform: linux/amd64
     privileged: true
@@ -114,24 +130,32 @@ services:
     runtime: nvidia
     environment:
       - DISPLAY=${DISPLAY:-:0}
+      - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
+      - WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-0}
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
       - QT_X11_NO_MITSHM=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       # ROS2 域ID，同一网络内不同机器人需使用不同的ID
       # - ROS_DOMAIN_ID=0
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${XDG_RUNTIME_DIR:-/run/user/1000}:${XDG_RUNTIME_DIR:-/run/user/1000}
       - /dev:/dev
       - ${HOME}/.ssh:/home/ros/.ssh
-      # - ${HOME}/.codex-ros-humble-jammy:/home/ros/.codex
-      # - ${HOME}/.claude:/home/ros/.claude
+      - ${HOME}/.codex:/home/ros/.codex
+      - ${HOME}/.gemini:/home/ros/.gemini
+      - ${HOME}/.antigravity:/home/ros/.antigravity
+      - ${HOME}/.config/Antigravity:/home/ros/.config/Antigravity
+      - ${HOME}/.claude:/home/ros/.claude
       - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
-      - ./resources/custom2.yaml:/etc/ros/rosdep/sources.list.d/custom2.yaml:ro
+      - ./resources/custom.humble.yaml:/etc/ros/rosdep/sources.list.d/custom2.yaml:ro
       # TODO: 这里的挂载路径需要改成自己的
-      - /home/jay/00-CodeSpace/02-zj_humanoid/00-RosSpace:/home/ros/00-RosSpace
-      # - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-Ros1Space
-      # - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/01-Ros2Space
+      # - /home/jay/00-CodeSpace/02-zj_humanoid/00-RosSpace:/home/ros/00-RosSpace
+      - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-Ros1Space
+      - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/01-Ros2Space
       # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
     network_mode: "host"
     extra_hosts:
@@ -147,15 +171,130 @@ services:
     tty: true
     restart: unless-stopped
 
+  ros-humble-focal:
+    image: ros-humble-focal
+    build:
+      context: .
+      dockerfile: Dockerfile.HumbleOnFocal
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+        BASE_IMAGE: ${HUMBLE_FOCAL_BASE_IMAGE:-docker.m.daocloud.io/library/ubuntu:20.04}
+      cache_to:
+        - type=local,dest=.docker-cache/ros-humble-focal,mode=max
+    container_name: ros-humble-focal
+    platform: linux/amd64
+    privileged: true
+    user: ros
+    runtime: nvidia
+    environment:
+      - DISPLAY=${DISPLAY:-:0}
+      - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/1000}
+      - WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-0}
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+      - QT_X11_NO_MITSHM=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      # ROS2 域ID，同一网络内不同机器人需使用不同的ID
+      # - ROS_DOMAIN_ID=0
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${XDG_RUNTIME_DIR:-/run/user/1000}:${XDG_RUNTIME_DIR:-/run/user/1000}
+      - /dev:/dev
+      - ${HOME}/.ssh:/home/ros/.ssh
+      - ${HOME}/.codex:/home/ros/.codex
+      - ${HOME}/.gemini:/home/ros/.gemini
+      - ${HOME}/.antigravity:/home/ros/.antigravity
+      - ${HOME}/.config/Antigravity:/home/ros/.config/Antigravity
+      - ${HOME}/.claude:/home/ros/.claude
+      - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
+      - ./resources/custom.humble.yaml:/etc/ros/rosdep/sources.list.d/custom2.yaml:ro
+      # TODO: 这里的挂载路径需要改成自己的
+      # - /home/jay/00-CodeSpace/02-zj_humanoid/00-RosSpace:/home/ros/00-RosSpace
+      - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-Ros1Space
+      - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/01-Ros2Space
+      # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
+    network_mode: "host"
+    extra_hosts:
+      - "hp-pro:127.0.1.1"
+      - "jay-ZBOX:127.0.1.1"
+    # networks:
+    #   ros_network:
+    #     ipv4_address: 192.168.50.110
+    dns:
+      - 8.8.8.8
+      - 114.114.114.114
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+  ros-jazzy-noble:
+    image: ros-jazzy-noble
+    build:
+      context: .
+      dockerfile: Dockerfile.JazzyOnNoble
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+      cache_to:
+        - type=local,dest=.docker-cache/ros-jazzy-noble,mode=max
+    container_name: ros-jazzy-noble
+    platform: linux/amd64
+    privileged: true
+    user: ros
+    runtime: nvidia
+    environment:
+      - DISPLAY=${DISPLAY:-:0}
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+      - QT_X11_NO_MITSHM=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      # ROS2 域ID，同一网络内不同机器人需使用不同的ID
+      # - ROS_DOMAIN_ID=0
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /dev:/dev
+      - ${HOME}/.ssh:/home/ros/.ssh
+      - ${HOME}/.codex:/home/ros/.codex
+      - ${HOME}/.gemini:/home/ros/.gemini
+      - ${HOME}/.antigravity:/home/ros/.antigravity
+      - ${HOME}/.config/Antigravity:/home/ros/.config/Antigravity
+      - ${HOME}/.claude:/home/ros/.claude
+      - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
+      - ./resources/custom.jazzy.yaml:/etc/ros/rosdep/sources.list.d/custom2.yaml:ro
+      # TODO: 这里的挂载路径需要改成自己的
+      # - /home/jay/00-CodeSpace/02-zj_humanoid/00-RosSpace:/home/ros/00-RosSpace
+      - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-Ros1Space
+      - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/01-Ros2Space
+      # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
+    network_mode: "host"
+    extra_hosts:
+      - "hp-pro:127.0.1.1"
+      - "jay-ZBOX:127.0.1.1"
+    # networks:
+    #   ros_network:
+    #     ipv4_address: 192.168.50.100
+    dns:
+      - 8.8.8.8
+      - 114.114.114.114
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
   ros-foxy-focal:
-    image: cros20-foxy
-    pull_policy: build
+    image: ros-foxy-focal
     build:
       context: .
       dockerfile: Dockerfile.FoxyOnFocal
       args:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
+      cache_to:
+        - type=local,dest=.docker-cache/ros-foxy-focal,mode=max
     container_name: ros-foxy-focal
     platform: linux/amd64
     privileged: true
@@ -166,6 +305,8 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
       - QT_X11_NO_MITSHM=1
+      - PYTHONDONTWRITEBYTECODE=1
+      - ROSDISTRO_INDEX_URL=file:///opt/rosdistro/index-v4.yaml
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       # ROS2 域ID，同一网络内不同机器人需使用不同的ID
       # - ROS_DOMAIN_ID=0
@@ -173,14 +314,17 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev
       - ${HOME}/.ssh:/home/ros/.ssh
-      # - ${HOME}/.codex-ros-foxy-focal:/home/ros/.codex
-      # - ${HOME}/.claude:/home/ros/.claude
+      - ${HOME}/.codex:/home/ros/.codex
+      - ${HOME}/.gemini:/home/ros/.gemini
+      - ${HOME}/.antigravity:/home/ros/.antigravity
+      - ${HOME}/.config/Antigravity:/home/ros/.config/Antigravity
+      - ${HOME}/.claude:/home/ros/.claude
       - ${HOME}/.ssh/id_rsa.pub:/home/ros/.ssh/authorized_keys:ro
-      - ./resources/custom2.yaml:/etc/ros/rosdep/sources.list.d/custom2.yaml:ro
+      - ./resources/custom.foxy.yaml:/etc/ros/rosdep/sources.list.d/custom2.yaml:ro
       # TODO: 这里的挂载路径需要改成自己的
-      - /home/jay/00-CodeSpace/02-zj_humanoid/00-RosSpace:/home/ros/00-RosSpace
-      # - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-Ros1Space
-      # - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/01-Ros2Space
+      # - /home/jay/00-CodeSpace/02-zj_humanoid/00-RosSpace:/home/ros/00-RosSpace
+      - /home/zhangjunjie/00-zj-humanoid/00-Ros1Space:/home/ros/01-Ros1Space
+      - /home/zhangjunjie/00-zj-humanoid/01-Ros2Space:/home/ros/01-Ros2Space
       # - /home/jay/00-CodeSpace:/home/ros/01-RosSpace
     network_mode: "host"
     extra_hosts:

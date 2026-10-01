@@ -1,7 +1,9 @@
+
 # 示例:
-# actionlib:     # 功能包名称
-#   ubuntu: ros-noetic-actionlib  # deb包名,需要注意的是 如果功能包名称中有下划线,在deb包中需要更改为-
+# pico_runtime:     # 功能包名称
+#   ubuntu: [zj-humanoid-ros-noetic-pico-runtime]  # deb包名,需要注意的是 如果功能包名称中有下划线,在deb包中需要更改为-
 # 该文件用来标识ros依赖,即如果在功能包中有依赖 自定义的功能包的话,需要在该文件中列出
+
 rtipc_runtime:
   ubuntu: [zj-humanoid-rtipc-runtime]
 uplimb_runtime:
@@ -67,3 +69,42 @@ naviai_mic_driver:
   ubuntu: [zj-humanoid-ros-noetic-naviai-mic-driver]
 naviai_audio_launch:
   ubuntu: [zj-humanoid-ros-noetic-naviai-audio-launch]
+eigen:
+  ubuntu:
+    focal: [libeigen3-dev]
+yaml-cpp:
+  ubuntu:
+    focal: [libyaml-cpp-dev]
+    jammy: [libyaml-cpp-dev]
+  debian:
+    bullseye: [libyaml-cpp-dev]
+
+
+logging:
+  ubuntu: [zj-humanoid-logging]
+bbox_collision_model:
+  ubuntu: [zj-humanoid-ros-noetic-bbox-collision-model]
+i2_s_description:
+  ubuntu: [zj-humanoid-ros-noetic-i2-s-description]
+jk1_description:
+  ubuntu: [zj-humanoid-ros-noetic-jk1-description]
+jk2_description:
+  ubuntu: [zj-humanoid-ros-noetic-jk2-description]
+u1_description:
+  ubuntu: [zj-humanoid-ros-noetic-u1-description]
+wa1_400l_description:
+  ubuntu: [zj-humanoid-ros-noetic-wa1-400l-description]
+wa1_d11_description:
+  ubuntu: [zj-humanoid-ros-noetic-wa1-d11-description]
+wa2_a2_lite_description:
+  ubuntu: [zj-humanoid-ros-noetic-wa2-a2-lite-description]
+wa2_l_ty20_description:
+  ubuntu: [zj-humanoid-ros-noetic-wa2-l-ty20-description]
+wa2_ls_description:
+  ubuntu: [zj-humanoid-ros-noetic-wa2-ls-description]
+zyd_description:
+  ubuntu: [zj-humanoid-ros-noetic-zyd-description]
+led_controller:
+  ubuntu: [zj-humanoid-ros-noetic-led-controller]
+led_controller_msgs:
+  ubuntu: [zj-humanoid-ros-noetic-led-controller-msgs]

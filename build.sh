@@ -1,47 +1,63 @@
 #!/bin/bash
 # 检查参数是否正确
 if [ $# -ne 1 ]; then
-  echo "Usage: $0 {focal|jammy|ubuntu2004|ubuntu2204|humble|foxy}"
+  echo "Usage: $0 {NoeticOnFocal|NoeticOnJammy|HumbleOnJammy|HumbleOnFocal|FoxyOnFocal|JazzyOnNoble|focal|jammy|ubuntu2004|ubuntu2204|humble|humble-focal|foxy|jazzy}"
   exit 1
 fi
 # 根据传入的参数设置 Dockerfile 和目标镜像名称
 case $1 in
-  focal|ubuntu2004)
+  NoeticOnFocal|focal|ubuntu2004)
     DOCKERFILE="Dockerfile.NoeticOnFocal"
-    IMAGE_NAME="cros20"
+    IMAGE_NAME="ros-noetic-focal"
     ;;
-  jammy|ubuntu2204)
+  NoeticOnJammy|jammy|ubuntu2204)
     DOCKERFILE="Dockerfile.NoeticOnJammy"
-    IMAGE_NAME="cros22"
+    IMAGE_NAME="ros-noetic-jammy"
     ;;
-  humble)
+  HumbleOnJammy|humble)
     DOCKERFILE="Dockerfile.HumbleOnJammy"
-    IMAGE_NAME="cros22-humble"
+    IMAGE_NAME="ros-humble-jammy"
     ;;
-  HumbleOnFoxy)
+  humble-focal|HumbleOnFocal|HumbleOnFoxy)
     DOCKERFILE="Dockerfile.HumbleOnFocal"
-    IMAGE_NAME="cros20-humble"
+    IMAGE_NAME="ros-humble-focal"
     BASE_IMAGE_ARG="--build-arg BASE_IMAGE=${BASE_IMAGE:-docker.m.daocloud.io/library/ubuntu:20.04}"
     ;;
-  foxy)
+  FoxyOnFocal|foxy)
     DOCKERFILE="Dockerfile.FoxyOnFocal"
-    IMAGE_NAME="cros20-foxy"
+    IMAGE_NAME="ros-foxy-focal"
+    ;;
+  JazzyOnNoble|jazzy)
+    DOCKERFILE="Dockerfile.JazzyOnNoble"
+    IMAGE_NAME="ros-jazzy-noble"
     ;;
   *)
     echo "Invalid argument: $1"
-    echo "Usage: $0 {focal|jammy|ubuntu2004|ubuntu2204|humble|foxy}"
+    echo "Usage: $0 {NoeticOnFocal|NoeticOnJammy|HumbleOnJammy|HumbleOnFocal|FoxyOnFocal|JazzyOnNoble|focal|jammy|ubuntu2004|ubuntu2204|humble|humble-focal|foxy|jazzy}"
     exit 1
     ;;
 esac
 # 执行 docker build 命令
-docker build --platform=linux/amd64 \
-             --build-arg UID="$(id -u)" \
-             --build-arg GID="$(id -g)" \
-             ${BASE_IMAGE_ARG} \
-             -t $IMAGE_NAME \
-             -f $DOCKERFILE .
+CACHE_ROOT="${CACHE_ROOT:-.docker-cache}"
+CACHE_DIR="$CACHE_ROOT/$IMAGE_NAME"
+CACHE_FROM=()
+
+mkdir -p "$CACHE_ROOT"
+if [ -f "$CACHE_DIR/index.json" ]; then
+  CACHE_FROM=(--cache-from "type=local,src=$CACHE_DIR")
+fi
+
+docker buildx build --platform=linux/amd64 \
+                   --build-arg UID="$(id -u)" \
+                   --build-arg GID="$(id -g)" \
+                   "${CACHE_FROM[@]}" \
+                   --cache-to "type=local,dest=$CACHE_DIR,mode=max" \
+                   --load \
+                   ${BASE_IMAGE_ARG} \
+                   -t "$IMAGE_NAME" \
+                   -f "$DOCKERFILE" .
 
 
 # How to test containers:
-# docker run -it --rm cros20
-# docker run -it --rm cros22
+# docker run -it --rm ros-noetic-focal
+# docker run -it --rm ros-noetic-jammy

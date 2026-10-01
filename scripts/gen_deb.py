@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-from re import A
-from typing import List, Optional
+import re
+from typing import List, Optional, Tuple
 from plumbum import CommandNotFound, ProcessExecutionError, local , FG
 from plumbum.cmd import sudo, chmod, echo, cat, git, sed
 from pathlib import Path
@@ -41,7 +41,38 @@ def get_branch_info():
     branch_name = branch_name.replace("_", "")
     commit_count = git("rev-list", "--count", "HEAD").strip()
     commit_hash = git("log", "-1", "--format=%h").strip()
-    return f"{branch_name}+{commit_count}-{commit_hash}"
+    return f"{branch_name}+{commit_count}.{commit_hash}"
+
+
+def is_tag_trigger() -> bool:
+    return os.environ.get("IS_TAG_TRIGGER") == "true"
+
+
+def current_tag_name() -> str:
+    tag_name = os.environ.get("TAG")
+    if tag_name is not None:
+        logger.debug(f"Using tag name from environment variable TAG: {tag_name}")
+        return tag_name
+
+    try:
+        return git("describe", "--tags", "--exact-match", "HEAD").strip()
+    except (ProcessExecutionError, CommandNotFound, FileNotFoundError) as exc:
+        raise RuntimeError("IS_TAG_TRIGGER=true but no tag name was found") from exc
+
+
+def parse_tag_revision(tag_name: str) -> Tuple[str, str]:
+    match = re.fullmatch(r"v([^-]+)(?:-(.+))?", tag_name)
+    if not match:
+        raise ValueError(f"TAG格式不正确: {tag_name}, 期望格式: v<package_version> 或 v<package_version>-<revision>, 例如 v1.0.0 或 v1.0.0-1")
+    logger.debug(f"Parsed tag name: {tag_name}, package version: {match.group(1)}, revision: {match.group(2) or '0'}")
+    return match.group(1), match.group(2) or "0"
+
+
+def get_tag_revision(pkg: "PackageInfo") -> str:
+    tag_version, revision = parse_tag_revision(current_tag_name())
+    if tag_version != pkg.version:
+        raise ValueError(f"TAG版本 {tag_version} 与 package.xml 版本 {pkg.version} 不一致")
+    return revision
 
 
 def create_rosdep_source(pkgs_name, script_dir):
@@ -72,6 +103,7 @@ class PackageInfo:
     version: str                                # 功能包版本
     abs_path: str                               # 功能包路径
     deb_name: Optional[str] = None              # 生成的deb包名称
+    debug_deb_path: Optional[str] = None        # 生成的ddeb调试包路径
 
 @dataclass_json
 @dataclass
@@ -122,13 +154,17 @@ class Builder(ABC):
         self.__pkg = pkg
         self._pkg = pkg
         self.deb_path, self.deb_name = None, None
+        self.debug_deb_paths = []
 
     # @abstractmethod
-    def build(self):
+    def build(self, strip_debug_symbols: bool=True):
         # pass
         cpu_count = multiprocessing.cpu_count()
         parallel_jobs = min(max(1, cpu_count // 4), 8)
-        with local.env(DEB_BUILD_OPTIONS=f"parallel={parallel_jobs} nocheck"):
+        deb_build_options = [f"parallel={parallel_jobs}", "nocheck"]
+        if not strip_debug_symbols:
+            deb_build_options.append("nostrip")
+        with local.env(DEB_BUILD_OPTIONS=" ".join(deb_build_options)):
             fakeroot["debian/rules", "binary"] & FG
 
 
@@ -158,9 +194,10 @@ class Builder(ABC):
 
     def modify_debian_rules(self):
         raw_context = [
-            "",
-            "override_dh_strip:",
-            "	true",
+            # 剥离调试符号并单独生成ddeb调试包
+            # "",
+            # "override_dh_strip:",
+            # "	true",
             "",
             "override_dh_shlibdeps:",
             "	true",
@@ -175,18 +212,29 @@ class Builder(ABC):
 
     def get_deb_info(self):
         text = Path(self.__pkg.abs_path).joinpath("debian", "files").read_text()
-        self.deb_name = text.split(" ")[0]
-        self.deb_path = str(Path(self.__pkg.abs_path).joinpath("..", self.deb_name))
-        text = Path(self.__pkg.abs_path).joinpath("debian", "control").read_text()
-        for line in text.split("\n"):
-            if line.startswith("Package:"):
-                self.__pkg.deb_name = line.split(" ")[1]
+        parent = Path(self.__pkg.abs_path).parent
+        for line in text.splitlines():
+            artifact = line.split(" ")[0]
+            artifact_path = parent.joinpath(artifact)
+            if artifact.endswith(".ddeb") or "-dbgsym_" in artifact:
+                self.debug_deb_paths.append(str(artifact_path))
+            elif artifact.endswith(".deb") and self.deb_path is None:
+                self.deb_name = artifact
+                self.deb_path = str(artifact_path)
 
 
     def mv(self, dest_path:Path):
         dest_path.mkdir(parents=True, exist_ok=True)
         Path(self.deb_path).rename(dest_path.joinpath(self.deb_name))
-        return dest_path.joinpath(self.deb_name)
+        first_debug_deb_path = None
+        for debug_deb_path in self.debug_deb_paths:
+            src_debug_deb_path = Path(debug_deb_path)
+            if src_debug_deb_path.exists():
+                moved_debug_deb_path = dest_path.joinpath(src_debug_deb_path.name)
+                src_debug_deb_path.rename(moved_debug_deb_path)
+                if first_debug_deb_path is None:
+                    first_debug_deb_path = moved_debug_deb_path
+        return dest_path.joinpath(self.deb_name), first_debug_deb_path
 
 
 
@@ -212,14 +260,16 @@ class DebPackageBuilder(Builder):
         Path("debian/rules").write_text(context)
 
 
-    def build(self, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False):
+    def build(self, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False, strip_debug_symbols: bool=True):
         logger.info(f"📦 Building package: {self._pkg.name} at {self._pkg.abs_path}")
 
         self.clear()
         with local.cwd(self._pkg.abs_path):
             logger.info("🛠  Generating debian package...")
-            if os.environ.get("IS_TAG_TRIGGER") == "true" or local_build == True:        # 打tag的时候云端也上传 tag名称就是v1.0.0等
-            # TODO 根据构建的规则进行生成，是否要生成一个时间戳
+            if is_tag_trigger():
+                revision = get_tag_revision(self._pkg)
+                bloom_generate["debian", "--debian-inc", revision, "--unsafe"]()
+            elif local_build == True:
                 bloom_generate["debian", "--native", "--unsafe"]()
             else:
                 bloom_generate["debian", "--debian-inc", f"{get_branch_info()}", "--unsafe"]()
@@ -227,7 +277,7 @@ class DebPackageBuilder(Builder):
             self.modify_debian_rules()
             self.modify_deb_name(prefix)
             logger.info("📦 Building debian package...")
-            super().build()
+            super().build(strip_debug_symbols=strip_debug_symbols)
         self.get_deb_info()
         self.clear()
 
@@ -238,15 +288,17 @@ class ROSPackageBuilder(Builder):
         super().modify_debian_rules()
 
 
-    def build(self, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False):
+    def build(self, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False, strip_debug_symbols: bool=True):
         logger.info(f"📦 Building package: {self._pkg.name} at {self._pkg.abs_path}")
 
         self.clear()
         with local.cwd(self._pkg.abs_path):
 
             logger.info("🛠  Generating rosdebian package...")
-            if os.environ.get("IS_TAG_TRIGGER") == "true" or local_build:        # 打tag的时候云端也上传 tag名称就是v1.0.0等
-            # TODO 根据构建的规则进行生成，是否要生成一个时间戳
+            if is_tag_trigger():
+                revision = get_tag_revision(self._pkg)
+                bloom_generate["rosdebian", "--ros-distro", f"{ROS_VERSION}", "--debian-inc", revision, "--unsafe"]()
+            elif local_build:
                 bloom_generate["rosdebian", "--ros-distro", f"{ROS_VERSION}", "--unsafe"]()
             else:
                 bloom_generate["rosdebian", "--ros-distro", f"{ROS_VERSION}", "--debian-inc", f"{get_branch_info()}", "--unsafe"]()
@@ -255,14 +307,14 @@ class ROSPackageBuilder(Builder):
             self.modify_debian_rules()
             self.modify_deb_name(prefix)
 
-            if self.is_data_package():
+            if self.is_data_package() and os.environ.get("ROS_VERSION") == "1":
                 self.modify_deb_arch(arch="all")
                 logger.info("📦 Detected data package, modifying debian/postrm and debian/postinst...")
                 self.postinst()
                 self.postrm()
 
             logger.info("📦 Building rosdebian package...")
-            super().build()
+            super().build(strip_debug_symbols=strip_debug_symbols)
         self.get_deb_info()
         self.clear()
     
@@ -339,11 +391,13 @@ class RosDebCli:
 
     def __init__(self):
         self._local_build = False
+        self._strip_debug_symbols = True
         self._packages = PackgesInfo()
 
 
-    def __call__(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False, deb_type:str="rosdebian") -> None:
+    def __call__(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", local_build: bool=False, deb_type:str="rosdebian", strip_debug_symbols: bool=True) -> None:
         self._local_build = local_build
+        self._strip_debug_symbols = strip_debug_symbols
         if deb_type not in ("rosdebian", "debian"):
             raise ValueError(f"不支持的构建类型: {deb_type}, 仅支持 rosdebian 或 debian")
 
@@ -357,10 +411,11 @@ class RosDebCli:
                     commit_count = git("rev-list", "--count", "HEAD").strip(),
                     commit_hash  = git("log", "-1", "--format=%h").strip()
                 )
-        self.build(workspace=workspace, prefix=prefix, arch=arch, deb_type=deb_type)
+        self.build(workspace=workspace, prefix=prefix, arch=arch, deb_type=deb_type, strip_debug_symbols=strip_debug_symbols)
 
 
-    def build(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", deb_type: str="rosdebian") -> None:
+    def build(self, workspace: str, prefix: str="zj-humanoid", arch: str="all", deb_type: str="rosdebian", strip_debug_symbols: bool=True) -> None:
+        self._strip_debug_symbols = strip_debug_symbols
         sudo["su"]()
         workspace_path = Path(workspace).expanduser().resolve()
         if not workspace_path.exists():
@@ -377,10 +432,11 @@ class RosDebCli:
             pkg:PackageInfo
             builder = builder_cls(pkg)
             builders.append(builder)
-            builder.build(prefix=prefix, arch=arch, local_build=self._local_build)
+            builder.build(prefix=prefix, arch=arch, local_build=self._local_build, strip_debug_symbols=self._strip_debug_symbols)
             builder.install()
-            deb_name = builder.mv(workspace_path.joinpath("dist").resolve())
+            deb_name, debug_deb_path = builder.mv(workspace_path.joinpath("dist").resolve())
             pkg.deb_name = str(deb_name)
+            pkg.debug_deb_path = str(debug_deb_path) if debug_deb_path else None
             self._packages.packages.append(pkg)
             
 

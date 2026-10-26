@@ -279,8 +279,12 @@ RUN for rc in /root/.bashrc /home/ros/.bashrc; do \
         printf '%s\n' '    done' >> "$rc"; \
         printf '%s\n' '}' >> "$rc"; \
         printf '%s\n' '_ros2_register_argcomplete' >> "$rc"; \
+        printf '%s\n' '_ros2_argcomplete_registered() {' >> "$rc"; \
+        printf '%s\n' '    complete -p 2>/dev/null | grep -Eq '"'"'(^|[[:space:]])"?ros2"?$'"'"' && complete -p 2>/dev/null | grep -Eq '"'"'(^|[[:space:]])"?colcon"?$'"'"' && return 0' >> "$rc"; \
+        printf '%s\n' '    [[ -n "${_comps[ros2]-}" && -n "${_comps[colcon]-}" ]]' >> "$rc"; \
+        printf '%s\n' '}' >> "$rc"; \
         printf '%s\n' '_ros2_refresh_argcomplete() {' >> "$rc"; \
-        printf '%s\n' '    complete -p 2>/dev/null | grep -Eq '"'"'(^|[[:space:]])"?ros2"?$'"'"' && complete -p 2>/dev/null | grep -Eq '"'"'(^|[[:space:]])"?colcon"?$'"'"' || _ros2_register_argcomplete' >> "$rc"; \
+        printf '%s\n' '    _ros2_argcomplete_registered || _ros2_register_argcomplete' >> "$rc"; \
         printf '%s\n' '}' >> "$rc"; \
         printf '%s\n' 'autoload -Uz add-zsh-hook && add-zsh-hook precmd _ros2_refresh_argcomplete' >> "$rc"; \
         printf '%s\n' 'export CMAKE_PREFIX_PATH=/opt/zj_humanoid:$CMAKE_PREFIX_PATH' >> "$rc"; \
